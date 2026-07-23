@@ -4,8 +4,11 @@ import { fileURLToPath } from 'node:url'
 
 const root = fileURLToPath(new URL('.', import.meta.url))
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   appType: 'mpa',
+  // GitHub Pages sirve este proyecto bajo /prototipos-bo/ (no en la raíz del dominio).
+  // Solo aplica al build de producción — `npm run dev` sigue sirviendo en la raíz local.
+  base: command === 'build' ? '/prototipos-bo/' : '/',
   build: {
     rollupOptions: {
       input: {
@@ -14,4 +17,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))
