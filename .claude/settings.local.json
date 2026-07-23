@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sS https://preview.tabler.io/alerts.html -o /tmp/tabler-alerts.html)",
+      "Read(//tmp/**)",
+      "Bash(curl -sS https://preview.tabler.io/toasts.html -o /tmp/tabler-toasts.html)",
+      "Bash(command -v chromium-cli)",
+      "Bash(npx --no-install playwright --version)",
+      "Bash(npm ls *)",
+      "Bash(where msedge.exe)",
+      "Bash(\"/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe\" --version)",
+      "Bash(\"/c/Program Files/Google/Chrome/Application/chrome.exe\" --version)",
+      "Bash(rm -rf dist)",
+      "Bash(npm run *)"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "modulo-reintegros-prototipos",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.1.5"
+  },
+  "dependencies": {
+    "@tabler/core": "^1.4.0"
+  }
+}
