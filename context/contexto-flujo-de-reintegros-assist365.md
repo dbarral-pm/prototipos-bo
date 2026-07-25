@@ -64,7 +64,7 @@ A continuación, enlistamos los principales dolores que queremos, progresivament
    Esto genera fricción con los clientes, ya que termina siendo un dato que se pide después por mail: muchas veces los clientes tardan en ver en mail (pudo haber llegado a SPAM), pueden escribir mal los datos ya que no hay validación alguna cuando se pasan por mail, etc. Todo contribuye a este ida y vuelta tedioso por mail, que hace que el pago del reintegro se demore más, y lo que justamente queremos (en pos de mejorar la experiencia de los reintegros en sí) es pagarle a nuestros clientes lo más rápido posible. 
 
 3. **Persistencia de datos**: actualmente, cuando un cliente realiza una solicitud de reintegros, no registramos dicha solicitud en nuestra BBDD. Enviamos los datos del formulario por mail (como se indicó anteriormente) al equipo de Operaciones y al proveedor, pero no guardamos la información en nuestra propia base. Lo que sí hacemos (además del mail) es enviar los datos a un pipeline de Hubspot para que el equipo de Operaciones pueda gestionar el caso desde aquella interfaz.   
-   No tener registro de las solicitudes de reintegros que hacen nuestros clientes en nuestra propia base, es un dolor, ya que nos impide tener una trazabilidad completa de las interacciones que el cliente ha tenido con nuestro producto: es importante, de cara a accionables de personalización y fidelización, entender qué clientes hicieron uso del servicio, ante qué casos, qué les pasó, cómo fué su experiencia, etc.   
+   No tener registro de las solicitudes de reintegros que hacen nuestros clientes en nuestra propia base, es un dolor, ya que nos impide tener una trazabilidad completa de las interacciones que el cliente ha tenido con nuestro producto a lo largo del tiempo: es importante, de cara a accionables de personalización y fidelización, entender qué clientes hicieron uso del servicio, ante qué casos, cuántas veces, qué les pasó, cómo fué su experiencia, etc.   
 
 ## Propuestas de solución
 
@@ -97,7 +97,7 @@ Para mayor referencia, revisar los node-id de figma como ejemplos:
 \- [https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8789-37713\&t=zTbOn9ty5FQ69THy-0](https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8789-37713&t=zTbOn9ty5FQ69THy-0)  
 \- [https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8789-55913\&t=zTbOn9ty5FQ69THy-0](https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8789-55913&t=zTbOn9ty5FQ69THy-0)
 
-La idea es crear dentro del backoffice, un nuevo módulo llamado “Reintegros”. Este módulo tendrá un menú con una subopción llamado “Formulario web” y dentro de esta subopción, tres opciones más:
+La idea es crear dentro del backoffice, un nuevo módulo llamado “Reintegros”. Este módulo tendrá un menú con una subsección  llamada “Formulario web” y dentro de esta subsección, tres subopciones más:
 
 \> “Categoría de asistencia”;  
 \> “Subcategoría de asistencia”;  
@@ -106,7 +106,7 @@ La idea es crear dentro del backoffice, un nuevo módulo llamado “Reintegros�
 ##### Sobre la interfaz del prototipo y los componentes
 
 A continuación se dejan algunas sugerencias de cómo llegar al objetivo de la feature mencionado más arriba, pero se deja a criterio de Claude la utilización de los recursos visuales y estructura que considere más pertinentes para concretar la idea en un prototipo amigable a nivel UX/UI para los usuarios.  
-El único requisito es utilizar la skill 
+El único requisito es utilizar la skill bo-prototipo.
 
 #####  Categoría de asistencia
 
@@ -166,5 +166,45 @@ El foco de este documento, por ahora, es priorizar el problema **2- d)** anterio
   [https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8603-3278\&t=zTbOn9ty5FQ69THy-0](https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8603-3278&t=zTbOn9ty5FQ69THy-0)  
 - **Paso 8**: Pedido de alias, cbu o cuenta paypal (dependiendo país del usuario): [https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8720-67666\&t=zTbOn9ty5FQ69THy-0](https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8720-67666&t=zTbOn9ty5FQ69THy-0) || [https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8758-6618\&t=zTbOn9ty5FQ69THy-0](https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8758-6618&t=zTbOn9ty5FQ69THy-0)  
 - **Paso 9**: Confirmación de datos final: [https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8604-34445\&t=zTbOn9ty5FQ69THy-0](https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8604-34445&t=zTbOn9ty5FQ69THy-0)  
-- **Paso 10**: feedback de éxito o error: [https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8650-6034\&t=zTbOn9ty5FQ69THy-0](https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8650-6034&t=zTbOn9ty5FQ69THy-0) || [https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8650-6022\&t=zTbOn9ty5FQ69THy-0](https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8650-6022&t=zTbOn9ty5FQ69THy-0)  
-  
+- **Paso 10**: feedback de éxito o error: [https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8650-6034\&t=zTbOn9ty5FQ69THy-0](https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8650-6034&t=zTbOn9ty5FQ69THy-0) || [https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8650-6022\&t=zTbOn9ty5FQ69THy-0](https://www.figma.com/design/0cxVfa0WbXKLMTIL8qX9O2/Mi-voucher?node-id=8650-6022&t=zTbOn9ty5FQ69THy-0)
+
+### Sobre el problema 3: la persistencia de datos
+
+Considerando el problema número 3- mencionado anteriormente, en relación a que no alojamos en nuestra base de datos las solicitudes de reintegros que recibimos de nuestros clientes, la idea es comenzar a hacerlo. Si bien seguiremos enviando la información de las solicitudes a un CRM (ya no más Hubspot, será Zendesk), para que el equipo de Operaciones pueda gestionar en una interfaz amigable, conectada a canales de comunicación como el mail, whatsapp, y beneficiarse de todas las ventajas que ofrecen herramientas como estas (notificaciones, notas internas, asignaciones entre usuarios, etc), la idea es que también en nuestra base de datos, podamos crear una tabla/entidad de solicitudes de reintegros. 
+
+#### Objetivo
+
+La idea es que cada una de las solicitudes de reintegros que ingresan por el formulario web de la página de reintegros, se alojen en nuestra base de datos, persistiendo todos los datos que le son requeridos al cliente a lo largo del flujo.   
+Además de persistir las solicitudes en la BBDD, será necesario generar dentro del Backoffice, un módulo tipo ABM para estas solicitudes.   
+La nueva entidad/tabla “Reintegros” en nuestra base, deberá tener relaciones con otras tablas, principalmente, con la de ***Personas*** (clientes en nuestra bbd), ***Cuentas*** (para solicitar un reintegro, el usuario debe estar logueado con un set de credenciales) y con la de ***Reservas*** (referente a la compra realizada por el cliente, que contiene el o los vouchers del servicio contratado, con sus respectivos viajeros vinculados). Por ende, en esta vista dentro del Backoffice, se verá a qué cliente pertenece cada solicitud de reintegro generada. 
+
+#### Lineamientos funcionales para el prototipo
+
+Precisamos prototipar mediante la skill bo-prototipo, dentro del módulo “Reintegros” del Backoffice, una subsección llamada “Solicitudes de reintegros”. Es decir, ahora, el módulo “Reintegros”, que ya tiene prototipada la subsección “Formulario web de reintegros”, deberá tener una más, que despliegue la nueva funcionalidad. 
+
+#####  Sobre la interfaz del prototipo y los componentes
+
+A continuación se dejan algunas sugerencias de cómo llegar al objetivo de la feature mencionado más arriba, pero se deja a criterio de Claude la utilización de los recursos visuales y estructura que considere más pertinentes para concretar la idea en un prototipo amigable a nivel UX/UI para los usuarios. El único requisito es utilizar la skill bo-prototipo, y mantener cierta consistencia y armonía visual con lo prototipado anteriormente dentro de la subsección “Formulario web de reintegros”.
+
+* La subsección deberá contener un bloque informativo, comentando de qué va la sección.  
+* Deberán enlistarse las solicitudes de reintegros desde la más reciente a la más antigua.  
+* Probablemente se requiera de paginación. Por defecto, se mostrarán siempre las últimas 8 solicitudes de reintegros recibidas.   
+* Las solicitudes recibidas tendrán campos visibles que se mostrarán en la vista inicial apenas se ingresa a la subsección, y un botón de “ver detalle”, donde se verá el resto de la información vinculada a la solicitud. Probablemente, la vista del ver detalle, convenga que sea una vista nueva y no una ventana modal, sobre todo por la cantidad de información, pero se deja a criterio de Claude a la hora de diseñar la UI.  
+* Campos visibles de una “fila” de solicitud:  
+  \- Id de la solicitud (aleatorio);  
+  \- Fecha y hora en que es recibida la solicitud;  
+  \- Mail de la cuenta que realizó la solicitud;  
+  \- Nombre y apellido del dueño de la cuenta que realizó la solicitud;  
+  \- Categoría de asistencia médica;  
+  \- Subcategoría de asistencia médica;  
+  \- Reserva vinculada;  
+  \- Monto total solicitado (en la moneda en que se solicitó, ej: USD 300 ó ARS 5.000)  
+  \- País de origen de la reserva;  
+  \- Acciones de: ver más detalle, o eliminar (no se permite EDITAR datos en esta vista, al menos no por ahora).  
+* El clic en “Más detalle” deberá permitir ver la solicitud completa, a la que se sumarán (a los datos ya mencionados y presentados en la tabla anteriormente), la siguiente información (es decir, deben verse los datos mencionados arriba y estos también):  
+  \- Fecha del evento (ingresada por el usuario en el formulario, cuándo pasó el siniestro)  
+  \- Vouchers y nombre y apellido de los viajeros involucrados: cuando alguien selecciona una reserva para solicitar un reintegro, no necesariamente el reintegro se solicita sobre todos los viajeros involucrados en ella. Por ejemplo, una reserva puede tener a 5 integrantes de una familia entera y solo 1 fue el que tuvo el evento y necesitó pedir la asistencia.  
+  \- Datos de pago: cerca de la info de “Monto total solicitado y moneda”, deberán ir los datos de pago que el usuario dejó. Aquí es importante dejar en el prototipo los 2 casos de uso posible que tenemos actualmente, ya que, si el país de origen de la reserva es argentina, pedimos: “nombre del titular de la cuenta”, “alias” o “cbu”. Y si el país de origen es distinto de argentina, pedimos: “nombre del titular de la cuenta paypal” y “cuenta paypal” (que es el mail de la cuenta asociado a paypal).  
+  \- Documentación: y acá la cosa se pone interesante. Como se indicó en el punto “Paso 7” del heading “Sobre los problemas 1-  y 2- a), b), c) y e): UI/UX de la página de reintegros”, según el tipo de subcategoría de asistencia que seleccione el usuario, deberá adjuntar tantos documentos le sean requeridos para esa categoría.   
+  La idea es que desde el BO se puedan ver esos documentos, al lado de sus respectivos nombres. Por ejemplo, la subcategoría asistencia médica tiene 4 documentos asociados requeridos. Se dejan adjuntos 4 archivos para que se usen de modelo para el prototipo, con que se usen en una solicitud o dos, alcanza para mostrarlo.   
+* Se podrán eliminar solicitudes, siempre con vista de confirmación. 

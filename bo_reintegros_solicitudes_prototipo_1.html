@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reintegros · Solicitudes de reintegros — BO ASSIST 365</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script type="module" src="/src/tabler.js"></script>
+<style>
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- NAVBAR -->
+  <header class="navbar navbar-expand-md d-print-none">
+    <div class="container-xl">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+        <a href="."><img src="https://assistcdn.s3.us-west-1.amazonaws.com/assets/site/home/img/brand/a365_logo_xa.svg" height="28" alt="ASSIST 365"></a>
+      </h1>
+      <div class="navbar-nav flex-row order-md-last">
+        <div class="nav-item dropdown">
+          <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown" aria-label="Open user menu">
+            <span class="avatar avatar-sm">DB</span>
+            <div class="d-none d-xl-block ps-2">
+              <div>Denu Barral</div>
+              <div class="mt-1 small text-secondary">Producto</div>
+            </div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <a href="#" class="dropdown-item">Perfil</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">Cerrar sesión</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <header class="navbar-expand-md">
+    <div class="collapse navbar-collapse" id="navbar-menu">
+      <div class="navbar">
+        <div class="container-xl">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-dashboard nav-link-icon"></i><span class="nav-link-title">Dashboard</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-ticket nav-link-icon"></i><span class="nav-link-title">Vouchers</span></a></li>
+            <li class="nav-item dropdown active">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+                <i class="ti ti-cash-banknote nav-link-icon"></i><span class="nav-link-title">Reintegros</span>
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="bo_reintegros_formulario_web_prototipo_2.html">Formulario web de reintegros</a>
+                <a class="dropdown-item active" href="bo_reintegros_solicitudes_prototipo_1.html">Solicitudes de reintegros</a>
+              </div>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-photo nav-link-icon"></i><span class="nav-link-title">Contenido</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-affiliate nav-link-icon"></i><span class="nav-link-title">Afiliados</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-settings nav-link-icon"></i><span class="nav-link-title">Configuración</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+    <div class="container-xl">
+
+      <div class="page-header d-print-none mb-3">
+        <div class="row align-items-center">
+          <div class="col">
+            <div class="page-pretitle mb-1">Reintegros</div>
+            <h2 class="page-title">Solicitudes de reintegros</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info" role="alert">
+        <div class="d-flex">
+          <div><i class="ti ti-bulb alert-icon"></i></div>
+          <div>
+            <strong>Objetivo del módulo:</strong> ver todas las solicitudes de reintegro que los viajeros enviaron desde el formulario web, con los datos de la cuenta, la reserva vinculada y la documentación presentada. Estas solicitudes también se gestionan operativamente desde Zendesk — esta vista es el registro persistente en nuestra base de datos.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row g-0">
+          <!-- SUB-NAVEGACIÓN DEL MÓDULO -->
+          <div class="col-12 col-md-3 border-end">
+            <div class="card-body">
+              <h4 class="subheader">Reintegros</h4>
+              <div class="list-group list-group-transparent">
+                <a href="bo_reintegros_formulario_web_prototipo_2.html" class="list-group-item list-group-item-action d-flex align-items-center">
+                  <i class="ti ti-forms me-2"></i>Formulario web de reintegros
+                </a>
+                <a href="bo_reintegros_solicitudes_prototipo_1.html" class="list-group-item list-group-item-action d-flex align-items-center active">
+                  <i class="ti ti-list-check me-2"></i>Solicitudes de reintegros
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTENIDO -->
+          <div class="col-12 col-md-9 d-flex flex-column">
+            <div class="card-body">
+
+              <!-- FILTROS -->
+              <div class="row g-2 mb-2">
+                <div class="col-12 col-md-6">
+                  <div class="input-icon">
+                    <input type="text" class="form-control" id="search-solicitudes" placeholder="Buscar por mail, nombre o ID..." oninput="currentPage=1;renderSolicitudes()">
+                    <span class="input-icon-addon"><i class="ti ti-search"></i></span>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <select class="form-select" id="filter-periodo" onchange="onPeriodoChange()">
+                    <option value="">Todo el período</option>
+                    <option value="7">Últimos 7 días</option>
+                    <option value="30">Últimos 30 días</option>
+                    <option value="mes">Este mes</option>
+                    <option value="anio">Este año</option>
+                    <option value="custom">Personalizado…</option>
+                  </select>
+                </div>
+                <div class="col-6 col-md-3">
+                  <select class="form-select" id="filter-pais" onchange="currentPage=1;renderSolicitudes()">
+                    <option value="">Todos los países</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row g-2 mb-3">
+                <div class="col-6 col-md-3">
+                  <input type="text" class="form-control" id="filter-reserva" placeholder="N° de reserva" oninput="currentPage=1;renderSolicitudes()">
+                </div>
+                <div class="col-6 col-md-5 d-none" id="filter-fecha-custom-wrap">
+                  <input type="text" class="form-control" id="filter-fecha-custom" placeholder="Elegí un rango" readonly>
+                </div>
+                <div class="col-12 col-md-2">
+                  <button class="btn btn-outline-secondary w-100" onclick="clearFilters()"><i class="ti ti-filter-x"></i> Limpiar</button>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center mb-2">
+                <span class="text-secondary" id="count-solicitudes"></span>
+              </div>
+
+              <div class="card">
+                <div class="table-responsive">
+                  <table class="table table-vcenter card-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Fecha y hora</th>
+                        <th>Cliente</th>
+                        <th>Categoría / Subcategoría</th>
+                        <th>Reserva</th>
+                        <th>Monto</th>
+                        <th>País</th>
+                        <th class="w-1"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-solicitudes"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <nav class="d-flex justify-content-center mt-3" id="pagination-wrap"></nav>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* =========================================================
+   ESTADO (datos de ejemplo — mismos rubros de Categoría/Subcategoría
+   que ya se usan en "Formulario web de reintegros")
+   ========================================================= */
+let solicitudes = [
+  { id:'REQ-93841', fechaHora:'21/07/2026 14:32', mail:'juan.garcia@mail.com', nombre:'Juan García', categoria:'Salud', subcategoria:'Asistencia médica', reserva:'482911', monto:{valor:450,moneda:'USD'}, pais:'Argentina',
+    fechaEvento:'15/07/2026', viajeros:[ {nombre:'Juan García', voucher:'A365ARWTA48291N'}, {nombre:'Lucía García', voucher:'A365ARWTA48292N'} ],
+    pago:{ tipo:'ars', titular:'Juan García', alias:'juan.garcia.mp', cbu:'0000003100012345678901' },
+    documentos:[ {name:'Informe médico', files:['ejemplo-informe-medico.jpg']}, {name:'Recibos y facturas', files:['ejemplo-factura.png']}, {name:'Pasaporte o DNI', files:['ejemplo-pasaporte.avif']}, {name:'Itinerario de viaje', files:['ejemplo-itinerario1.webp','ejemplo-itinerario2.jpg']} ] },
+  { id:'REQ-77213', fechaHora:'19/07/2026 09:14', mail:'maria.lopez@mail.com', nombre:'María López', categoria:'Salud', subcategoria:'Medicamentos', reserva:'517642', monto:{valor:80,moneda:'USD'}, pais:'Chile',
+    fechaEvento:'14/07/2026', viajeros:[ {nombre:'María López', voucher:'A365CLWMA51761N'} ],
+    pago:{ tipo:'paypal', titular:'María López', paypalEmail:'maria.lopez@paypal.com' },
+    documentos:[ {name:'Informe médico', files:['informe-medico-maria.pdf']}, {name:'Receta médica', files:['receta-maria.jpg']}, {name:'Recibos y facturas', files:['recibo-farmacia-maria.jpg']} ] },
+  { id:'REQ-65210', fechaHora:'16/07/2026 18:47', mail:'nico.fernandez@mail.com', nombre:'Nicolás Fernández', categoria:'Vuelo', subcategoria:'Demora de vuelo', reserva:'398201', monto:{valor:220,moneda:'EUR'}, pais:'España',
+    fechaEvento:'13/07/2026', viajeros:[ {nombre:'Nicolás Fernández', voucher:'A365ESWTA39821N'}, {nombre:'Ana Fernández', voucher:'A365ESWTA39822N'} ],
+    pago:{ tipo:'paypal', titular:'Nicolás Fernández', paypalEmail:'nico.fernandez@paypal.com' },
+    documentos:[ {name:'Pasaporte o DNI', files:['dni-nicolas.jpg']}, {name:'Itinerario de viaje', files:['itinerario-nicolas.pdf']} ] },
+  { id:'REQ-54029', fechaHora:'12/07/2026 11:05', mail:'sofia.ramirez@mail.com', nombre:'Sofía Ramírez', categoria:'Equipaje', subcategoria:'Extravío de equipaje', reserva:'460355', monto:{valor:65000,moneda:'ARS'}, pais:'Argentina',
+    fechaEvento:'05/07/2026', viajeros:[ {nombre:'Sofía Ramírez', voucher:'A365ARWTA46036N'} ],
+    pago:{ tipo:'ars', titular:'Sofía Ramírez', alias:'sofia.ramirez.uy', cbu:'0000003100098765432109' },
+    documentos:[ {name:'Pasaporte o DNI', files:['dni-sofia.jpg']}, {name:'Itinerario de viaje', files:['itinerario-sofia.pdf']} ] },
+  { id:'REQ-48117', fechaHora:'08/07/2026 16:23', mail:'contacto@travelinsider.com', nombre:'Travel Insider', categoria:'Salud', subcategoria:'Urgencia odontológica', reserva:'275188', monto:{valor:150,moneda:'USD'}, pais:'México',
+    fechaEvento:'02/07/2026', viajeros:[ {nombre:'Travel Insider', voucher:'A365MXWMA27519N'} ],
+    pago:{ tipo:'paypal', titular:'Travel Insider', paypalEmail:'contacto@travelinsider.com' },
+    documentos:[ {name:'Pasaporte o DNI', files:['dni-travelinsider.jpg']}, {name:'Itinerario de viaje', files:['itinerario-travelinsider.pdf']} ] },
+  { id:'REQ-39288', fechaHora:'03/07/2026 10:51', mail:'nicolas@viajesconnico.com', nombre:'Viajes con Nico', categoria:'Otros', subcategoria:'Traslado sanitario', reserva:'391027', monto:{valor:120000,moneda:'ARS'}, pais:'Argentina',
+    fechaEvento:'28/06/2026', viajeros:[ {nombre:'Viajes con Nico', voucher:'A365ARWTA39103N'} ],
+    pago:{ tipo:'ars', titular:'Viajes con Nico', alias:'viajesconnico.mp', cbu:'0000003100011122233344' },
+    documentos:[ {name:'Informe médico', files:['informe-medico-nico.pdf']}, {name:'Recibos y facturas', files:['recibo-ambulancia-nico.jpg']} ] },
+  { id:'REQ-31054', fechaHora:'27/06/2026 20:09', mail:'camila.torres@mail.com', nombre:'Camila Torres', categoria:'Salud', subcategoria:'Asistencia médica', reserva:'228916', monto:{valor:300,moneda:'USD'}, pais:'Uruguay',
+    fechaEvento:'22/06/2026', viajeros:[ {nombre:'Camila Torres', voucher:'A365UYWMA22892N'} ],
+    pago:{ tipo:'paypal', titular:'Camila Torres', paypalEmail:'camila.torres@paypal.com' },
+    documentos:[ {name:'Informe médico', files:['informe-medico-camila.pdf']}, {name:'Recibos y facturas', files:['recibo-clinica-camila.jpg']}, {name:'Pasaporte o DNI', files:['dni-camila.jpg']}, {name:'Itinerario de viaje', files:['itinerario-camila.pdf']} ] },
+  { id:'REQ-27765', fechaHora:'19/06/2026 08:37', mail:'martin.suarez@mail.com', nombre:'Martín Suárez', categoria:'Vuelo', subcategoria:'Cancelación de vuelo', reserva:'350744', monto:{valor:95000,moneda:'ARS'}, pais:'Argentina',
+    fechaEvento:'15/06/2026', viajeros:[ {nombre:'Martín Suárez', voucher:'A365ARWTA35075N'}, {nombre:'Lucía Suárez', voucher:'A365ARWTA35076N'} ],
+    pago:{ tipo:'ars', titular:'Martín Suárez', alias:'martin.suarez.ar', cbu:'0000003100055566677788' },
+    documentos:[ {name:'Pasaporte o DNI', files:['dni-martin.jpg']}, {name:'Itinerario de viaje', files:['itinerario-martin.pdf']} ] },
+  { id:'REQ-19432', fechaHora:'11/06/2026 13:58', mail:'lucia.fernandez@mail.com', nombre:'Lucía Fernández', categoria:'Equipaje', subcategoria:'Demora de equipaje', reserva:'194532', monto:{valor:60,moneda:'USD'}, pais:'Colombia',
+    fechaEvento:'06/06/2026', viajeros:[ {nombre:'Lucía Fernández', voucher:'A365COWMA19453N'} ],
+    pago:{ tipo:'paypal', titular:'Lucía Fernández', paypalEmail:'lucia.fernandez@paypal.com' },
+    documentos:[ {name:'Pasaporte o DNI', files:['dni-lucia.jpg']}, {name:'Itinerario de viaje', files:['itinerario-lucia.pdf']} ] },
+  { id:'REQ-11298', fechaHora:'02/06/2026 17:20', mail:'diego.alvarez@mail.com', nombre:'Diego Álvarez', categoria:'Salud', subcategoria:'Medicamentos', reserva:'112980', monto:{valor:15000,moneda:'ARS'}, pais:'Argentina',
+    fechaEvento:'29/05/2026', viajeros:[ {nombre:'Diego Álvarez', voucher:'A365ARWTA11299N'} ],
+    pago:{ tipo:'ars', titular:'Diego Álvarez', alias:'diego.alvarez.ar', cbu:'0000003100099988877766' },
+    documentos:[ {name:'Receta médica', files:['receta-diego.jpg']}, {name:'Recibos y facturas', files:['recibo-farmacia-diego.jpg']} ] },
+];
+
+/* País → código ISO2 (clases .flag-country-XX de Tabler) */
+const PAIS_ISO = { 'Argentina':'ar', 'Chile':'cl', 'España':'es', 'México':'mx', 'Uruguay':'uy', 'Colombia':'co' };
+
+const PAGE_SIZE = 8;
+let currentPage = 1;
+let customRange = { start: null, end: null };
+let litepickerInstance = null;
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+function fmtMonto(m) { return m.moneda + ' ' + m.valor.toLocaleString('es-AR'); }
+
+function parseFechaHora(str) {
+  const [datePart, timePart] = str.split(' ');
+  const [d, m, y] = datePart.split('/').map(Number);
+  const [hh, mm] = (timePart || '00:00').split(':').map(Number);
+  return new Date(y, m - 1, d, hh, mm);
+}
+
+function initTooltips() {
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => bootstrap.Tooltip.getOrCreateInstance(el));
+}
+
+/* =========================================================
+   FILTROS
+   ========================================================= */
+function populatePaisFilter() {
+  const select = document.getElementById('filter-pais');
+  const paises = [...new Set(solicitudes.map(s => s.pais))].sort();
+  select.innerHTML = '<option value="">Todos los países</option>' + paises.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+function onPeriodoChange() {
+  const val = document.getElementById('filter-periodo').value;
+  const wrap = document.getElementById('filter-fecha-custom-wrap');
+  wrap.classList.toggle('d-none', val !== 'custom');
+  if (val === 'custom' && !litepickerInstance) {
+    litepickerInstance = new Litepicker({
+      element: document.getElementById('filter-fecha-custom'),
+      singleMode: false,
+      format: 'DD/MM/YYYY',
+      setup: (picker) => {
+        picker.on('selected', () => {
+          const start = picker.getStartDate();
+          const end = picker.getEndDate();
+          customRange.start = start ? start.dateInstance : null;
+          customRange.end = end ? end.dateInstance : null;
+          currentPage = 1;
+          renderSolicitudes();
+        });
+      },
+    });
+  }
+  currentPage = 1;
+  renderSolicitudes();
+}
+
+function matchesPeriodo(s) {
+  const periodo = document.getElementById('filter-periodo').value;
+  if (!periodo) return true;
+  const fecha = parseFechaHora(s.fechaHora);
+  const now = new Date();
+  if (periodo === '7') { const from = new Date(now); from.setDate(now.getDate() - 7); return fecha >= from; }
+  if (periodo === '30') { const from = new Date(now); from.setDate(now.getDate() - 30); return fecha >= from; }
+  if (periodo === 'mes') { return fecha.getFullYear() === now.getFullYear() && fecha.getMonth() === now.getMonth(); }
+  if (periodo === 'anio') { return fecha.getFullYear() === now.getFullYear(); }
+  if (periodo === 'custom') {
+    if (!customRange.start || !customRange.end) return true;
+    return fecha >= customRange.start && fecha <= customRange.end;
+  }
+  return true;
+}
+
+function clearFilters() {
+  document.getElementById('search-solicitudes').value = '';
+  document.getElementById('filter-periodo').value = '';
+  document.getElementById('filter-pais').value = '';
+  document.getElementById('filter-reserva').value = '';
+  document.getElementById('filter-fecha-custom-wrap').classList.add('d-none');
+  document.getElementById('filter-fecha-custom').value = '';
+  customRange = { start: null, end: null };
+  currentPage = 1;
+  renderSolicitudes();
+}
+
+/* =========================================================
+   LISTADO + PAGINACIÓN
+   ========================================================= */
+function renderSolicitudes() {
+  const q = (document.getElementById('search-solicitudes').value || '').toLowerCase();
+  const paisFiltro = document.getElementById('filter-pais').value;
+  const reservaFiltro = (document.getElementById('filter-reserva').value || '').trim();
+
+  const filtered = solicitudes.filter(s =>
+    (s.mail.toLowerCase().includes(q) || s.nombre.toLowerCase().includes(q) || s.id.toLowerCase().includes(q)) &&
+    (!paisFiltro || s.pais === paisFiltro) &&
+    (!reservaFiltro || s.reserva.includes(reservaFiltro)) &&
+    matchesPeriodo(s)
+  );
+  document.getElementById('count-solicitudes').textContent = filtered.length + (filtered.length === 1 ? ' solicitud' : ' solicitudes');
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+  const pageItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  const tbody = document.getElementById('tbody-solicitudes');
+  if (!pageItems.length) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty">
+      <div class="empty-icon"><i class="ti ti-file-off" style="font-size:2.5rem"></i></div>
+      <p class="empty-title">No encontramos solicitudes para estos filtros.</p>
+    </div></td></tr>`;
+  } else {
+    tbody.innerHTML = pageItems.map(s => {
+      const isoCode = PAIS_ISO[s.pais] || '';
+      return `
+      <tr>
+        <td><span class="text-secondary">${s.id}</span></td>
+        <td>${s.fechaHora}</td>
+        <td>
+          <div>${s.nombre}</div>
+          <div class="text-secondary" style="font-size:12px">${s.mail}</div>
+        </td>
+        <td>
+          <span class="badge bg-blue-lt">${s.categoria}</span>
+          <div class="text-secondary mt-1" style="font-size:12px">${s.subcategoria}</div>
+        </td>
+        <td><span class="badge bg-green-lt">${s.reserva}</span></td>
+        <td>${fmtMonto(s.monto)}</td>
+        <td>
+          <span class="flag flag-country-${isoCode} me-1" style="height:1.2rem" data-bs-toggle="tooltip" title="${s.pais}"></span>
+          <span class="text-secondary" style="font-size:12px">${isoCode.toUpperCase()}</span>
+        </td>
+        <td>
+          <a class="btn btn-icon btn-sm" href="bo_reintegros_solicitud_detalle_prototipo_1.html?id=${s.id}" title="Ver detalle"><i class="ti ti-eye"></i></a>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  renderPagination(totalPages);
+  initTooltips();
+}
+
+function renderPagination(totalPages) {
+  const wrap = document.getElementById('pagination-wrap');
+  if (totalPages <= 1) { wrap.innerHTML = ''; return; }
+  let html = '<ul class="pagination">';
+  html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="#" onclick="goToPage(${currentPage - 1});return false">Anterior</a></li>`;
+  for (let p = 1; p <= totalPages; p++) {
+    html += `<li class="page-item ${p === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="goToPage(${p});return false">${p}</a></li>`;
+  }
+  html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}"><a class="page-link" href="#" onclick="goToPage(${currentPage + 1});return false">Siguiente</a></li>`;
+  html += '</ul>';
+  wrap.innerHTML = html;
+}
+
+function goToPage(p) {
+  currentPage = p;
+  renderSolicitudes();
+  window.scrollTo(0, 0);
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+populatePaisFilter();
+renderSolicitudes();
+</script>
+</body>
+</html>

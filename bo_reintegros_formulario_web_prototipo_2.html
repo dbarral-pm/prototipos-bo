@@ -51,7 +51,15 @@
           <ul class="navbar-nav">
             <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-dashboard nav-link-icon"></i><span class="nav-link-title">Dashboard</span></a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-ticket nav-link-icon"></i><span class="nav-link-title">Vouchers</span></a></li>
-            <li class="nav-item active"><a class="nav-link" href="#"><i class="ti ti-cash-banknote nav-link-icon"></i><span class="nav-link-title">Reintegros</span></a></li>
+            <li class="nav-item dropdown active">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+                <i class="ti ti-cash-banknote nav-link-icon"></i><span class="nav-link-title">Reintegros</span>
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item active" href="bo_reintegros_formulario_web_prototipo_2.html">Formulario web de reintegros</a>
+                <a class="dropdown-item" href="bo_reintegros_solicitudes_prototipo_1.html">Solicitudes de reintegros</a>
+              </div>
+            </li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-photo nav-link-icon"></i><span class="nav-link-title">Contenido</span></a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-affiliate nav-link-icon"></i><span class="nav-link-title">Afiliados</span></a></li>
             <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-settings nav-link-icon"></i><span class="nav-link-title">Configuración</span></a></li>
@@ -65,7 +73,7 @@
   <div class="page-body">
     <div class="container-xl">
 
-      <div class="page-header d-print-none">
+      <div class="page-header d-print-none mb-3">
         <div class="row align-items-center">
           <div class="col">
             <div class="page-pretitle mb-1">Reintegros</div>
@@ -88,16 +96,24 @@
           <!-- SUB-NAVEGACIÓN DEL MÓDULO (patrón real de settings.html) -->
           <div class="col-12 col-md-3 border-end">
             <div class="card-body">
-              <h4 class="subheader">Formulario web</h4>
-              <div class="list-group list-group-transparent" id="module-nav">
-                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center active" data-section="categorias" onclick="showSection('categorias');return false">
-                  <i class="ti ti-category-2 me-2"></i>Categoría de asistencia
+              <h4 class="subheader">Reintegros</h4>
+              <div class="list-group list-group-transparent">
+                <a href="bo_reintegros_formulario_web_prototipo_2.html" class="list-group-item list-group-item-action d-flex align-items-center active">
+                  <i class="ti ti-forms me-2"></i>Formulario web de reintegros
                 </a>
-                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center" data-section="subcategorias" onclick="showSection('subcategorias');return false">
-                  <i class="ti ti-list-details me-2"></i>Subcategoría de asistencia
-                </a>
-                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center" data-section="documentos" onclick="showSection('documentos');return false">
-                  <i class="ti ti-files me-2"></i>Documentos requeridos
+                <div class="ps-3" id="module-nav">
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center active" data-section="categorias" onclick="showSection('categorias');return false">
+                    <i class="ti ti-category-2 me-2"></i>Categoría de asistencia
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center" data-section="subcategorias" onclick="showSection('subcategorias');return false">
+                    <i class="ti ti-list-details me-2"></i>Subcategoría de asistencia
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center" data-section="documentos" onclick="showSection('documentos');return false">
+                    <i class="ti ti-files me-2"></i>Documentos requeridos
+                  </a>
+                </div>
+                <a href="bo_reintegros_solicitudes_prototipo_1.html" class="list-group-item list-group-item-action d-flex align-items-center">
+                  <i class="ti ti-list-check me-2"></i>Solicitudes de reintegros
                 </a>
               </div>
             </div>
@@ -289,9 +305,15 @@
           <div class="invalid-feedback" id="doc-icon-error"></div>
         </div>
         <div class="mb-3">
-          <label class="form-label">Nombre / descripción <span class="text-danger">*</span> <span class="form-label-description" id="doc-name-count">0/145</span></label>
-          <textarea class="form-control" id="doc-name" maxlength="145" rows="3" placeholder="Ej: Certificado emitido por el médico tratante, con detalle del tratamiento y diagnóstico" oninput="updateCounter('doc-name','doc-name-count',145)"></textarea>
+          <label class="form-label">Nombre <span class="text-danger">*</span> <span class="form-label-description" id="doc-name-count">0/40</span></label>
+          <input class="form-control" id="doc-name" maxlength="40" placeholder="Ej: Informe médico" oninput="updateCounter('doc-name','doc-name-count',40)">
           <div class="invalid-feedback" id="doc-name-error">El nombre es obligatorio.</div>
+          <small class="form-hint">Nombre corto — se usa como referencia rápida en las demás vistas (se repite en varias subcategorías).</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Descripción <span class="text-danger">*</span> <span class="form-label-description" id="doc-desc-count">0/200</span></label>
+          <textarea class="form-control" id="doc-desc" maxlength="200" rows="3" placeholder="Ej: Informe médico completo, con detalle del tratamiento recibido y diagnóstico" oninput="updateCounter('doc-desc','doc-desc-count',200)"></textarea>
+          <div class="invalid-feedback" id="doc-desc-error">La descripción es obligatoria.</div>
           <small class="form-hint">La vinculación con subcategorías de asistencia se gestiona desde la sección "Subcategoría de asistencia".</small>
         </div>
       </div>
@@ -365,14 +387,14 @@ let subcategorias = [
 ];
 
 let documentos = [
-  { id:'doc-informe-medico', icon:'ti-report-medical', name:'Informe médico completo, con detalle del tratamiento recibido y diagnóstico', subcats:['asist-medica','medicamentos','traslado-sanitario','repat-sanitaria','embarazo','cob-deportiva','mascotas'] },
-  { id:'doc-recibos', icon:'ti-receipt', name:'Recibos, boletas y facturas que acrediten el gasto incurrido', subcats:['asist-medica','medicamentos','traslado-sanitario','repat-funeraria','embarazo','cob-deportiva','mascotas'] },
-  { id:'doc-pasaporte', icon:'ti-id', name:'Foto de pasaporte o documento de identidad', subcats:['asist-medica','medicamentos','odontologia','demora-vuelo','cancel-vuelo','demora-equipaje','extravio-equipaje','repat-sanitaria','repat-funeraria'] },
-  { id:'doc-itinerario', icon:'ti-ticket', name:'Itinerario completo de viaje (ticket aéreo con fecha de salida, regreso y llegada a destino)', subcats:['asist-medica','medicamentos','odontologia','demora-vuelo','cancel-vuelo','demora-equipaje','extravio-equipaje','repat-sanitaria'] },
-  { id:'doc-receta', icon:'ti-prescription', name:'Prescripción y receta de los medicamentos', subcats:['medicamentos'] },
-  { id:'doc-pir', icon:'ti-file-alert', name:'PIR (Property Irregularity Report) emitido por la aerolínea', subcats:['demora-equipaje','extravio-equipaje','rotura-equipaje'] },
-  { id:'doc-foto-dano', icon:'ti-camera', name:'Evidencia fotográfica clara del daño sufrido por el equipaje', subcats:['rotura-equipaje'] },
-  { id:'doc-cartilla-vacunacion', icon:'ti-vaccine', name:'Cartilla de vacunación completa de la mascota', subcats:['mascotas'] },
+  { id:'doc-informe-medico', icon:'ti-report-medical', name:'Informe médico', desc:'Informe médico completo, con detalle del tratamiento recibido y diagnóstico', subcats:['asist-medica','medicamentos','traslado-sanitario','repat-sanitaria','embarazo','cob-deportiva','mascotas'] },
+  { id:'doc-recibos', icon:'ti-receipt', name:'Recibos y facturas', desc:'Recibos, boletas y facturas que acrediten el gasto incurrido', subcats:['asist-medica','medicamentos','traslado-sanitario','repat-funeraria','embarazo','cob-deportiva','mascotas'] },
+  { id:'doc-pasaporte', icon:'ti-id', name:'Pasaporte o DNI', desc:'Foto de pasaporte o documento de identidad', subcats:['asist-medica','medicamentos','odontologia','demora-vuelo','cancel-vuelo','demora-equipaje','extravio-equipaje','repat-sanitaria','repat-funeraria'] },
+  { id:'doc-itinerario', icon:'ti-ticket', name:'Itinerario de viaje', desc:'Itinerario completo de viaje (ticket aéreo con fecha de salida, regreso y llegada a destino)', subcats:['asist-medica','medicamentos','odontologia','demora-vuelo','cancel-vuelo','demora-equipaje','extravio-equipaje','repat-sanitaria'] },
+  { id:'doc-receta', icon:'ti-prescription', name:'Receta médica', desc:'Prescripción y receta de los medicamentos', subcats:['medicamentos'] },
+  { id:'doc-pir', icon:'ti-file-alert', name:'PIR de la aerolínea', desc:'PIR (Property Irregularity Report) emitido por la aerolínea', subcats:['demora-equipaje','extravio-equipaje','rotura-equipaje'] },
+  { id:'doc-foto-dano', icon:'ti-camera', name:'Foto del daño', desc:'Evidencia fotográfica clara del daño sufrido por el equipaje', subcats:['rotura-equipaje'] },
+  { id:'doc-cartilla-vacunacion', icon:'ti-vaccine', name:'Cartilla de vacunación', desc:'Cartilla de vacunación completa de la mascota', subcats:['mascotas'] },
 ];
 
 let uploadedIcons = { cat: null, sub: null, doc: null }; // dataURL temporal por modal
@@ -459,14 +481,16 @@ function renderSubcatsSelector(containerId, checkedIds) {
 function docsLinkedTo(subcatId) { return documentos.filter(d => d.subcats.includes(subcatId)); }
 
 function renderDocsSelector(containerId, checkedIds) {
-  // Los nombres de documento son largos (hasta 145 caracteres) — se listan como checklist vertical
-  // (form-check nativo) en vez de chips, para que se lea el texto completo sin truncar.
+  // Las descripciones de documento pueden ser largas — se listan como checklist vertical
+  // (form-check nativo) en vez de chips, mostrando nombre corto + descripción completa sin truncar.
   const selector = document.getElementById(containerId);
   selector.innerHTML = documentos.map(d => {
     const checked = checkedIds && checkedIds.includes(d.id);
     return `<label class="form-check">
       <input type="checkbox" value="${d.id}" class="form-check-input" ${checked ? 'checked' : ''}>
-      <span class="form-check-label"><i class="ti ${d.icon} me-1 text-secondary"></i>${d.name}</span>
+      <span class="form-check-label"><i class="ti ${d.icon} me-1 text-secondary"></i><strong>${d.name}</strong>
+        <div class="text-secondary" style="font-size:12px">${d.desc}</div>
+      </span>
     </label>`;
   }).join('');
 }
@@ -596,9 +620,7 @@ function renderSubcategorias() {
   list.innerHTML = filtered.map(s => {
     const cat = catById(s.categoryId);
     const linkedDocs = docsLinkedTo(s.id);
-    const docSummary = linkedDocs.length
-      ? `<span class="badge bg-yellow-lt text-warning"><i class="ti ti-files me-1"></i>Tiene ${linkedDocs.length} documento${linkedDocs.length === 1 ? '' : 's'} vinculado${linkedDocs.length === 1 ? '' : 's'}</span>`
-      : '<span class="text-secondary" style="font-size:12px">Sin documentos vinculados</span>';
+    const docChips = linkedDocs.map(d => `<span class="badge bg-yellow-lt text-warning">${d.name}</span>`).join(' ');
     return `
       <div class="list-group-item">
         <div class="row align-items-center">
@@ -606,7 +628,7 @@ function renderSubcategorias() {
           <div class="col text-truncate">
             <div class="text-body">${s.title}</div>
             <div class="text-secondary text-truncate mt-1" style="font-size:12.5px">Pertenece a <span class="badge bg-blue-lt ms-1">${cat ? cat.title : '—'}</span></div>
-            <div class="mt-2">${docSummary}</div>
+            <div class="mt-2 d-flex flex-wrap gap-1">${docChips}</div>
           </div>
           <div class="col-auto">
             <div class="btn-list">
@@ -707,7 +729,7 @@ function deleteSubcategoria(id) {
 function renderDocumentos() {
   const q = (document.getElementById('search-documentos').value || '').toLowerCase();
   const list = document.getElementById('list-documentos');
-  const filtered = documentos.filter(d => d.name.toLowerCase().includes(q));
+  const filtered = documentos.filter(d => d.name.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q));
   document.getElementById('count-documentos').textContent = filtered.length + (filtered.length === 1 ? ' documento' : ' documentos');
 
   if (!filtered.length) {
@@ -719,16 +741,17 @@ function renderDocumentos() {
   }
 
   list.innerHTML = filtered.map(d => {
-    const chips = d.subcats.length
-      ? d.subcats.map(sid => { const s = subcatById(sid); return s ? '<span class="badge bg-blue-lt">' + s.title + '</span>' : ''; }).join(' ')
+    const subcatSummary = d.subcats.length
+      ? `<span class="badge bg-blue-lt"><i class="ti ti-list-details me-1"></i>Tiene ${d.subcats.length} subcategoría${d.subcats.length === 1 ? '' : 's'} vinculada${d.subcats.length === 1 ? '' : 's'}</span>`
       : '<span class="text-secondary" style="font-size:12px">Sin vincular a ninguna subcategoría</span>';
     return `
       <div class="list-group-item">
         <div class="row">
           <div class="col-auto"><span class="avatar avatar-sm bg-yellow-lt text-warning"><i class="ti ${d.icon}"></i></span></div>
           <div class="col">
-            <div style="font-size:13.5px">${d.name}</div>
-            <div class="mt-2 d-flex flex-wrap gap-1">${chips}</div>
+            <div class="fw-bold">${d.name}</div>
+            <div class="text-secondary mt-1" style="font-size:13px">${d.desc}</div>
+            <div class="mt-2">${subcatSummary}</div>
           </div>
           <div class="col-auto">
             <div class="btn-list">
@@ -746,13 +769,16 @@ function openDocumentoModal(id) {
   uploadedIcons.doc = null;
   document.getElementById('modal-documento-title').innerHTML = '<i class="ti ti-files text-primary me-2"></i>' + (id ? 'Editar documento requerido' : 'Nuevo documento requerido');
   document.getElementById('doc-icon-preview').innerHTML = '<i class="ti ti-photo-up"></i>';
-  ['doc-name-error','doc-icon-error'].forEach(x => document.getElementById(x).classList.remove('d-block'));
+  ['doc-name-error','doc-desc-error','doc-icon-error'].forEach(x => document.getElementById(x).classList.remove('d-block'));
   document.getElementById('doc-icon-input').classList.remove('is-invalid');
   document.getElementById('doc-name').classList.remove('is-invalid');
+  document.getElementById('doc-desc').classList.remove('is-invalid');
 
   const doc = id ? documentos.find(d => d.id === id) : null;
   document.getElementById('doc-name').value = doc ? doc.name : '';
-  updateCounter('doc-name','doc-name-count',145);
+  document.getElementById('doc-desc').value = doc ? doc.desc : '';
+  updateCounter('doc-name','doc-name-count',40);
+  updateCounter('doc-desc','doc-desc-count',200);
   if (doc) document.getElementById('doc-icon-preview').innerHTML = '<i class="ti ' + doc.icon + '" style="font-size:1.1rem"></i>';
 
   openModal('modal-documento');
@@ -760,21 +786,24 @@ function openDocumentoModal(id) {
 
 function requestSaveDocumento() {
   const name = document.getElementById('doc-name').value.trim();
+  const desc = document.getElementById('doc-desc').value.trim();
 
   let valid = true;
   document.getElementById('doc-name').classList.toggle('is-invalid', !name);
   document.getElementById('doc-name-error').classList.toggle('d-block', !name);
   if (!name) valid = false;
+  document.getElementById('doc-desc').classList.toggle('is-invalid', !desc);
+  document.getElementById('doc-desc-error').classList.toggle('d-block', !desc);
+  if (!desc) valid = false;
   if (!valid) return;
 
-  const shortName = name.length > 40 ? name.slice(0,40) + '…' : name;
   const actionLabel = editingId ? 'editar' : 'crear';
-  openConfirm('Confirmar ' + actionLabel, `¿Estás seguro de que deseas ${actionLabel} el documento "${shortName}"?`, () => {
+  openConfirm('Confirmar ' + actionLabel, `¿Estás seguro de que deseas ${actionLabel} el documento "${name}"?`, () => {
     if (editingId) {
       const doc = documentos.find(d => d.id === editingId);
-      doc.name = name; // la vinculación con subcategorías no se toca acá — se gestiona desde "Subcategoría de asistencia"
+      doc.name = name; doc.desc = desc; // la vinculación con subcategorías no se toca acá — se gestiona desde "Subcategoría de asistencia"
     } else {
-      documentos.push({ id: 'doc-' + Date.now(), icon: 'ti-file-text', name, subcats: [] });
+      documentos.push({ id: 'doc-' + Date.now(), icon: 'ti-file-text', name, desc, subcats: [] });
     }
     closeModal('modal-documento');
     renderDocumentos();

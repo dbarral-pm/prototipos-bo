@@ -14,6 +14,8 @@ export default defineConfig(({ command }) => ({
       input: {
         index: resolve(root, 'index.html'),
         reintegrosFormularioWeb: resolve(root, 'bo_reintegros_formulario_web_prototipo_2.html'),
+        reintegrosSolicitudes: resolve(root, 'bo_reintegros_solicitudes_prototipo_1.html'),
+        reintegrosSolicitudDetalle: resolve(root, 'bo_reintegros_solicitud_detalle_prototipo_1.html'),
       },
     },
   },

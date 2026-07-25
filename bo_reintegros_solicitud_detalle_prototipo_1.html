@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reintegros · Detalle de solicitud — BO ASSIST 365</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script type="module" src="/src/tabler.js"></script>
+<style>
+  body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- NAVBAR -->
+  <header class="navbar navbar-expand-md d-print-none">
+    <div class="container-xl">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+        <a href="."><img src="https://assistcdn.s3.us-west-1.amazonaws.com/assets/site/home/img/brand/a365_logo_xa.svg" height="28" alt="ASSIST 365"></a>
+      </h1>
+      <div class="navbar-nav flex-row order-md-last">
+        <div class="nav-item dropdown">
+          <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown" aria-label="Open user menu">
+            <span class="avatar avatar-sm">DB</span>
+            <div class="d-none d-xl-block ps-2">
+              <div>Denu Barral</div>
+              <div class="mt-1 small text-secondary">Producto</div>
+            </div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <a href="#" class="dropdown-item">Perfil</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">Cerrar sesión</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <header class="navbar-expand-md">
+    <div class="collapse navbar-collapse" id="navbar-menu">
+      <div class="navbar">
+        <div class="container-xl">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-dashboard nav-link-icon"></i><span class="nav-link-title">Dashboard</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-ticket nav-link-icon"></i><span class="nav-link-title">Vouchers</span></a></li>
+            <li class="nav-item dropdown active">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+                <i class="ti ti-cash-banknote nav-link-icon"></i><span class="nav-link-title">Reintegros</span>
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="bo_reintegros_formulario_web_prototipo_2.html">Formulario web de reintegros</a>
+                <a class="dropdown-item active" href="bo_reintegros_solicitudes_prototipo_1.html">Solicitudes de reintegros</a>
+              </div>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-photo nav-link-icon"></i><span class="nav-link-title">Contenido</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-affiliate nav-link-icon"></i><span class="nav-link-title">Afiliados</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-settings nav-link-icon"></i><span class="nav-link-title">Configuración</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE BODY -->
+  <div class="page-body">
+    <div class="container-xl">
+
+      <div class="page-header d-print-none">
+        <div class="row align-items-center">
+          <div class="col">
+            <div class="page-pretitle mb-1">
+              <a href="bo_reintegros_solicitudes_prototipo_1.html" class="text-secondary"><i class="ti ti-arrow-left me-1"></i>Reintegros / Solicitudes de reintegros</a>
+            </div>
+            <h2 class="page-title" id="page-title">Detalle de solicitud</h2>
+          </div>
+        </div>
+      </div>
+
+      <div id="content-not-found" class="d-none">
+        <div class="empty">
+          <div class="empty-icon"><i class="ti ti-file-off" style="font-size:2.5rem"></i></div>
+          <p class="empty-title">No encontramos esa solicitud.</p>
+          <p class="empty-subtitle text-secondary">Puede que ya haya sido eliminada.</p>
+          <div class="empty-action"><a href="bo_reintegros_solicitudes_prototipo_1.html" class="btn btn-primary">Volver al listado</a></div>
+        </div>
+      </div>
+
+      <div id="content-detalle" class="d-none">
+
+        <div class="card mb-3">
+          <div class="card-header"><h3 class="card-title"><i class="ti ti-id-badge2 text-primary me-2"></i>Información general</h3></div>
+          <div class="card-body">
+            <div class="datagrid" id="datagrid-general"></div>
+          </div>
+        </div>
+
+        <div class="row row-cards mb-3">
+          <div class="col-12 col-md-6">
+            <div class="card h-100">
+              <div class="card-header"><h3 class="card-title"><i class="ti ti-users text-primary me-2"></i>Viajeros involucrados</h3></div>
+              <div class="list-group list-group-flush" id="list-viajeros"></div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="card h-100">
+              <div class="card-header"><h3 class="card-title"><i class="ti ti-credit-card text-primary me-2"></i>Datos de pago</h3></div>
+              <div class="card-body">
+                <div class="datagrid" id="datagrid-pago"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3 class="card-title"><i class="ti ti-files text-primary me-2"></i>Documentación presentada</h3></div>
+          <div class="list-group list-group-flush" id="list-documentos"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   ESTADO (mismos datos de ejemplo que en el listado — en un
+   BO real esto vendría de la BBDD por id, no duplicado)
+   ========================================================= */
+let solicitudes = [
+  { id:'REQ-93841', fechaHora:'21/07/2026 14:32', mail:'juan.garcia@mail.com', nombre:'Juan García', categoria:'Salud', subcategoria:'Asistencia médica', reserva:'482911', monto:{valor:450,moneda:'USD'}, pais:'Argentina',
+    fechaEvento:'15/07/2026', viajeros:[ {nombre:'Juan García', voucher:'A365ARWTA48291N'}, {nombre:'Lucía García', voucher:'A365ARWTA48292N'} ],
+    pago:{ tipo:'ars', titular:'Juan García', alias:'juan.garcia.mp', cbu:'0000003100012345678901' },
+    documentos:[ {name:'Informe médico', files:['ejemplo-informe-medico.jpg']}, {name:'Recibos y facturas', files:['ejemplo-factura.png']}, {name:'Pasaporte o DNI', files:['ejemplo-pasaporte.avif']}, {name:'Itinerario de viaje', files:['ejemplo-itinerario1.webp','ejemplo-itinerario2.jpg']} ] },
+  { id:'REQ-77213', fechaHora:'19/07/2026 09:14', mail:'maria.lopez@mail.com', nombre:'María López', categoria:'Salud', subcategoria:'Medicamentos', reserva:'517642', monto:{valor:80,moneda:'USD'}, pais:'Chile',
+    fechaEvento:'14/07/2026', viajeros:[ {nombre:'María López', voucher:'A365CLWMA51761N'} ],
+    pago:{ tipo:'paypal', titular:'María López', paypalEmail:'maria.lopez@paypal.com' },
+    documentos:[ {name:'Informe médico', files:['informe-medico-maria.pdf']}, {name:'Receta médica', files:['receta-maria.jpg']}, {name:'Recibos y facturas', files:['recibo-farmacia-maria.jpg']} ] },
+  { id:'REQ-65210', fechaHora:'16/07/2026 18:47', mail:'nico.fernandez@mail.com', nombre:'Nicolás Fernández', categoria:'Vuelo', subcategoria:'Demora de vuelo', reserva:'398201', monto:{valor:220,moneda:'EUR'}, pais:'España',
+    fechaEvento:'13/07/2026', viajeros:[ {nombre:'Nicolás Fernández', voucher:'A365ESWTA39821N'}, {nombre:'Ana Fernández', voucher:'A365ESWTA39822N'} ],
+    pago:{ tipo:'paypal', titular:'Nicolás Fernández', paypalEmail:'nico.fernandez@paypal.com' },
+    documentos:[ {name:'Pasaporte o DNI', files:['dni-nicolas.jpg']}, {name:'Itinerario de viaje', files:['itinerario-nicolas.pdf']} ] },
+  { id:'REQ-54029', fechaHora:'12/07/2026 11:05', mail:'sofia.ramirez@mail.com', nombre:'Sofía Ramírez', categoria:'Equipaje', subcategoria:'Extravío de equipaje', reserva:'460355', monto:{valor:65000,moneda:'ARS'}, pais:'Argentina',
+    fechaEvento:'05/07/2026', viajeros:[ {nombre:'Sofía Ramírez', voucher:'A365ARWTA46036N'} ],
+    pago:{ tipo:'ars', titular:'Sofía Ramírez', alias:'sofia.ramirez.uy', cbu:'0000003100098765432109' },
+    documentos:[ {name:'Pasaporte o DNI', files:['dni-sofia.jpg']}, {name:'Itinerario de viaje', files:['itinerario-sofia.pdf']} ] },
+  { id:'REQ-48117', fechaHora:'08/07/2026 16:23', mail:'contacto@travelinsider.com', nombre:'Travel Insider', categoria:'Salud', subcategoria:'Urgencia odontológica', reserva:'275188', monto:{valor:150,moneda:'USD'}, pais:'México',
+    fechaEvento:'02/07/2026', viajeros:[ {nombre:'Travel Insider', voucher:'A365MXWMA27519N'} ],
+    pago:{ tipo:'paypal', titular:'Travel Insider', paypalEmail:'contacto@travelinsider.com' },
+    documentos:[ {name:'Pasaporte o DNI', files:['dni-travelinsider.jpg']}, {name:'Itinerario de viaje', files:['itinerario-travelinsider.pdf']} ] },
+  { id:'REQ-39288', fechaHora:'03/07/2026 10:51', mail:'nicolas@viajesconnico.com', nombre:'Viajes con Nico', categoria:'Otros', subcategoria:'Traslado sanitario', reserva:'391027', monto:{valor:120000,moneda:'ARS'}, pais:'Argentina',
+    fechaEvento:'28/06/2026', viajeros:[ {nombre:'Viajes con Nico', voucher:'A365ARWTA39103N'} ],
+    pago:{ tipo:'ars', titular:'Viajes con Nico', alias:'viajesconnico.mp', cbu:'0000003100011122233344' },
+    documentos:[ {name:'Informe médico', files:['informe-medico-nico.pdf']}, {name:'Recibos y facturas', files:['recibo-ambulancia-nico.jpg']} ] },
+  { id:'REQ-31054', fechaHora:'27/06/2026 20:09', mail:'camila.torres@mail.com', nombre:'Camila Torres', categoria:'Salud', subcategoria:'Asistencia médica', reserva:'228916', monto:{valor:300,moneda:'USD'}, pais:'Uruguay',
+    fechaEvento:'22/06/2026', viajeros:[ {nombre:'Camila Torres', voucher:'A365UYWMA22892N'} ],
+    pago:{ tipo:'paypal', titular:'Camila Torres', paypalEmail:'camila.torres@paypal.com' },
+    documentos:[ {name:'Informe médico', files:['informe-medico-camila.pdf']}, {name:'Recibos y facturas', files:['recibo-clinica-camila.jpg']}, {name:'Pasaporte o DNI', files:['dni-camila.jpg']}, {name:'Itinerario de viaje', files:['itinerario-camila.pdf']} ] },
+  { id:'REQ-27765', fechaHora:'19/06/2026 08:37', mail:'martin.suarez@mail.com', nombre:'Martín Suárez', categoria:'Vuelo', subcategoria:'Cancelación de vuelo', reserva:'350744', monto:{valor:95000,moneda:'ARS'}, pais:'Argentina',
+    fechaEvento:'15/06/2026', viajeros:[ {nombre:'Martín Suárez', voucher:'A365ARWTA35075N'}, {nombre:'Lucía Suárez', voucher:'A365ARWTA35076N'} ],
+    pago:{ tipo:'ars', titular:'Martín Suárez', alias:'martin.suarez.ar', cbu:'0000003100055566677788' },
+    documentos:[ {name:'Pasaporte o DNI', files:['dni-martin.jpg']}, {name:'Itinerario de viaje', files:['itinerario-martin.pdf']} ] },
+  { id:'REQ-19432', fechaHora:'11/06/2026 13:58', mail:'lucia.fernandez@mail.com', nombre:'Lucía Fernández', categoria:'Equipaje', subcategoria:'Demora de equipaje', reserva:'194532', monto:{valor:60,moneda:'USD'}, pais:'Colombia',
+    fechaEvento:'06/06/2026', viajeros:[ {nombre:'Lucía Fernández', voucher:'A365COWMA19453N'} ],
+    pago:{ tipo:'paypal', titular:'Lucía Fernández', paypalEmail:'lucia.fernandez@paypal.com' },
+    documentos:[ {name:'Pasaporte o DNI', files:['dni-lucia.jpg']}, {name:'Itinerario de viaje', files:['itinerario-lucia.pdf']} ] },
+  { id:'REQ-11298', fechaHora:'02/06/2026 17:20', mail:'diego.alvarez@mail.com', nombre:'Diego Álvarez', categoria:'Salud', subcategoria:'Medicamentos', reserva:'112980', monto:{valor:15000,moneda:'ARS'}, pais:'Argentina',
+    fechaEvento:'29/05/2026', viajeros:[ {nombre:'Diego Álvarez', voucher:'A365ARWTA11299N'} ],
+    pago:{ tipo:'ars', titular:'Diego Álvarez', alias:'diego.alvarez.ar', cbu:'0000003100099988877766' },
+    documentos:[ {name:'Receta médica', files:['receta-diego.jpg']}, {name:'Recibos y facturas', files:['recibo-farmacia-diego.jpg']} ] },
+];
+
+/* Únicos 5 archivos reales que tenemos como muestra (el resto son nombres de referencia, sin archivo real detrás) */
+const REAL_ASSETS = new Set(['ejemplo-factura.png','ejemplo-informe-medico.jpg','ejemplo-itinerario1.webp','ejemplo-itinerario2.jpg','ejemplo-pasaporte.avif']);
+const ASSET_BASE = 'assets-reintegros/';
+
+const currentId = new URLSearchParams(window.location.search).get('id');
+
+function fmtMonto(m) { return m.moneda + ' ' + m.valor.toLocaleString('es-AR'); }
+
+function initTooltips() {
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => bootstrap.Tooltip.getOrCreateInstance(el));
+}
+
+function datagridItem(title, content) {
+  return `<div class="datagrid-item"><div class="datagrid-title">${title}</div><div class="datagrid-content">${content}</div></div>`;
+}
+
+function render() {
+  const s = solicitudes.find(x => x.id === currentId);
+  if (!s) {
+    document.getElementById('content-not-found').classList.remove('d-none');
+    return;
+  }
+  document.getElementById('content-detalle').classList.remove('d-none');
+  document.getElementById('page-title').textContent = 'Solicitud ' + s.id;
+
+  document.getElementById('datagrid-general').innerHTML = [
+    datagridItem('ID de solicitud', s.id),
+    datagridItem('Fecha y hora recibida', s.fechaHora),
+    datagridItem('Fecha del evento', s.fechaEvento),
+    datagridItem('Cliente', s.nombre + '<br><span class="text-secondary" style="font-size:12px">' + s.mail + '</span>'),
+    datagridItem('Categoría de asistencia', '<span class="badge bg-blue-lt">' + s.categoria + '</span>'),
+    datagridItem('Subcategoría de asistencia', s.subcategoria),
+    datagridItem('Reserva vinculada', '<span class="badge bg-green-lt">' + s.reserva + '</span>'),
+    datagridItem('Monto total solicitado', fmtMonto(s.monto)),
+    datagridItem('País de origen', '<span class="flag flag-country-' + (PAIS_ISO(s.pais)) + ' me-1" style="height:1.2rem"></span>' + s.pais),
+  ].join('');
+
+  document.getElementById('list-viajeros').innerHTML = s.viajeros.map(v => `
+    <div class="list-group-item d-flex align-items-center">
+      <span class="avatar avatar-sm bg-blue-lt text-primary me-2">${v.nombre.split(' ').map(x => x[0]).slice(0, 2).join('')}</span>
+      <div>
+        <div>${v.nombre}</div>
+        <div class="text-secondary" style="font-size:12px">Voucher: ${v.voucher}</div>
+      </div>
+    </div>`).join('');
+
+  const pagoHtml = s.pago.tipo === 'ars'
+    ? [
+        datagridItem('Medio de pago', '<span class="badge bg-azure-lt">Transferencia / Alias / CBU (Argentina)</span>'),
+        datagridItem('Titular de la cuenta', s.pago.titular),
+        datagridItem('Alias', s.pago.alias),
+        datagridItem('CBU', s.pago.cbu),
+      ].join('')
+    : [
+        datagridItem('Medio de pago', '<span class="badge bg-azure-lt">PayPal (fuera de Argentina)</span>'),
+        datagridItem('Titular de la cuenta PayPal', s.pago.titular),
+        datagridItem('Cuenta PayPal', s.pago.paypalEmail),
+      ].join('');
+  document.getElementById('datagrid-pago').innerHTML = pagoHtml;
+
+  document.getElementById('list-documentos').innerHTML = s.documentos.map(d => {
+    const filesHtml = d.files.map(f => {
+      if (REAL_ASSETS.has(f)) {
+        const url = ASSET_BASE + f;
+        return `
+          <div class="col-6 col-md-3">
+            <a data-fslightbox="doc-${s.id}" href="${url}">
+              <div class="img-responsive img-responsive-4x3 rounded border" style="background-image:url(${url})"></div>
+            </a>
+            <div class="d-flex align-items-center justify-content-between mt-1">
+              <span class="text-secondary text-truncate" style="font-size:11px">${f}</span>
+              <a href="${url}" download class="btn btn-icon btn-sm" title="Descargar"><i class="ti ti-download"></i></a>
+            </div>
+          </div>`;
+      }
+      return `
+        <div class="col-6 col-md-3">
+          <div class="img-responsive img-responsive-4x3 rounded border d-flex align-items-center justify-content-center bg-light">
+            <i class="ti ti-file-off text-secondary" style="font-size:1.5rem"></i>
+          </div>
+          <div class="text-secondary text-truncate mt-1" style="font-size:11px" data-bs-toggle="tooltip" title="Archivo de ejemplo no disponible en el prototipo">${f}</div>
+        </div>`;
+    }).join('');
+    return `
+      <div class="list-group-item">
+        <div class="fw-bold mb-2"><i class="ti ti-file-text text-secondary me-1"></i>${d.name}</div>
+        <div class="row g-2">${filesHtml}</div>
+      </div>`;
+  }).join('');
+
+  if (window.refreshFsLightbox) window.refreshFsLightbox();
+  initTooltips();
+}
+
+function PAIS_ISO(pais) {
+  const map = { 'Argentina':'ar', 'Chile':'cl', 'España':'es', 'México':'mx', 'Uruguay':'uy', 'Colombia':'co' };
+  return map[pais] || '';
+}
+
+render();
+</script>
+</body>
+</html>

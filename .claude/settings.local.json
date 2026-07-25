@@ -11,7 +11,12 @@
       "Bash(\"/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe\" --version)",
       "Bash(\"/c/Program Files/Google/Chrome/Application/chrome.exe\" --version)",
       "Bash(rm -rf dist)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(node -e ' *)",
+      "Bash(node --check extracted.js)",
+      "Bash(rm -f extracted.js)",
+      "Bash(curl -sS https://preview.tabler.io/pagination.html -o /tmp/tabler-pagination.html)",
+      "Bash(curl -sS https://preview.tabler.io/datagrid.html -o /tmp/tabler-datagrid.html)"
     ]
   }
 }
