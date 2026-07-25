@@ -42,17 +42,27 @@ Ejemplos ya identificados en features anteriores — quedan permitidos porque Ta
 
 ## Setup del proyecto (Vite + dependencia real de Tabler)
 
-Los prototipos viven dentro de un proyecto Vite (no son archivos HTML sueltos ni se empaquetan en zip). Structure real del repo:
+Los prototipos viven dentro de un único proyecto Vite compartido por todos los módulos del BO (no son archivos HTML sueltos ni se empaquetan en zip). El repo es multi-módulo: cada módulo tiene su propia carpeta `modulo_[nombre]/` con sus HTML, su `context/` y sus assets, pero el `package.json`/`vite.config.js`/`src/tabler.js` de Tabler se comparten en la raíz. Structure real del repo:
 
 ```
-package.json          → declara @tabler/core como dependency (no devDependency: se usa en runtime del prototipo)
-vite.config.js
-src/tabler.js         → único entrypoint que importa Tabler:
-                           import '@tabler/core/dist/css/tabler.min.css'
-                           import '@tabler/core/dist/js/tabler.esm.min.js'
-index.html             → índice con links a todos los prototipos
-bo_[feature]_prototipo_[N].html
+package.json                    → declara @tabler/core como dependency (no devDependency: se usa en runtime del prototipo)
+vite.config.js                  → un entry en rollupOptions.input por cada HTML de cada módulo
+src/tabler.js                   → único entrypoint que importa Tabler (compartido por todos los módulos):
+                                     import '@tabler/core/dist/css/tabler.min.css'
+                                     import '@tabler/core/dist/js/tabler.esm.min.js'
+index.html                       → índice del sitio, agrupado por módulo (un <h2 class="group"> por módulo)
+modulo_[nombre]/                 → una carpeta por módulo del BO
+  bo_[feature]_prototipo_[N].html
+  context/                       → docs de contexto específicas de ese módulo (no se buildean)
+public/modulo_[nombre]/[assets]/ → imágenes de referencia de ese módulo (ver más abajo)
 ```
+
+**Al agregar un módulo nuevo:**
+1. Crear `modulo_[nombre-del-modulo]/` y poner ahí el/los HTML del prototipo.
+2. Si el prototipo usa imágenes de referencia, van en `public/modulo_[nombre-del-modulo]/assets-[algo]/`, y se referencian desde el HTML con ruta **relativa sin barra inicial** (`assets-algo/foto.jpg`, no `/assets-algo/foto.jpg`) — así Vite las resuelve bien tanto en local como bajo el `base: '/prototipos-bo/'` de producción, sin importar en qué subcarpeta viva la página.
+3. Agregar el/los nuevo(s) HTML a `rollupOptions.input` en `vite.config.js`, apuntando a `modulo_[nombre]/bo_....html`.
+4. Agregar un link (o un nuevo `<h2 class="group">`) en `index.html`.
+5. El `<script type="module" src="/src/tabler.js">` va igual en el `<head>` de cada HTML nuevo — es una ruta absoluta desde la raíz del proyecto, funciona sin importar la subcarpeta.
 
 **Si `@tabler/core` no está instalado todavía en el proyecto:**
 ```bash
@@ -110,13 +120,13 @@ Cada prototipo es un archivo `.html` dentro del proyecto Vite (no autocontenido 
 
 ### 3. Guardar y probar
 
-Guardar el archivo en la raíz del proyecto con nombre descriptivo:
+Guardar el archivo dentro de la carpeta del módulo correspondiente (`modulo_[nombre]/`, crearla si el módulo es nuevo) con nombre descriptivo:
 ```
-bo_[nombre-feature]_prototipo_[N].html
+modulo_[nombre-del-modulo]/bo_[nombre-feature]_prototipo_[N].html
 ```
-Ejemplo: `bo_bonus_venta_prototipo_1.html`
+Ejemplo: `modulo_bonus_venta/bo_bonus_venta_prototipo_1.html`
 
-Agregar un link al nuevo prototipo en `index.html` (el índice de navegación del proyecto).
+Agregar el nuevo entry en `rollupOptions.input` (`vite.config.js`) y un link al nuevo prototipo en `index.html` (el índice de navegación del proyecto, agrupado por módulo).
 
 Correr `npm run dev` y verificar en el navegador que carga bien, que los modales/dropdowns/toasts responden, y que no hay errores de consola.
 
@@ -607,5 +617,5 @@ En los prototipos, renderizar siempre la vista del **rol con más permisos** (Ma
 - [ ] Los modales usan `bootstrap.Modal` (no clases `.open` custom)
 - [ ] Los formularios validan con `.is-invalid` / `.invalid-feedback` nativos
 - [ ] Las acciones destructivas pasan por modal de confirmación (`modal-status bg-danger`)
-- [ ] El archivo se guarda con el naming convention `bo_[feature]_prototipo_[N].html` y se agrega al índice `index.html`
+- [ ] El archivo se guarda dentro de `modulo_[nombre]/` con el naming convention `bo_[feature]_prototipo_[N].html`, se agrega a `rollupOptions.input` en `vite.config.js` y se linkea desde `index.html`
 - [ ] Se corrió `npm run dev` y se verificó en el navegador que todo funciona sin errores de consola

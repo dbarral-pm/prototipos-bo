@@ -11,12 +11,14 @@ export default defineConfig(({ command }) => ({
   base: command === 'build' ? '/prototipos-bo/' : '/',
   build: {
     rollupOptions: {
+      // Cada módulo vive en su propia carpeta (modulo_xxx/). Al sumar un módulo
+      // nuevo, agregar acá su(s) página(s) HTML apuntando a esa carpeta.
       input: {
         index: resolve(root, 'index.html'),
-        reintegrosFormularioWeb: resolve(root, 'bo_reintegros_formulario_web_prototipo_2.html'),
-        reintegrosSolicitudes: resolve(root, 'bo_reintegros_solicitudes_prototipo_1.html'),
-        reintegrosSolicitudDetalle: resolve(root, 'bo_reintegros_solicitud_detalle_prototipo_1.html'),
-        contenidoEcommerceHome: resolve(root, 'bo_contenido_ecommerce_home_prototipo_1.html'),
+        reintegrosFormularioWeb: resolve(root, 'modulo_reintegros/bo_reintegros_formulario_web_prototipo_2.html'),
+        reintegrosSolicitudes: resolve(root, 'modulo_reintegros/bo_reintegros_solicitudes_prototipo_1.html'),
+        reintegrosSolicitudDetalle: resolve(root, 'modulo_reintegros/bo_reintegros_solicitud_detalle_prototipo_1.html'),
+        contenidoEcommerceHome: resolve(root, 'modulo_gestion_de_contenido/bo_contenido_ecommerce_home_prototipo_1.html'),
       },
     },
   },
