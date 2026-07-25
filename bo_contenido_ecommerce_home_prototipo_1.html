@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contenido Ecommerce — BO ASSIST 365</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script type="module" src="/src/tabler.js"></script>
+<style>
+  body { font-family: "Inter", sans-serif; }
+
+  /* CUSTOM: sidebar CMS de dos niveles (secciones expandibles + subitems + estado
+     "próximamente"). Tabler no tiene un patrón nativo para este árbol de navegación
+     lateral de dos niveles con items deshabilitados; se resuelve con estructura propia
+     usando utilidades Tabler (text-primary, fs-*, etc.) para color/tipografía. El
+     expandir/colapsar en sí usa el componente Collapse nativo de Bootstrap. */
+  .cms-sidebar { width: 240px; flex-shrink: 0; border-right: 1px solid #e6e8eb; min-height: calc(100vh - 56px); padding: .75rem 0; }
+  .cms-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; padding: .5rem 1rem .25rem; }
+  .cms-parent { display: flex; align-items: center; gap: .5rem; padding: .45rem .9rem; font-size: 13px; font-weight: 500; cursor: pointer; user-select: none; border-radius: 4px; margin: 0 .5rem; text-decoration: none; color: inherit; }
+  .cms-parent:hover, .cms-parent:focus { background: #f5f7fb; text-decoration: none !important; }
+  .cms-parent .chev { margin-left: auto; transition: transform .18s; }
+  .cms-parent[aria-expanded="true"] .chev { transform: rotate(90deg); }
+  .cms-parent-disabled { opacity: .55; cursor: not-allowed; pointer-events: none; }
+  .cms-child { display: flex; align-items: center; gap: .45rem; padding: .4rem .8rem .4rem 2rem; font-size: 13px; text-decoration: none; color: inherit; border-left: 2px solid transparent; border-radius: 0 4px 4px 0; margin-right: .5rem; }
+  .cms-child:hover, .cms-child:focus { background: #f5f7fb; text-decoration: none !important; }
+  .cms-child.active { border-left-color: currentColor; }
+  .cms-content { flex: 1; min-width: 0; padding: 1.5rem; }
+  .cms-section { display: none; max-width: 960px; }
+  .cms-section.active { display: block; }
+
+  /* CUSTOM: aire entre el breadcrumb, el título y el bloque de info de cada sección.
+     Con !important porque el CSS de Tabler se inyecta después (vía el módulo JS) y
+     pisa reglas de igual especificidad definidas antes en el documento. */
+  .cms-content .page-pretitle { margin-bottom: .5rem !important; }
+  .cms-content .page-header { margin-bottom: 1.75rem !important; }
+
+  /* CUSTOM: alinea el texto del contador de caracteres; el color (normal/advertencia/
+     superado) usa las clases nativas text-secondary / text-warning / text-danger e
+     is-invalid, no CSS propio. */
+  .char-counter { text-align: right; margin-top: .25rem; }
+
+  /* CUSTOM: se oculta el ícono nativo de "X" que Bootstrap agrega en .is-invalid —
+     en el contador de caracteres solo interesa el borde rojo y el número en rojo,
+     sin el ícono de validación de formulario. */
+  .form-control.is-invalid { background-image: none !important; padding-right: .75rem !important; }
+
+  /* CUSTOM: preview en vivo del ticker de marquesina — simula el componente animado
+     real del sitio; Tabler no tiene un widget de este tipo. */
+  .mq-preview { border-radius: 6px; padding: .6rem 1rem; overflow: hidden; white-space: nowrap; margin-top: .5rem; }
+  .mq-preview span { display: inline-block; animation: mq-scroll 14s linear infinite; }
+  @keyframes mq-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* CUSTOM: tarjeta de preview de imagen (thumbnail + metadata + botón "Cambiar").
+     Tabler tiene .card y .btn pero no esta combinación específica. */
+  .img-preview-card { display: none; }
+  .img-preview-card.show { display: block; }
+  .img-preview-thumb { position: relative; height: 110px; overflow: hidden; border-radius: 6px 6px 0 0; background: #f5f7fb; }
+  .img-preview-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .img-preview-caption { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,.62)); padding: .4rem .6rem; font-size: 11px; color: #fff; font-family: monospace; }
+
+  /* CUSTOM: refuerza el contraste del tab de país activo (Tabler lo deja muy sutil,
+     casi gris) para que se note claramente cuál mercado se está editando. */
+  .card .nav-tabs .nav-link.active {
+    color: #206bc4 !important;
+    font-weight: 600 !important;
+    background-color: #e9f2fc !important;
+    border-color: #dbeafe #dbeafe #e9f2fc !important;
+    border-bottom: 2px solid #206bc4 !important;
+  }
+
+  /* CUSTOM: zona de arrastrar/soltar archivo — Tabler resuelve la subida simple con
+     <input type="file"> pero no tiene un dropzone visual con estado hover propio. */
+  .file-drop { border: 1px dashed #c7cdd6; border-radius: 6px; padding: 1.25rem 1rem; text-align: center; cursor: pointer; background: #fafbfc; transition: border-color .15s, background .15s; }
+  .file-drop:hover { border-color: #206bc4; background: #f3f8fe; }
+  .file-drop strong { color: #206bc4; }
+
+  /* CUSTOM: manija de reordenar FAQs por drag & drop (solo visual, igual que en el
+     prototipo original — no hay librería de sorting nativa en Tabler). */
+  .drag-handle { cursor: grab; }
+
+  /* CUSTOM: preview en tiempo real de cada slide de Banners — mockup del componente
+     real del home; no es un componente de Tabler. */
+  .slide-preview { border-radius: 10px; padding: .9rem 1.1rem; margin-top: 1rem; }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- ==================== NAVBAR ==================== -->
+  <header class="navbar navbar-expand-md d-print-none">
+    <div class="container-xl">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+        <a href="."><img src="https://assistcdn.s3.us-west-1.amazonaws.com/assets/site/home/img/brand/a365_logo_xa.svg" height="28" alt="ASSIST 365"></a>
+      </h1>
+      <div class="navbar-nav flex-row order-md-last">
+        <div class="nav-item dropdown">
+          <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown" aria-label="Open user menu">
+            <span class="avatar avatar-sm">DB</span>
+            <div class="d-none d-xl-block ps-2">
+              <div>Denu Barral</div>
+              <div class="mt-1 small text-secondary">Producto</div>
+            </div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <a href="#" class="dropdown-item">Perfil</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">Cerrar sesión</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <header class="navbar-expand-md">
+    <div class="collapse navbar-collapse" id="navbar-menu">
+      <div class="navbar">
+        <div class="container-xl">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="#"><i class="ti ti-home-2 me-1"></i><span class="nav-link-title">Home</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><span class="nav-link-title">Afiliados</span> <i class="ti ti-chevron-down ms-1" style="font-size:12px"></i></a></li>
+            <li class="nav-item active"><a class="nav-link" href="#"><i class="ti ti-layout-2 me-1"></i><span class="nav-link-title">Contenido</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><span class="nav-link-title">Configuración</span> <i class="ti ti-chevron-down ms-1" style="font-size:12px"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== LAYOUT: SIDEBAR + CONTENT ==================== -->
+  <div class="page-body" style="margin:0;padding:0">
+    <div class="d-flex align-items-start" style="min-height:calc(100vh - 56px)">
+
+      <!-- -------- CMS SIDEBAR (CUSTOM) -------- -->
+      <aside class="cms-sidebar">
+        <div class="cms-section-label text-secondary">Contenido Ecommerce</div>
+
+        <!-- HOME (expandible) -->
+        <a href="#" class="cms-parent text-primary" id="nav-home-parent" data-bs-toggle="collapse" data-bs-target="#ch-home" role="button" aria-expanded="true" aria-controls="ch-home">
+          <i class="ti ti-home-2"></i>Home
+          <i class="ti ti-chevron-right chev"></i>
+        </a>
+        <div class="collapse show" id="ch-home">
+          <a href="#" class="cms-child" id="nav-hero" onclick="showSection('hero');return false">
+            <i class="ti ti-photo"></i>Hero
+          </a>
+          <a href="#" class="cms-child" id="nav-mq-top" onclick="showSection('mq-top');return false">
+            <i class="ti ti-player-play"></i>Marquesina Top
+          </a>
+          <a href="#" class="cms-child active text-primary" id="nav-banners" onclick="showSection('banners');return false">
+            <i class="ti ti-layout-cards"></i>Banners
+          </a>
+          <a href="#" class="cms-child" id="nav-mq-bottom" onclick="showSection('mq-bottom');return false">
+            <i class="ti ti-player-play"></i>Marquesina Bottom
+          </a>
+          <a href="#" class="cms-child" id="nav-faqs" onclick="showSection('faqs');return false">
+            <i class="ti ti-help-circle"></i>FAQs
+          </a>
+        </div>
+
+        <!-- HISTORIAL DE CAMBIOS -->
+        <a href="#" class="cms-parent" id="nav-historial" onclick="showSection('historial');return false">
+          <i class="ti ti-history"></i>Historial de cambios
+        </a>
+
+        <!-- PREGUNTAS FRECUENTES (próximamente) -->
+        <div class="cms-parent cms-parent-disabled">
+          <i class="ti ti-message-question"></i>Preguntas frecuentes
+          <span class="badge bg-secondary-lt ms-auto">Pronto</span>
+        </div>
+
+        <!-- QUIÉNES SOMOS (próximamente) -->
+        <div class="cms-parent cms-parent-disabled">
+          <i class="ti ti-building"></i>Quiénes somos
+          <span class="badge bg-secondary-lt ms-auto">Pronto</span>
+        </div>
+      </aside>
+
+      <!-- -------- CMS CONTENT -------- -->
+      <main class="cms-content">
+
+        <!-- ============================================================
+             HERO
+        ============================================================ -->
+        <div class="cms-section" id="section-hero">
+          <div class="page-header d-print-none">
+            <div class="page-pretitle">Home <i class="ti ti-chevron-right" style="font-size:10px"></i> Hero</div>
+            <div class="row align-items-center">
+              <div class="col"><h2 class="page-title">Hero</h2></div>
+              <div class="col-auto">
+                <button class="btn btn-sm" onclick="showSection('historial')"><i class="ti ti-history"></i>Historial de cambios</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-info" role="alert">
+            <div class="d-flex">
+              <div><i class="ti ti-info-circle alert-icon"></i></div>
+              <div>La imagen del hero aparece como fondo detrás del cotizador. Podés subir imágenes distintas para cada mercado. <strong>El sistema renombra automáticamente el archivo al guardarlo</strong> — no hace falta que el nombre del archivo sea exacto. Sí es importante respetar el formato JPG y las dimensiones indicadas.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <ul class="nav nav-tabs px-3 pt-2" id="tabs-hero" role="tablist">
+              <li class="nav-item"><a href="#" class="nav-link active" onclick="selTab(event,this)">🇦🇷 Argentina</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇨🇱 Chile</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇲🇽 México</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇧🇷 Brasil</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇵🇹 Portugal</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇨🇴 Colombia</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇺🇸 EE.UU.</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🌍 Resto del mundo</a></li>
+            </ul>
+            <div class="card-body">
+              <div class="row">
+
+                <!-- IMAGEN DESKTOP -->
+                <div class="col-md-6 mb-3 mb-md-0">
+                  <label class="form-label">Imagen Desktop</label>
+                  <div class="img-preview-card show" id="prev-hero-d">
+                    <div class="img-preview-thumb">
+                      <img src="assets-contenido-ecommerce/BgCotizadorDesktop.jpg">
+                      <div class="img-preview-caption">hero_desktop.jpg &nbsp;·&nbsp; JPG · 38 KB · 1600×347 px</div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center gap-2 py-2">
+                      <i class="ti ti-circle-check text-success"></i>
+                      <span class="text-secondary" style="font-size:12px">Imagen actual</span>
+                      <button class="btn btn-sm ms-auto" onclick="showDrop('drop-hero-d','prev-hero-d')"><i class="ti ti-refresh"></i>Cambiar</button>
+                    </div>
+                  </div>
+                  <div class="file-drop" id="drop-hero-d" style="display:none" onclick="simUpload('drop-hero-d','prev-hero-d','hero_desktop.jpg','1600×347','38 KB')">
+                    <i class="ti ti-photo-up fs-1 text-secondary d-block mb-1"></i>
+                    <div><strong>Subir archivo</strong> o arrastrar aquí</div>
+                    <div class="text-secondary" style="font-size:11px">JPG · 1600 × 347 px · Máx. 40 KB</div>
+                  </div>
+                  <p class="form-hint">Formato obligatorio: <strong>JPG</strong> · Dimensiones: <strong>1600 × 347 px</strong> · Máx. 40 KB</p>
+                </div>
+
+                <!-- IMAGEN MOBILE -->
+                <div class="col-md-6">
+                  <label class="form-label">Imagen Mobile</label>
+                  <div class="img-preview-card show" id="prev-hero-m">
+                    <div class="img-preview-thumb">
+                      <img src="assets-contenido-ecommerce/BgCotizadorMobile.jpg">
+                      <div class="img-preview-caption">hero_mobile.jpg &nbsp;·&nbsp; JPG · 17 KB · 834×252 px</div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center gap-2 py-2">
+                      <i class="ti ti-circle-check text-success"></i>
+                      <span class="text-secondary" style="font-size:12px">Imagen actual</span>
+                      <button class="btn btn-sm ms-auto" onclick="showDrop('drop-hero-m','prev-hero-m')"><i class="ti ti-refresh"></i>Cambiar</button>
+                    </div>
+                  </div>
+                  <div class="file-drop" id="drop-hero-m" style="display:none" onclick="simUpload('drop-hero-m','prev-hero-m','hero_mobile.jpg','834×252','17 KB')">
+                    <i class="ti ti-device-mobile fs-1 text-secondary d-block mb-1"></i>
+                    <div><strong>Subir archivo</strong> o arrastrar aquí</div>
+                    <div class="text-secondary" style="font-size:11px">JPG · 834 × 252 px · Máx. 20 KB</div>
+                  </div>
+                  <p class="form-hint">Formato obligatorio: <strong>JPG</strong> · Dimensiones: <strong>834 × 252 px</strong> · Máx. 20 KB</p>
+                </div>
+
+              </div>
+            </div>
+            <div class="card-footer d-flex align-items-center gap-3 flex-wrap">
+              <span class="text-secondary">Publicación:</span>
+              <div class="form-selectgroup" id="sched-h">
+                <label class="form-selectgroup-item">
+                  <input type="radio" name="sched-h" value="imm" class="form-selectgroup-input" checked onchange="sched('h')">
+                  <span class="form-selectgroup-label"><i class="ti ti-bolt me-1"></i>Inmediato</span>
+                </label>
+                <label class="form-selectgroup-item">
+                  <input type="radio" name="sched-h" value="prog" class="form-selectgroup-input" onchange="sched('h')">
+                  <span class="form-selectgroup-label"><i class="ti ti-calendar-time me-1"></i>Programado</span>
+                </label>
+              </div>
+              <div id="h-dt" style="display:none">
+                <input type="datetime-local" class="form-control">
+              </div>
+              <div class="ms-auto">
+                <button class="btn btn-primary" onclick="openConfirm()"><i class="ti ti-device-floppy"></i>Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             MARQUESINA TOP
+        ============================================================ -->
+        <div class="cms-section" id="section-mq-top">
+          <div class="page-header d-print-none">
+            <div class="page-pretitle">Home <i class="ti ti-chevron-right" style="font-size:10px"></i> Marquesina Top</div>
+            <div class="row align-items-center">
+              <div class="col"><h2 class="page-title">Marquesina Top</h2></div>
+              <div class="col-auto">
+                <button class="btn btn-sm" onclick="showSection('historial')"><i class="ti ti-history"></i>Historial de cambios</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <ul class="nav nav-tabs px-3 pt-2" id="tabs-mq-top">
+              <li class="nav-item"><a href="#" class="nav-link active" onclick="selTab(event,this)">🇦🇷 Argentina</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇨🇱 Chile</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇲🇽 México</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇧🇷 Brasil</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇵🇹 Portugal</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇨🇴 Colombia</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇺🇸 EE.UU.</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🌍 Resto del mundo</a></li>
+            </ul>
+            <div class="card-body">
+              <div class="mb-3">
+                <label class="form-label">Texto del banner <code class="text-secondary">Marquesina_top</code></label>
+                <input class="form-control" type="text" id="mq-top-input" value="Acumulá 15% OFF con código AHORA15" oninput="updateMqPreview('mq-top-input','mq-top-prev')">
+                <p class="form-hint">Texto corrido con scroll infinito. El sistema lo repite automáticamente. Sin límite de caracteres.</p>
+              </div>
+              <div class="mq-preview" style="background:#1e2a6e">
+                <span id="mq-top-prev" style="font-size:12px;color:#fff">
+                  <i class="ti ti-plane-departure" style="font-size:11px;opacity:.8"></i> Acumulá 15% OFF con código AHORA15 &nbsp;&nbsp;•&nbsp;&nbsp; <i class="ti ti-plane-departure" style="font-size:11px;opacity:.8"></i> Acumulá 15% OFF con código AHORA15 &nbsp;&nbsp;•&nbsp;&nbsp; <i class="ti ti-plane-departure" style="font-size:11px;opacity:.8"></i> Acumulá 15% OFF con código AHORA15 &nbsp;&nbsp;•&nbsp;&nbsp;
+                </span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <p class="form-hint mb-0"><i class="ti ti-info-circle"></i> Los íconos separadores (<i class="ti ti-plane-departure"></i>) son del Design System y no son editables.</p>
+                <p class="form-hint mb-0">Vista previa</p>
+              </div>
+            </div>
+            <div class="card-footer d-flex align-items-center gap-3 flex-wrap">
+              <span class="text-secondary">Publicación:</span>
+              <div class="form-selectgroup" id="sched-mt">
+                <label class="form-selectgroup-item">
+                  <input type="radio" name="sched-mt" value="imm" class="form-selectgroup-input" checked onchange="sched('mt')">
+                  <span class="form-selectgroup-label"><i class="ti ti-bolt me-1"></i>Inmediato</span>
+                </label>
+                <label class="form-selectgroup-item">
+                  <input type="radio" name="sched-mt" value="prog" class="form-selectgroup-input" onchange="sched('mt')">
+                  <span class="form-selectgroup-label"><i class="ti ti-calendar-time me-1"></i>Programado</span>
+                </label>
+              </div>
+              <div id="mt-dt" style="display:none">
+                <input type="datetime-local" class="form-control">
+              </div>
+              <div class="ms-auto">
+                <button class="btn btn-primary" onclick="openConfirm()"><i class="ti ti-device-floppy"></i>Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             BANNERS
+        ============================================================ -->
+        <div class="cms-section active" id="section-banners">
+          <div class="page-header d-print-none">
+            <div class="page-pretitle">Home <i class="ti ti-chevron-right" style="font-size:10px"></i> Banners</div>
+            <div class="row align-items-center">
+              <div class="col"><h2 class="page-title">Banners</h2></div>
+              <div class="col-auto">
+                <button class="btn btn-sm" onclick="showSection('historial')"><i class="ti ti-history"></i>Historial de cambios</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-info" role="alert">
+            <div class="d-flex">
+              <div><i class="ti ti-info-circle alert-icon"></i></div>
+              <div>Los banners se editan por mercado. Seleccioná el país arriba y completá los 3 slides. <strong>Las imágenes se nombran automáticamente</strong> — solo subí el archivo correcto y el sistema lo maneja.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <ul class="nav nav-tabs px-3 pt-2" id="tabs-banners">
+              <li class="nav-item"><a href="#" class="nav-link active" onclick="selTab(event,this)">🇦🇷 Argentina</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇨🇱 Chile</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇲🇽 México</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇧🇷 Brasil</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇵🇹 Portugal</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇨🇴 Colombia</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇺🇸 EE.UU.</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🌍 Resto del mundo</a></li>
+            </ul>
+
+            <div class="card-body">
+              <div class="accordion" id="banners-accordion">
+
+                <!-- ---- SLIDE 1 ---- -->
+                <div class="accordion-item" id="acc1">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#acc1-body">
+                      <span class="badge bg-blue-lt me-2" style="font-size:10px">SLIDE 1</span>
+                      <span style="font-size:14px;font-weight:600">Banner 1: Cuotas y promociones</span>
+                      <span class="status status-green ms-2" style="font-size:11px"><span class="status-dot"></span>Activo</span>
+                    </button>
+                  </h2>
+                  <div class="accordion-collapse collapse" id="acc1-body" data-bs-parent="#banners-accordion">
+                    <div class="accordion-body">
+                      <div class="mb-2"><span class="text-secondary" style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">Texto izquierdo</span></div>
+                      <div class="row">
+                        <div class="col-md-4 mb-3">
+                          <label class="form-label">Vigencia <code class="text-secondary">Slide_1_left_vigencia</code></label>
+                          <input class="form-control" id="s1-vigencia" type="text" maxlength="34" oninput="cc(this,'cc1v');updateS1Preview()" onkeydown="ccBlock(this,'cc1v',event)" value="">
+                          <div class="form-hint char-counter" id="cc1v">0/34</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <label class="form-label">Promo <code class="text-secondary">Slide_1_left_promo</code></label>
+                          <input class="form-control" id="s1-promo" type="text" maxlength="40" oninput="cc(this,'cc1p');updateS1Preview()" value="Hasta 60% OFF y 12 cuotas sin interés">
+                          <div class="form-hint char-counter" id="cc1p">38/40</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <label class="form-label">Disclaimer <code class="text-secondary">Slide_1_left_disclaimer</code></label>
+                          <input class="form-control" id="s1-disclaimer" type="text" maxlength="40" oninput="cc(this,'cc1d');updateS1Preview()" value="Con tarjetas de todos los bancos">
+                          <div class="form-hint char-counter" id="cc1d">32/40</div>
+                        </div>
+                      </div>
+
+                      <div class="mb-2 mt-2"><span class="text-secondary" style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">Imagen de fondo derecha</span></div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Desktop <code class="text-secondary">Slide_1_right_background</code></label>
+                          <div class="img-preview-card show" id="prev-s1d">
+                            <div class="img-preview-thumb" style="height:80px">
+                              <img src="assets-contenido-ecommerce/Slide1Desktop.jpg">
+                              <div class="img-preview-caption">slide_1_right_background_desktop.jpg · JPG · 36 KB · 486×280 px</div>
+                            </div>
+                            <div class="card-footer d-flex align-items-center gap-2 py-2">
+                              <i class="ti ti-circle-check text-success"></i>
+                              <span class="text-secondary" style="font-size:12px">Imagen actual</span>
+                              <button class="btn btn-sm ms-auto" onclick="showDrop('drop-s1d','prev-s1d')"><i class="ti ti-refresh"></i>Cambiar</button>
+                            </div>
+                          </div>
+                          <div class="file-drop" id="drop-s1d" style="display:none" onclick="simUpload('drop-s1d','prev-s1d','slide_1_right_background_desktop.jpg','486×280','36 KB')">
+                            <i class="ti ti-photo-up fs-2 text-secondary d-block mb-1"></i>
+                            <div><strong>Subir archivo</strong> o arrastrar aquí</div>
+                            <div class="text-secondary" style="font-size:11px">JPG · 486 × 280 px · Máx. 40 KB</div>
+                          </div>
+                          <p class="form-hint">486 × 280 px · Máx. 40 KB · JPG</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Mobile <code class="text-secondary">Slide_1_right_background</code></label>
+                          <div class="img-preview-card show" id="prev-s1m">
+                            <div class="img-preview-thumb" style="height:80px">
+                              <img src="assets-contenido-ecommerce/Slide1Mobile.jpg">
+                              <div class="img-preview-caption">slide_1_right_background_mobile.jpg · JPG · 22 KB · 548×140 px</div>
+                            </div>
+                            <div class="card-footer d-flex align-items-center gap-2 py-2">
+                              <i class="ti ti-circle-check text-success"></i>
+                              <span class="text-secondary" style="font-size:12px">Imagen actual</span>
+                              <button class="btn btn-sm ms-auto" onclick="showDrop('drop-s1m','prev-s1m')"><i class="ti ti-refresh"></i>Cambiar</button>
+                            </div>
+                          </div>
+                          <div class="file-drop" id="drop-s1m" style="display:none" onclick="simUpload('drop-s1m','prev-s1m','slide_1_right_background_mobile.jpg','548×140','22 KB')">
+                            <i class="ti ti-photo-up fs-2 text-secondary d-block mb-1"></i>
+                            <div><strong>Subir archivo</strong></div>
+                            <div class="text-secondary" style="font-size:11px">JPG · 548 × 140 px · Máx. 40 KB</div>
+                          </div>
+                          <p class="form-hint">548 × 140 px · Máx. 40 KB · JPG</p>
+                        </div>
+                      </div>
+
+                      <div class="mb-2 mt-2"><span class="text-secondary" style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">CTA de la imagen</span></div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Texto del CTA <code class="text-secondary">Slide_1_right_cta</code></label>
+                          <input class="form-control" id="s1-cta-texto" type="text" maxlength="54" oninput="cc(this,'cc1c');updateS1Preview()" value="Conocé nuestros medios de pago">
+                          <div class="form-hint char-counter" id="cc1c">30/54</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">URL de destino <code class="text-secondary">Slide_1_cta_url</code></label>
+                          <input class="form-control" type="url" value="https://assist-365.com/#medios-de-pago" placeholder="https://assist-365.com/pagina">
+                          <p class="form-hint">Puede ser una URL completa o un anchor interno (ej: <code>#medios-de-pago</code>).</p>
+                        </div>
+                      </div>
+
+                      <!-- CUSTOM: preview en tiempo real del componente real del sitio -->
+                      <div class="slide-preview d-flex gap-3" style="background:linear-gradient(135deg,#ece8fa,#d4cdf5)">
+                        <div class="flex-fill rounded-2 d-flex flex-column justify-content-center gap-1 p-3" style="background:rgba(255,255,255,.6)">
+                          <div class="d-flex align-items-center gap-2 mb-1">
+                            <div class="d-flex align-items-center justify-content-center flex-shrink-0" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a78bfa)">
+                              <span style="font-size:13px;font-weight:800;color:#fff">%</span>
+                            </div>
+                            <div id="s1-prev-vigencia" style="font-size:10px;color:#1a1040;font-weight:600">—</div>
+                          </div>
+                          <div id="s1-prev-promo" style="font-size:14px;font-weight:800;color:#1a1040;line-height:1.25">Hasta 60% OFF y 12 cuotas sin interés</div>
+                          <div id="s1-prev-disclaimer" style="font-size:10px;color:rgba(30,15,60,.5);margin-top:3px">Con tarjetas de todos los bancos</div>
+                        </div>
+                        <div class="flex-fill rounded-2 d-flex flex-column align-items-center justify-content-end p-3" style="background:#ede9fe;min-height:90px">
+                          <div id="s1-prev-cta" style="background:#1a1040;color:#fff;font-size:10px;font-weight:700;padding:5px 14px;border-radius:20px;text-align:center">Conocé nuestros medios de pago</div>
+                        </div>
+                      </div>
+                      <p class="form-hint text-end mt-1">Vista previa del componente</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ---- SLIDE 2 ---- -->
+                <div class="accordion-item" id="acc2">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#acc2-body">
+                      <span class="badge bg-blue-lt me-2" style="font-size:10px">SLIDE 2</span>
+                      <span style="font-size:14px;font-weight:600">Banner 2: Plan multitrip</span>
+                      <span class="status status-green ms-2" style="font-size:11px"><span class="status-dot"></span>Activo</span>
+                    </button>
+                  </h2>
+                  <div class="accordion-collapse collapse" id="acc2-body" data-bs-parent="#banners-accordion">
+                    <div class="accordion-body">
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Texto izquierdo <code class="text-secondary">Slide_2_left_text</code></label>
+                          <input class="form-control" id="s2-left" type="text" maxlength="58" oninput="cc(this,'cc2t');updateS2Preview()" value="10% OFF pagando con transferencia">
+                          <div class="form-hint char-counter" id="cc2t">34/58</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Subtítulo tarjeta <code class="text-secondary">Slide_2_right_subtext</code></label>
+                          <input class="form-control" id="s2-sub" type="text" maxlength="46" oninput="cc(this,'cc2s');updateS2Preview()" value="Plan anual multitrip">
+                          <div class="form-hint char-counter" id="cc2s">20/46</div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Título tarjeta <code class="text-secondary">Slide_2_right_title</code></label>
+                          <input class="form-control" id="s2-title" type="text" maxlength="30" oninput="cc(this,'cc2ti');updateS2Preview()" value="¿Viajás seguido? Vamos con vos">
+                          <div class="form-hint char-counter text-warning" id="cc2ti">30/30</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Dropline <code class="text-secondary">Slide_2_right_dropline</code></label>
+                          <input class="form-control" id="s2-drop" type="text" maxlength="76" oninput="cc(this,'cc2d');updateS2Preview()" value="Viajes ilimitados durante todo un año, hasta 30 o 60 días por viaje.">
+                          <div class="form-hint char-counter" id="cc2d">69/76</div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">CTA <code class="text-secondary">Slide_2_right_cta</code></label>
+                          <input class="form-control" id="s2-cta" type="text" maxlength="40" oninput="cc(this,'cc2c');updateS2Preview()" value="Cotizá tu viaje ahora">
+                          <div class="form-hint char-counter" id="cc2c">21/40</div>
+                          <label class="form-label mt-2">URL del CTA <code class="text-secondary">Slide_2_cta_url</code></label>
+                          <input class="form-control" type="url" value="https://assist-365.com/multitrip" placeholder="https://assist-365.com/...">
+                          <p class="form-hint">URL de destino. Puede ser una URL completa o un anchor interno (ej: <code>#multitrip</code>).</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Imagen central PNG <code class="text-secondary">Slide_2_middle_background</code></label>
+                          <div class="img-preview-card show" id="prev-s2mid">
+                            <div class="img-preview-thumb" style="height:80px">
+                              <img src="assets-contenido-ecommerce/Slide2Desktop.png">
+                              <div class="img-preview-caption">slide_2_middle_background.png · PNG transparente · 22 KB · 280×280 px</div>
+                            </div>
+                            <div class="card-footer d-flex align-items-center gap-2 py-2">
+                              <i class="ti ti-circle-check text-success"></i>
+                              <span class="text-secondary" style="font-size:12px">Imagen actual</span>
+                              <button class="btn btn-sm ms-auto" onclick="showDrop('drop-s2mid','prev-s2mid')"><i class="ti ti-refresh"></i>Cambiar</button>
+                            </div>
+                          </div>
+                          <div class="file-drop" id="drop-s2mid" style="display:none" onclick="simUpload('drop-s2mid','prev-s2mid','slide_2_middle_background.png','280×280','22 KB')">
+                            <i class="ti ti-photo-up fs-2 text-secondary d-block mb-1"></i>
+                            <div><strong>Subir archivo</strong> o arrastrar aquí</div>
+                            <div class="text-secondary" style="font-size:11px">PNG transparente · 280 × 280 px · Máx. 40 KB</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- CUSTOM: preview en tiempo real del componente real del sitio -->
+                      <div class="slide-preview d-flex gap-2">
+                        <div class="flex-fill rounded-2 d-flex flex-column justify-content-center gap-2 p-3" style="background:#CFF6FF">
+                          <i class="ti ti-shield-check" style="font-size:22px;color:#31319B"></i>
+                          <div id="s2-prev-left" style="font-size:13px;font-weight:800;color:#1a1040;line-height:1.3">10% OFF pagando con transferencia</div>
+                        </div>
+                        <div class="flex-fill rounded-2 d-flex flex-column gap-1 p-3" style="background:#f0fdf4">
+                          <div id="s2-prev-sub" style="font-size:10px;font-weight:600;color:#31319B;letter-spacing:.03em">Plan anual multitrip</div>
+                          <div id="s2-prev-title" style="font-size:13px;font-weight:800;color:#1a1040;line-height:1.2">¿Viajás seguido? Vamos con vos</div>
+                          <div id="s2-prev-drop" style="font-size:10px;color:#444;margin-top:3px;line-height:1.4">Viajes ilimitados durante todo un año, hasta 30 o 60 días por viaje.</div>
+                          <div class="mt-2">
+                            <div id="s2-prev-cta" style="display:inline-block;background:#1549a0;color:#fff;font-size:10px;font-weight:600;padding:5px 14px;border-radius:20px">Cotizá tu viaje ahora →</div>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="form-hint text-end mt-1">Vista previa del componente</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ---- SLIDE 3 ---- -->
+                <div class="accordion-item" id="acc3">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#acc3-body">
+                      <span class="badge bg-blue-lt me-2" style="font-size:10px">SLIDE 3</span>
+                      <span style="font-size:14px;font-weight:600">Banner 3: Adicionales</span>
+                      <span class="status status-green ms-2" style="font-size:11px"><span class="status-dot"></span>Activo</span>
+                    </button>
+                  </h2>
+                  <div class="accordion-collapse collapse" id="acc3-body" data-bs-parent="#banners-accordion">
+                    <div class="accordion-body">
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Título <code class="text-secondary">Slide_3_left_title</code></label>
+                          <input class="form-control" id="s3-title" type="text" maxlength="54" oninput="cc(this,'cc3t');updateS3Preview()" value="Sumá coberturas adicionales y viajá más tranquilo">
+                          <div class="form-hint char-counter" id="cc3t">50/54</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">CTA <code class="text-secondary">Slide_3_left_cta</code></label>
+                          <input class="form-control" id="s3-cta" type="text" maxlength="24" oninput="cc(this,'cc3cta');updateS3Preview()" value="Conocé más">
+                          <div class="form-hint char-counter" id="cc3cta">10/24</div>
+                          <label class="form-label mt-2">URL del CTA <code class="text-secondary">Slide_3_cta_url</code></label>
+                          <input class="form-control" type="url" value="https://assist-365.com/adicionales" placeholder="https://assist-365.com/...">
+                          <p class="form-hint">URL de destino. Puede ser una URL completa o un anchor interno (ej: <code>#adicionales</code>).</p>
+                        </div>
+                      </div>
+
+                      <div class="mb-2 mt-2"><span class="text-secondary" style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">Ítems de adicionales</span></div>
+                      <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                          <div class="card card-sm">
+                            <div class="card-body">
+                              <div class="text-secondary mb-2" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Ítem 1</div>
+                              <label class="form-label" style="font-size:12px">Texto <code class="text-secondary">Slide_3_left_item_1_text</code></label>
+                              <input class="form-control form-control-sm" id="s3-item1" maxlength="120" oninput="cc(this,'cc3i1');updateS3Preview()" value="Tus objetos, protegidos: agregá cobertura para tus dispositivos electrónicos o por rotura de equipaje">
+                              <div class="form-hint char-counter" id="cc3i1">101/120</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="card card-sm">
+                            <div class="card-body">
+                              <div class="text-secondary mb-2" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Ítem 2</div>
+                              <label class="form-label" style="font-size:12px">Texto <code class="text-secondary">Slide_3_left_item_2_text</code></label>
+                              <input class="form-control form-control-sm" id="s3-item2" maxlength="100" oninput="cc(this,'cc3i2');updateS3Preview()" value="Cobertura a tu medida: sumá asistencia médica por embarazo, deportes o mascotas">
+                              <div class="form-hint char-counter" id="cc3i2">79/100</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- CUSTOM: preview en tiempo real del componente real del sitio -->
+                      <div class="slide-preview mb-3" style="background:#FFF8E7">
+                        <div id="s3-prev-title" style="font-size:13px;font-weight:800;color:#1a1040;line-height:1.25;margin-bottom:10px">Sumá coberturas adicionales y viajá más tranquilo</div>
+                        <div class="row mb-2">
+                          <div class="col-md-6 d-flex gap-2 align-items-start">
+                            <i class="ti ti-circle-check flex-shrink-0 mt-1" style="font-size:13px;color:#31319B"></i>
+                            <div id="s3-prev-item1" style="font-size:10px;color:#333;line-height:1.4">Tus objetos, protegidos: agregá cobertura para tus dispositivos electrónicos o por rotura de equipaje</div>
+                          </div>
+                          <div class="col-md-6 d-flex gap-2 align-items-start">
+                            <i class="ti ti-circle-check flex-shrink-0 mt-1" style="font-size:13px;color:#31319B"></i>
+                            <div id="s3-prev-item2" style="font-size:10px;color:#333;line-height:1.4">Cobertura a tu medida: sumá asistencia médica por embarazo, deportes o mascotas</div>
+                          </div>
+                        </div>
+                        <div id="s3-prev-cta" style="display:inline-block;background:#1549a0;color:#fff;font-size:10px;font-weight:700;padding:5px 16px;border-radius:20px">Conocé más →</div>
+                      </div>
+                      <p class="form-hint text-end mt-n2 mb-3">Vista previa del componente</p>
+
+                      <label class="form-label">Imagen de fondo derecha <code class="text-secondary">Slide_3_right_background</code></label>
+                      <div class="file-drop" id="drop-s3bg" style="display:none" onclick="simUpload('drop-s3bg','prev-s3bg','slide_3_right_background.jpg','486×280','34 KB')">
+                        <i class="ti ti-photo-up fs-2 text-secondary d-block mb-1"></i>
+                        <div><strong>Subir archivo</strong> o arrastrar aquí</div>
+                        <div class="text-secondary" style="font-size:11px">JPG · 486 × 280 px · Máx. 40 KB</div>
+                      </div>
+                      <div class="img-preview-card show" id="prev-s3bg">
+                        <div class="img-preview-thumb" style="height:80px">
+                          <img src="assets-contenido-ecommerce/Slide3Desktop.png">
+                          <div class="img-preview-caption">slide_3_right_background.jpg · JPG · 34 KB · 486×280 px</div>
+                        </div>
+                        <div class="card-footer d-flex align-items-center gap-2 py-2">
+                          <i class="ti ti-circle-check text-success"></i>
+                          <span class="text-secondary" style="font-size:12px">Imagen actual</span>
+                          <button class="btn btn-sm ms-auto" onclick="showDrop('drop-s3bg','prev-s3bg')"><i class="ti ti-refresh"></i>Cambiar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- /card-body banners -->
+
+            <div class="card-footer d-flex align-items-center gap-3 flex-wrap">
+              <span class="text-secondary">Publicación:</span>
+              <div class="form-selectgroup" id="sched-b">
+                <label class="form-selectgroup-item">
+                  <input type="radio" name="sched-b" value="imm" class="form-selectgroup-input" checked onchange="sched('b')">
+                  <span class="form-selectgroup-label"><i class="ti ti-bolt me-1"></i>Inmediato</span>
+                </label>
+                <label class="form-selectgroup-item">
+                  <input type="radio" name="sched-b" value="prog" class="form-selectgroup-input" onchange="sched('b')">
+                  <span class="form-selectgroup-label"><i class="ti ti-calendar-time me-1"></i>Programado</span>
+                </label>
+              </div>
+              <div id="b-dt" style="display:none">
+                <input type="datetime-local" class="form-control">
+              </div>
+              <div class="ms-auto">
+                <button class="btn btn-primary" onclick="openConfirm()"><i class="ti ti-device-floppy"></i>Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             MARQUESINA BOTTOM
+        ============================================================ -->
+        <div class="cms-section" id="section-mq-bottom">
+          <div class="page-header d-print-none">
+            <div class="page-pretitle">Home <i class="ti ti-chevron-right" style="font-size:10px"></i> Marquesina Bottom</div>
+            <div class="row align-items-center">
+              <div class="col"><h2 class="page-title">Marquesina Bottom</h2></div>
+              <div class="col-auto">
+                <button class="btn btn-sm" onclick="showSection('historial')"><i class="ti ti-history"></i>Historial de cambios</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <ul class="nav nav-tabs px-3 pt-2" id="tabs-mb">
+              <li class="nav-item"><a href="#" class="nav-link active" onclick="selTab(event,this)">🇦🇷 Argentina</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇨🇱 Chile</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇲🇽 México</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇧🇷 Brasil</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇵🇹 Portugal</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇨🇴 Colombia</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇺🇸 EE.UU.</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🌍 Resto del mundo</a></li>
+            </ul>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Vigencia <code class="text-secondary">Marquesina_bottom_vigencia</code></label>
+                  <input class="form-control" type="text" id="mb-v-input" maxlength="30" oninput="cc(this,'cc-mb-v');updateMqBottomPreview()" onkeydown="ccBlock(this,'cc-mb-v',event)" value="">
+                  <div class="form-hint char-counter" id="cc-mb-v">0/30</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Promo <code class="text-secondary">Marquesina_bottom_promo</code></label>
+                  <input class="form-control" type="text" id="mb-p-input" maxlength="42" oninput="cc(this,'cc-mb-p');updateMqBottomPreview()" value="Hasta 60% OFF y 12 cuotas sin interés">
+                  <div class="form-hint char-counter" id="cc-mb-p">38/42</div>
+                </div>
+              </div>
+              <div class="mb-3 col-md-6">
+                <label class="form-label">Disclaimer <code class="text-secondary">Marquesina_bottom_disclaimer</code></label>
+                <input class="form-control" type="text" id="mb-d-input" maxlength="42" oninput="cc(this,'cc-mb-d');updateMqBottomPreview()" value="Con tarjetas de todos los bancos">
+                <div class="form-hint char-counter" id="cc-mb-d">32/42</div>
+              </div>
+
+              <!-- CUSTOM: preview en tiempo real del componente real del sitio -->
+              <div class="rounded-2 p-3 d-flex align-items-center gap-3" style="background:linear-gradient(90deg,#1549a0,#1e6fd0)">
+                <i class="ti ti-discount-2 flex-shrink-0" style="font-size:28px;color:#fff"></i>
+                <div>
+                  <div id="mb-prev-v" style="font-size:11px;color:rgba(255,255,255,.75);font-weight:500">—</div>
+                  <div id="mb-prev-p" style="font-size:17px;font-weight:700;color:#fff;margin:2px 0">Protegete vos también con hasta 60% OFF y 12 cuotas sin interés</div>
+                  <div id="mb-prev-d" style="font-size:12px;color:rgba(255,255,255,.65)">Con tarjetas de todos los bancos</div>
+                </div>
+              </div>
+              <p class="form-hint text-end mt-1">Vista previa del componente</p>
+            </div>
+            <div class="card-footer d-flex align-items-center gap-3 flex-wrap">
+              <span class="text-secondary">Publicación:</span>
+              <div class="form-selectgroup" id="sched-mb">
+                <label class="form-selectgroup-item">
+                  <input type="radio" name="sched-mb" value="imm" class="form-selectgroup-input" checked onchange="sched('mb')">
+                  <span class="form-selectgroup-label"><i class="ti ti-bolt me-1"></i>Inmediato</span>
+                </label>
+                <label class="form-selectgroup-item">
+                  <input type="radio" name="sched-mb" value="prog" class="form-selectgroup-input" onchange="sched('mb')">
+                  <span class="form-selectgroup-label"><i class="ti ti-calendar-time me-1"></i>Programado</span>
+                </label>
+              </div>
+              <div id="mb-dt" style="display:none">
+                <input type="datetime-local" class="form-control">
+              </div>
+              <div class="ms-auto">
+                <button class="btn btn-primary" onclick="openConfirm()"><i class="ti ti-device-floppy"></i>Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             FAQS HOME
+        ============================================================ -->
+        <div class="cms-section" id="section-faqs">
+          <div class="page-header d-print-none">
+            <div class="page-pretitle">Home <i class="ti ti-chevron-right" style="font-size:10px"></i> Preguntas frecuentes</div>
+            <div class="row align-items-center">
+              <div class="col"><h2 class="page-title">FAQs — Componente Home</h2></div>
+              <div class="col-auto">
+                <button class="btn btn-sm" onclick="showSection('historial')"><i class="ti ti-history"></i>Historial de cambios</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-info" role="alert">
+            <div class="d-flex">
+              <div><i class="ti ti-info-circle alert-icon"></i></div>
+              <div>Este componente controla las preguntas frecuentes del <strong>componente home</strong>. Todas las FAQs que agregues aquí aparecerán en la home. Para la página completa de FAQs, ir a <em>Preguntas frecuentes</em> en el sidebar (próximamente).</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <ul class="nav nav-tabs px-3 pt-2" id="tabs-faqs">
+              <li class="nav-item"><a href="#" class="nav-link active" onclick="selTab(event,this)">🇦🇷 Argentina</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇨🇱 Chile</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇲🇽 México</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇧🇷 Brasil</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇵🇹 Portugal</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇨🇴 Colombia</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🇺🇸 EE.UU.</a></li>
+              <li class="nav-item"><a href="#" class="nav-link" onclick="selTab(event,this)">🌍 Resto del mundo</a></li>
+            </ul>
+            <div class="card-body" id="faqs-list">
+
+              <div class="card card-sm mb-2 faq-row">
+                <div class="card-body">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="ti ti-grip-vertical drag-handle text-secondary"></i>
+                    <span class="badge bg-secondary-lt">#1</span>
+                    <button class="btn btn-icon btn-sm btn-ghost-danger ms-auto" onclick="openDeleteFaq(this)"><i class="ti ti-trash"></i></button>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" style="font-size:12px">Pregunta</label>
+                    <input class="form-control form-control-sm" value="¿Qué es la asistencia al viajero y para qué sirve?">
+                  </div>
+                  <div>
+                    <label class="form-label" style="font-size:12px">Respuesta</label>
+                    <textarea class="form-control form-control-sm" rows="2">La asistencia al viajero es un servicio que te brinda soporte en caso de emergencias médicas, problemas legales, pérdida de equipaje y otros imprevistos mientras estás de viaje.</textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card card-sm mb-2 faq-row">
+                <div class="card-body">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="ti ti-grip-vertical drag-handle text-secondary"></i>
+                    <span class="badge bg-secondary-lt">#2</span>
+                    <button class="btn btn-icon btn-sm btn-ghost-danger ms-auto" onclick="openDeleteFaq(this)"><i class="ti ti-trash"></i></button>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" style="font-size:12px">Pregunta</label>
+                    <input class="form-control form-control-sm" value="¿Qué cubre la asistencia al viajero?">
+                  </div>
+                  <div>
+                    <label class="form-label" style="font-size:12px">Respuesta</label>
+                    <textarea class="form-control form-control-sm" rows="2">Cubre emergencias médicas, traslados, equipaje perdido, cancelaciones de vuelo y más, dependiendo del plan elegido.</textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card card-sm mb-2 faq-row">
+                <div class="card-body">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="ti ti-grip-vertical drag-handle text-secondary"></i>
+                    <span class="badge bg-secondary-lt">#3</span>
+                    <button class="btn btn-icon btn-sm btn-ghost-danger ms-auto" onclick="openDeleteFaq(this)"><i class="ti ti-trash"></i></button>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" style="font-size:12px">Pregunta</label>
+                    <input class="form-control form-control-sm" value="¿Es obligatorio el seguro de viaje?">
+                  </div>
+                  <div>
+                    <label class="form-label" style="font-size:12px">Respuesta</label>
+                    <textarea class="form-control form-control-sm" rows="2">Depende del destino. Algunos países como los del espacio Schengen lo exigen como requisito de visa.</textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card card-sm mb-2 faq-row">
+                <div class="card-body">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="ti ti-grip-vertical drag-handle text-secondary"></i>
+                    <span class="badge bg-secondary-lt">#4</span>
+                    <button class="btn btn-icon btn-sm btn-ghost-danger ms-auto" onclick="openDeleteFaq(this)"><i class="ti ti-trash"></i></button>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label" style="font-size:12px">Pregunta</label>
+                    <input class="form-control form-control-sm" value="¿Diferencia entre seguro de viaje y asistencia al viajero?">
+                  </div>
+                  <div>
+                    <label class="form-label" style="font-size:12px">Respuesta</label>
+                    <textarea class="form-control form-control-sm" rows="2">El seguro de viaje cubre principalmente cancelaciones y retrasos. La asistencia al viajero es más amplia: incluye emergencias médicas, traslados, asistencia legal y más.</textarea>
+                  </div>
+                </div>
+              </div>
+
+              <button class="btn btn-ghost-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-faq">
+                <i class="ti ti-plus"></i>Agregar pregunta
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             HISTORIAL DE CAMBIOS
+        ============================================================ -->
+        <div class="cms-section" id="section-historial">
+          <div class="page-header d-print-none">
+            <div class="page-pretitle">Home <i class="ti ti-chevron-right" style="font-size:10px"></i> Historial de cambios</div>
+            <div class="row align-items-center">
+              <div class="col"><h2 class="page-title">Historial de cambios</h2></div>
+              <div class="col-auto">
+                <button class="btn btn-sm" onclick="showSection('banners')"><i class="ti ti-arrow-left"></i>Volver</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-info" role="alert">
+            <div class="d-flex">
+              <div><i class="ti ti-info-circle alert-icon"></i></div>
+              <div>Registro de todos los cambios publicados en los componentes del home. Los cambios con estado <strong>Pendiente</strong> aún no se aplicaron al sitio (publicación programada).</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Todos los componentes — Home</span>
+              <div class="ms-auto d-flex gap-2">
+                <select class="form-select form-select-sm" style="width:auto" id="historial-filter-componente" onchange="filterHistorial()">
+                  <option value="">Todos los componentes</option>
+                  <option value="Hero">Hero</option>
+                  <option value="Marquesina Top">Marquesina Top</option>
+                  <option value="Banners">Banners</option>
+                  <option value="Marquesina Bottom">Marquesina Bottom</option>
+                  <option value="FAQs">FAQs</option>
+                </select>
+                <select class="form-select form-select-sm" style="width:auto" id="historial-filter-pais" onchange="filterHistorial()">
+                  <option value="">Todos los países</option>
+                  <option value="Argentina">🇦🇷 Argentina</option>
+                  <option value="Chile">🇨🇱 Chile</option>
+                  <option value="México">🇲🇽 México</option>
+                  <option value="Brasil">🇧🇷 Brasil</option>
+                  <option value="Portugal">🇵🇹 Portugal</option>
+                  <option value="Colombia">🇨🇴 Colombia</option>
+                  <option value="EE.UU.">🇺🇸 EE.UU.</option>
+                  <option value="Resto del mundo">🌍 Resto del mundo</option>
+                </select>
+              </div>
+            </div>
+            <div class="empty d-none" id="historial-empty">
+              <div class="empty-icon"><i class="ti ti-filter-off" style="font-size:3rem"></i></div>
+              <p class="empty-title">No hay cambios que coincidan con el filtro</p>
+              <p class="empty-subtitle text-secondary">Probá con otro componente o país, o limpiá los filtros.</p>
+              <div class="empty-action">
+                <button class="btn btn-primary" onclick="resetHistorialFilters()"><i class="ti ti-restore"></i>Limpiar filtros</button>
+              </div>
+            </div>
+            <div class="table-responsive" id="historial-table-wrap">
+              <table class="table table-vcenter card-table">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Componente</th>
+                    <th>País</th>
+                    <th>Publicación</th>
+                    <th>Estado</th>
+                    <th>Usuario</th>
+                    <th class="w-1"></th>
+                  </tr>
+                </thead>
+                <tbody id="historial-tbody">
+                  <!-- 1. Hero AR — Pendiente -->
+                  <tr id="row-hero-ar" data-ver-modal="modal-ver-hero-ar" data-component="Hero" data-country="Argentina">
+                    <td class="text-secondary text-nowrap">24/07/2026 10:20</td>
+                    <td>Hero</td>
+                    <td>🇦🇷 Argentina</td>
+                    <td><span class="badge bg-blue-lt">Programado 29/07 09:00</span></td>
+                    <td class="status-cell"><span class="status status-yellow"><span class="status-dot"></span>Pendiente</span></td>
+                    <td>Denu Barral</td>
+                    <td class="text-nowrap">
+                      <button class="btn btn-sm btn-ghost-secondary" data-bs-toggle="modal" data-bs-target="#modal-ver-hero-ar"><i class="ti ti-eye"></i>Ver</button>
+                      <button class="btn btn-sm btn-ghost-danger btn-cancelar" onclick="openCancelConfirm('row-hero-ar','Hero','🇦🇷 Argentina')"><i class="ti ti-ban"></i>Cancelar</button>
+                    </td>
+                  </tr>
+                  <!-- 2. Banner 3 CL — Pendiente -->
+                  <tr id="row-banner3-cl" data-ver-modal="modal-ver-banner3-cl" data-component="Banners" data-country="Chile">
+                    <td class="text-secondary text-nowrap">22/07/2026 09:05</td>
+                    <td>Banner 3: Seguro de equipaje</td>
+                    <td>🇨🇱 Chile</td>
+                    <td><span class="badge bg-blue-lt">Programado 27/07 00:00</span></td>
+                    <td class="status-cell"><span class="status status-yellow"><span class="status-dot"></span>Pendiente</span></td>
+                    <td>Florencia Duarte</td>
+                    <td class="text-nowrap">
+                      <button class="btn btn-sm btn-ghost-secondary" data-bs-toggle="modal" data-bs-target="#modal-ver-banner3-cl"><i class="ti ti-eye"></i>Ver</button>
+                      <button class="btn btn-sm btn-ghost-danger btn-cancelar" onclick="openCancelConfirm('row-banner3-cl','Banner 3: Seguro de equipaje','🇨🇱 Chile')"><i class="ti ti-ban"></i>Cancelar</button>
+                    </td>
+                  </tr>
+                  <!-- 3. Marquesina Bottom MX — Activo -->
+                  <tr id="row-mqbottom-mx" data-ver-modal="modal-ver-mqbottom-mx" data-component="Marquesina Bottom" data-country="México">
+                    <td class="text-secondary text-nowrap">20/07/2026 16:50</td>
+                    <td>Marquesina Bottom</td>
+                    <td>🇲🇽 México</td>
+                    <td><span class="badge bg-success-lt">Inmediato</span></td>
+                    <td class="status-cell"><span class="status status-green"><span class="status-dot"></span>Activo</span></td>
+                    <td>Denu Barral</td>
+                    <td class="text-nowrap">
+                      <button class="btn btn-sm btn-ghost-secondary" data-bs-toggle="modal" data-bs-target="#modal-ver-mqbottom-mx"><i class="ti ti-eye"></i>Ver</button>
+                      <button class="btn btn-sm btn-ghost-danger btn-cancelar" disabled><i class="ti ti-ban"></i>Cancelar</button>
+                    </td>
+                  </tr>
+                  <!-- 4. Banner 1 AR — Activo -->
+                  <tr id="row-banner1-ar" data-ver-modal="modal-ver-banner1-ar" data-component="Banners" data-country="Argentina">
+                    <td class="text-secondary text-nowrap">27/06/2026 14:32</td>
+                    <td>Banner 1: Cuotas y promociones</td>
+                    <td>🇦🇷 Argentina</td>
+                    <td><span class="badge bg-success-lt">Inmediato</span></td>
+                    <td class="status-cell"><span class="status status-green"><span class="status-dot"></span>Activo</span></td>
+                    <td>Florencia Duarte</td>
+                    <td class="text-nowrap">
+                      <button class="btn btn-sm btn-ghost-secondary" data-bs-toggle="modal" data-bs-target="#modal-ver-banner1-ar"><i class="ti ti-eye"></i>Ver</button>
+                      <button class="btn btn-sm btn-ghost-danger btn-cancelar" disabled><i class="ti ti-ban"></i>Cancelar</button>
+                    </td>
+                  </tr>
+                  <!-- 5. Banner 2 BR — Cancelado -->
+                  <tr id="row-banner2-br" data-ver-modal="modal-ver-banner2-br" data-component="Banners" data-country="Brasil">
+                    <td class="text-secondary text-nowrap">25/06/2026 09:15</td>
+                    <td>Banner 2: Plan multitrip</td>
+                    <td>🇧🇷 Brasil</td>
+                    <td><span class="badge bg-blue-lt">Programado 01/07 00:00</span></td>
+                    <td class="status-cell"><span class="status status-red"><span class="status-dot"></span>Cancelado</span></td>
+                    <td>Florencia Duarte</td>
+                    <td class="text-nowrap">
+                      <button class="btn btn-sm btn-ghost-secondary" data-bs-toggle="modal" data-bs-target="#modal-ver-banner2-br"><i class="ti ti-eye"></i>Ver</button>
+                      <button class="btn btn-sm btn-ghost-danger btn-cancelar" disabled><i class="ti ti-ban"></i>Cancelar</button>
+                    </td>
+                  </tr>
+                  <!-- 6. Marquesina Top CL — Cancelado -->
+                  <tr id="row-mqtop-cl" data-ver-modal="modal-ver-mqtop-cl" data-component="Marquesina Top" data-country="Chile">
+                    <td class="text-secondary text-nowrap">20/06/2026 11:00</td>
+                    <td>Marquesina Top</td>
+                    <td>🇨🇱 Chile</td>
+                    <td><span class="badge bg-blue-lt">Programado 30/06 00:01</span></td>
+                    <td class="status-cell"><span class="status status-red"><span class="status-dot"></span>Cancelado</span></td>
+                    <td>Denu Barral</td>
+                    <td class="text-nowrap">
+                      <button class="btn btn-sm btn-ghost-secondary" data-bs-toggle="modal" data-bs-target="#modal-ver-mqtop-cl"><i class="ti ti-eye"></i>Ver</button>
+                      <button class="btn btn-sm btn-ghost-danger btn-cancelar" disabled><i class="ti ti-ban"></i>Cancelar</button>
+                    </td>
+                  </tr>
+                  <!-- 7. FAQs AR — Finalizado -->
+                  <tr id="row-faqs-ar" data-ver-modal="modal-ver-faqs-ar" data-component="FAQs" data-country="Argentina">
+                    <td class="text-secondary text-nowrap">12/06/2026 16:30</td>
+                    <td>FAQs</td>
+                    <td>🇦🇷 Argentina</td>
+                    <td><span class="badge bg-success-lt">Inmediato</span></td>
+                    <td class="status-cell"><span class="badge bg-secondary-lt">Finalizado</span></td>
+                    <td>Florencia Duarte</td>
+                    <td class="text-nowrap">
+                      <button class="btn btn-sm btn-ghost-secondary" data-bs-toggle="modal" data-bs-target="#modal-ver-faqs-ar"><i class="ti ti-eye"></i>Ver</button>
+                      <button class="btn btn-sm btn-ghost-danger btn-cancelar" disabled><i class="ti ti-ban"></i>Cancelar</button>
+                    </td>
+                  </tr>
+                  <!-- 8. Hero BR — Finalizado -->
+                  <tr id="row-hero-br" data-ver-modal="modal-ver-hero-br" data-component="Hero" data-country="Brasil">
+                    <td class="text-secondary text-nowrap">05/06/2026 11:05</td>
+                    <td>Hero</td>
+                    <td>🇧🇷 Brasil</td>
+                    <td><span class="badge bg-success-lt">Inmediato</span></td>
+                    <td class="status-cell"><span class="badge bg-secondary-lt">Finalizado</span></td>
+                    <td>Denu Barral</td>
+                    <td class="text-nowrap">
+                      <button class="btn btn-sm btn-ghost-secondary" data-bs-toggle="modal" data-bs-target="#modal-ver-hero-br"><i class="ti ti-eye"></i>Ver</button>
+                      <button class="btn btn-sm btn-ghost-danger btn-cancelar" disabled><i class="ti ti-ban"></i>Cancelar</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Paginación -->
+            <div class="card-footer d-flex align-items-center" id="historial-footer">
+              <p class="m-0 text-secondary">Mostrando <span id="historial-showing-count">8</span> de <span>47</span> cambios</p>
+              <ul class="pagination m-0 ms-auto" id="historial-pagination">
+                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true"><i class="ti ti-chevron-left"></i></a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item disabled"><a class="page-link" href="#">…</a></li>
+                <li class="page-item"><a class="page-link" href="#">6</a></li>
+                <li class="page-item"><a class="page-link" href="#"><i class="ti ti-chevron-right"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </main><!-- /cms-content -->
+    </div>
+  </div>
+</div><!-- /page-wrapper -->
+
+<!-- ==================== MODALES: Ver cambio del Historial ==================== -->
+
+<!-- 1. VER: Hero AR — Pendiente -->
+<div class="modal modal-blur fade" id="modal-ver-hero-ar" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-eye text-primary me-2"></i>Ver cambio — Hero / 🇦🇷 Argentina</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="alert alert-warning rounded-0 m-0" id="status-bar-hero-ar" role="alert">
+          <div class="d-flex"><div><i class="ti ti-clock alert-icon"></i></div><div>Cambio <strong>Pendiente</strong> — se publicará el <strong>29/07/2026 a las 09:00 hs.</strong></div></div>
+        </div>
+        <div class="alert alert-danger rounded-0 m-0 d-none" id="cancel-info-hero-ar" role="alert">
+          <div class="d-flex"><div><i class="ti ti-user-x alert-icon"></i></div><div>Cancelado por <strong>Denu Barral</strong> el 24/07/2026.</div></div>
+        </div>
+        <div class="row g-3 border-bottom p-3 mx-0">
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Componente</div><div>Hero</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">País</div><div>🇦🇷 Argentina</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Guardado por</div><div>Denu Barral · 24/07</div></div>
+        </div>
+        <div class="p-3">
+          <div class="row">
+            <div class="col-md-6 mb-3 mb-md-0">
+              <label class="form-label"><i class="ti ti-device-desktop text-secondary me-1"></i>Imagen Desktop</label>
+              <div class="rounded-2 overflow-hidden" style="height:130px"><img src="assets-contenido-ecommerce/ejemplo-img-hero-historial-cambios.webp" style="width:100%;height:100%;object-fit:cover"></div>
+              <p class="form-hint">hero-ar-desktop.webp · 1920×600</p>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label"><i class="ti ti-device-mobile text-secondary me-1"></i>Imagen Mobile</label>
+              <div class="rounded-2 overflow-hidden" style="height:130px"><img src="assets-contenido-ecommerce/ejemplo-img-hero-monile-historial-cambios-.jpg" style="width:100%;height:100%;object-fit:cover"></div>
+              <p class="form-hint">hero-ar-mobile.jpg · 768×480</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-link link-secondary" data-bs-dismiss="modal">Cerrar</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. VER: Banner 3 CL — Pendiente -->
+<div class="modal modal-blur fade" id="modal-ver-banner3-cl" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-eye text-primary me-2"></i>Ver cambio — Banner 3 / 🇨🇱 Chile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="alert alert-warning rounded-0 m-0" id="status-bar-banner3-cl" role="alert">
+          <div class="d-flex"><div><i class="ti ti-clock alert-icon"></i></div><div>Cambio <strong>Pendiente</strong> — se publicará el <strong>27/07/2026 a las 00:00 hs.</strong></div></div>
+        </div>
+        <div class="alert alert-danger rounded-0 m-0 d-none" id="cancel-info-banner3-cl" role="alert">
+          <div class="d-flex"><div><i class="ti ti-user-x alert-icon"></i></div><div>Cancelado por <strong>Florencia Duarte</strong> el 22/07/2026.</div></div>
+        </div>
+        <div class="row g-3 border-bottom p-3 mx-0">
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Componente</div><div>Banner 3</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">País</div><div>🇨🇱 Chile</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Guardado por</div><div>Florencia Duarte · 22/07</div></div>
+        </div>
+        <div class="p-3 d-flex flex-column gap-3">
+          <div><label class="form-label">Vigencia <code class="text-secondary">Slide_3_left_vigencia</code></label><div class="form-control bg-secondary-lt">Desde el 1 al 31 de agosto</div></div>
+          <div><label class="form-label">Promo <code class="text-secondary">Slide_3_left_promo</code></label><div class="form-control bg-secondary-lt">Asegurate el equipaje por solo USD 12</div></div>
+          <div><label class="form-label">Disclaimer <code class="text-secondary">Slide_3_left_disclaimer</code></label><div class="form-control bg-secondary-lt">Disponible en todos los planes</div></div>
+          <div>
+            <label class="form-label">Imagen de fondo derecha <code class="text-secondary">Slide_3_right_background</code></label>
+            <div class="row g-2">
+              <div class="col-6">
+                <p class="form-hint"><i class="ti ti-device-desktop"></i> Desktop</p>
+                <div class="rounded-2 overflow-hidden" style="height:110px"><img src="assets-contenido-ecommerce/ejemplo-img-hero-historial-cambios.webp" style="width:100%;height:100%;object-fit:cover"></div>
+                <p class="form-hint">slide3-cl-desktop.jpg</p>
+              </div>
+              <div class="col-6">
+                <p class="form-hint"><i class="ti ti-device-mobile"></i> Mobile</p>
+                <div class="rounded-2 overflow-hidden" style="height:110px"><img src="assets-contenido-ecommerce/ejemplo-img-hero-monile-historial-cambios-.jpg" style="width:100%;height:100%;object-fit:cover"></div>
+                <p class="form-hint">slide3-cl-mobile.jpg</p>
+              </div>
+            </div>
+          </div>
+          <div><label class="form-label">Texto del CTA <code class="text-secondary">Slide_3_cta_text</code></label><div class="form-control bg-secondary-lt">Agregar cobertura de equipaje</div></div>
+          <div><label class="form-label">URL de destino <code class="text-secondary">Slide_3_cta_url</code></label><div class="form-control bg-secondary-lt" style="font-family:monospace;font-size:12px">https://assist-365.com/cl/equipaje</div></div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-link link-secondary" data-bs-dismiss="modal">Cerrar</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. VER: Marquesina Bottom MX — Activo -->
+<div class="modal modal-blur fade" id="modal-ver-mqbottom-mx" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-eye text-primary me-2"></i>Ver cambio — Marquesina Bottom / 🇲🇽 México</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="alert alert-success rounded-0 m-0" role="alert">
+          <div class="d-flex"><div><i class="ti ti-circle-check alert-icon"></i></div><div>Cambio <strong>Activo</strong> — publicado el 20/07/2026 a las 16:50 hs.</div></div>
+        </div>
+        <div class="row g-3 border-bottom p-3 mx-0">
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Componente</div><div>Marquesina Bottom</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">País</div><div>🇲🇽 México</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Guardado por</div><div>Denu Barral · 20/07</div></div>
+        </div>
+        <div class="p-3 d-flex flex-column gap-3">
+          <div><label class="form-label">Texto de marquesina <code class="text-secondary">Marquesina_bottom</code></label><div class="form-control bg-secondary-lt">¡Nuevo! Asistencia para estudiantes en el exterior desde USD 8</div></div>
+          <div>
+            <label class="form-label">Vista previa</label>
+            <div class="rounded-1 text-truncate" style="background:#1e2a6e;color:#fff;font-size:11px;padding:7px 12px">
+              <i class="ti ti-plane-departure" style="opacity:.7"></i>
+              &nbsp;¡Nuevo! Asistencia para estudiantes en el exterior desde USD 8 &nbsp;•&nbsp;
+              <i class="ti ti-plane-departure" style="opacity:.7"></i>
+              &nbsp;¡Nuevo! Asistencia para estudiantes en el exterior desde USD 8
+            </div>
+            <p class="form-hint"><i class="ti ti-info-circle"></i> Los íconos separadores son del Design System y no son editables.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-link link-secondary" data-bs-dismiss="modal">Cerrar</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. VER: Banner 1 AR — Activo -->
+<div class="modal modal-blur fade" id="modal-ver-banner1-ar" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-eye text-primary me-2"></i>Ver cambio — Banner 1 / 🇦🇷 Argentina</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="alert alert-success rounded-0 m-0" role="alert">
+          <div class="d-flex"><div><i class="ti ti-circle-check alert-icon"></i></div><div>Cambio <strong>Activo</strong> — publicado el 27/06/2026 a las 14:32 hs.</div></div>
+        </div>
+        <div class="row g-3 border-bottom p-3 mx-0">
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Componente</div><div>Banner 1</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">País</div><div>🇦🇷 Argentina</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Guardado por</div><div>Florencia Duarte · 27/06</div></div>
+        </div>
+        <div class="p-3 d-flex flex-column gap-3">
+          <div><label class="form-label">Vigencia <code class="text-secondary">Slide_1_left_vigencia</code></label><div class="form-control bg-secondary-lt">Desde el 1 al 31 de julio</div></div>
+          <div><label class="form-label">Promo <code class="text-secondary">Slide_1_left_promo</code></label><div class="form-control bg-secondary-lt">Hasta 60% OFF y 12 cuotas sin interés</div></div>
+          <div><label class="form-label">Disclaimer <code class="text-secondary">Slide_1_left_disclaimer</code></label><div class="form-control bg-secondary-lt">Con tarjetas de todos los bancos</div></div>
+          <div>
+            <label class="form-label">Imagen de fondo derecha <code class="text-secondary">Slide_1_right_background</code></label>
+            <div class="row g-2">
+              <div class="col-6">
+                <p class="form-hint"><i class="ti ti-device-desktop"></i> Desktop</p>
+                <div class="rounded-2 overflow-hidden" style="height:110px"><img src="assets-contenido-ecommerce/ejemplo-img-hero-historial-cambios.webp" style="width:100%;height:100%;object-fit:cover"></div>
+                <p class="form-hint">slide1-ar-desktop.jpg</p>
+              </div>
+              <div class="col-6">
+                <p class="form-hint"><i class="ti ti-device-mobile"></i> Mobile</p>
+                <div class="rounded-2 overflow-hidden" style="height:110px"><img src="assets-contenido-ecommerce/ejemplo-img-hero-monile-historial-cambios-.jpg" style="width:100%;height:100%;object-fit:cover"></div>
+                <p class="form-hint">slide1-ar-mobile.jpg</p>
+              </div>
+            </div>
+          </div>
+          <div><label class="form-label">Texto del CTA <code class="text-secondary">Slide_1_cta_text</code></label><div class="form-control bg-secondary-lt">Conocé nuestros medios de pago</div></div>
+          <div><label class="form-label">URL de destino <code class="text-secondary">Slide_1_cta_url</code></label><div class="form-control bg-secondary-lt" style="font-family:monospace;font-size:12px">https://assist-365.com/ar/medios-de-pago</div></div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-link link-secondary" data-bs-dismiss="modal">Cerrar</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. VER: Banner 2 BR — Cancelado -->
+<div class="modal modal-blur fade" id="modal-ver-banner2-br" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-eye text-primary me-2"></i>Ver cambio — Banner 2 / 🇧🇷 Brasil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="alert alert-danger rounded-0 m-0" role="alert">
+          <div class="d-flex"><div><i class="ti ti-ban alert-icon"></i></div><div>Cambio <strong>Cancelado</strong> — la publicación programada fue dejada sin efecto.</div></div>
+        </div>
+        <div class="alert alert-danger rounded-0 m-0" role="alert">
+          <div class="d-flex"><div><i class="ti ti-user-x alert-icon"></i></div><div>Cancelado por <strong>Denu Barral</strong> el 26/06/2026 a las 10:15 hs.</div></div>
+        </div>
+        <div class="row g-3 border-bottom p-3 mx-0">
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Componente</div><div>Banner 2</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">País</div><div>🇧🇷 Brasil</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Guardado por</div><div>Florencia Duarte · 25/06</div></div>
+        </div>
+        <div class="p-3 d-flex flex-column gap-3" style="opacity:.7">
+          <div><label class="form-label">Vigencia <code class="text-secondary">Slide_2_left_vigencia</code></label><div class="form-control bg-secondary-lt">Del 1 al 15 de julio</div></div>
+          <div><label class="form-label">Promo <code class="text-secondary">Slide_2_left_promo</code></label><div class="form-control bg-secondary-lt">Plan Multitrip — viajá todo el año</div></div>
+          <div><label class="form-label">Disclaimer <code class="text-secondary">Slide_2_left_disclaimer</code></label><div class="form-control bg-secondary-lt">Para residentes en Brasil</div></div>
+          <div>
+            <label class="form-label">Imagen de fondo derecha <code class="text-secondary">Slide_2_right_background</code></label>
+            <div class="row g-2">
+              <div class="col-6">
+                <p class="form-hint"><i class="ti ti-device-desktop"></i> Desktop</p>
+                <div class="rounded-2 overflow-hidden" style="height:110px"><img src="assets-contenido-ecommerce/ejemplo-img-hero-historial-cambios.webp" style="width:100%;height:100%;object-fit:cover"></div>
+              </div>
+              <div class="col-6">
+                <p class="form-hint"><i class="ti ti-device-mobile"></i> Mobile</p>
+                <div class="rounded-2 overflow-hidden" style="height:110px"><img src="assets-contenido-ecommerce/ejemplo-img-hero-monile-historial-cambios-.jpg" style="width:100%;height:100%;object-fit:cover"></div>
+              </div>
+            </div>
+          </div>
+          <div><label class="form-label">Texto del CTA <code class="text-secondary">Slide_2_cta_text</code></label><div class="form-control bg-secondary-lt">Conocé el plan multitrip</div></div>
+          <div><label class="form-label">URL de destino <code class="text-secondary">Slide_2_cta_url</code></label><div class="form-control bg-secondary-lt" style="font-family:monospace;font-size:12px">https://assist-365.com/br/multitrip</div></div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-link link-secondary" data-bs-dismiss="modal">Cerrar</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. VER: Marquesina Top CL — Cancelado -->
+<div class="modal modal-blur fade" id="modal-ver-mqtop-cl" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-eye text-primary me-2"></i>Ver cambio — Marquesina Top / 🇨🇱 Chile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="alert alert-danger rounded-0 m-0" role="alert">
+          <div class="d-flex"><div><i class="ti ti-ban alert-icon"></i></div><div>Cambio <strong>Cancelado</strong> — la publicación programada fue dejada sin efecto.</div></div>
+        </div>
+        <div class="alert alert-danger rounded-0 m-0" role="alert">
+          <div class="d-flex"><div><i class="ti ti-user-x alert-icon"></i></div><div>Cancelado por <strong>Florencia Duarte</strong> el 21/06/2026 a las 09:44 hs.</div></div>
+        </div>
+        <div class="row g-3 border-bottom p-3 mx-0">
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Componente</div><div>Marquesina Top</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">País</div><div>🇨🇱 Chile</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Guardado por</div><div>Denu Barral · 20/06</div></div>
+        </div>
+        <div class="p-3 d-flex flex-column gap-3" style="opacity:.7">
+          <div><label class="form-label">Texto de marquesina <code class="text-secondary">Marquesina_top</code></label><div class="form-control bg-secondary-lt">¡Nuevo! Cobertura médica extendida hasta 90 días para Chile</div></div>
+          <div>
+            <label class="form-label">Vista previa del texto cancelado</label>
+            <div class="rounded-1 text-truncate" style="background:#1e2a6e;color:#fff;font-size:11px;padding:7px 12px">
+              <i class="ti ti-plane-departure" style="opacity:.7"></i>
+              &nbsp;¡Nuevo! Cobertura médica extendida hasta 90 días para Chile &nbsp;•&nbsp;
+              <i class="ti ti-plane-departure" style="opacity:.7"></i>
+              &nbsp;¡Nuevo! Cobertura médica extendida hasta 90 días para Chile
+            </div>
+            <p class="form-hint"><i class="ti ti-info-circle"></i> Este cambio nunca llegó a publicarse.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-link link-secondary" data-bs-dismiss="modal">Cerrar</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. VER: FAQs AR — Finalizado -->
+<div class="modal modal-blur fade" id="modal-ver-faqs-ar" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-eye text-primary me-2"></i>Ver cambio — FAQs / 🇦🇷 Argentina</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="alert alert-secondary rounded-0 m-0" role="alert">
+          <div class="d-flex"><div><i class="ti ti-check alert-icon"></i></div><div>Cambio <strong>Finalizado</strong> — aplicado el 12/06/2026 a las 16:30 hs.</div></div>
+        </div>
+        <div class="row g-3 border-bottom p-3 mx-0">
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Componente</div><div>FAQs</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">País</div><div>🇦🇷 Argentina</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Guardado por</div><div>Florencia Duarte · 12/06</div></div>
+        </div>
+        <div class="p-3">
+          <label class="form-label">Preguntas frecuentes guardadas</label>
+          <div class="d-flex flex-column gap-2">
+            <div class="card card-sm bg-secondary-lt"><div class="card-body py-2"><p class="mb-1 fw-bold" style="font-size:12px">¿Qué cubre la asistencia al viajero?</p><p class="mb-0 text-secondary" style="font-size:12px">Cubre gastos médicos, hospitalización, repatriación, cancelación de vuelo y más según el plan elegido.</p></div></div>
+            <div class="card card-sm bg-secondary-lt"><div class="card-body py-2"><p class="mb-1 fw-bold" style="font-size:12px">¿Puedo contratar la asistencia después de salir del país?</p><p class="mb-0 text-secondary" style="font-size:12px">No. La asistencia debe contratarse antes de iniciar el viaje desde Argentina.</p></div></div>
+            <div class="card card-sm bg-secondary-lt"><div class="card-body py-2"><p class="mb-1 fw-bold" style="font-size:12px">¿Cómo accedo a mi voucher?</p><p class="mb-0 text-secondary" style="font-size:12px">Desde Mi Voucher en el sitio web, ingresando con tu email y número de reserva, o desde el email de confirmación.</p></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-link link-secondary" data-bs-dismiss="modal">Cerrar</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- 8. VER: Hero BR — Finalizado -->
+<div class="modal modal-blur fade" id="modal-ver-hero-br" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-eye text-primary me-2"></i>Ver cambio — Hero / 🇧🇷 Brasil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="alert alert-secondary rounded-0 m-0" role="alert">
+          <div class="d-flex"><div><i class="ti ti-check alert-icon"></i></div><div>Cambio <strong>Finalizado</strong> — aplicado el 05/06/2026 a las 11:05 hs.</div></div>
+        </div>
+        <div class="row g-3 border-bottom p-3 mx-0">
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Componente</div><div>Hero</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">País</div><div>🇧🇷 Brasil</div></div>
+          <div class="col-4"><div class="text-secondary" style="font-size:11px;font-weight:600;text-transform:uppercase">Guardado por</div><div>Denu Barral · 05/06</div></div>
+        </div>
+        <div class="p-3">
+          <div class="row">
+            <div class="col-md-6 mb-3 mb-md-0">
+              <label class="form-label"><i class="ti ti-device-desktop text-secondary me-1"></i>Imagen Desktop</label>
+              <div class="rounded-2 overflow-hidden" style="height:130px"><img src="assets-contenido-ecommerce/ejemplo-img-hero-historial-cambios.webp" style="width:100%;height:100%;object-fit:cover;opacity:.85"></div>
+              <p class="form-hint">hero-br-desktop-jun26.webp · 1920×600</p>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label"><i class="ti ti-device-mobile text-secondary me-1"></i>Imagen Mobile</label>
+              <div class="rounded-2 overflow-hidden" style="height:130px"><img src="assets-contenido-ecommerce/ejemplo-img-hero-monile-historial-cambios-.jpg" style="width:100%;height:100%;object-fit:cover;opacity:.85"></div>
+              <p class="form-hint">hero-br-mobile-jun26.jpg · 768×480</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-link link-secondary" data-bs-dismiss="modal">Cerrar</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Confirmar cancelación -->
+<div class="modal modal-blur fade" id="modal-cancelar-confirm" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-status bg-danger"></div>
+      <div class="modal-body text-center py-4">
+        <i class="ti ti-alert-triangle icon mb-2 text-danger icon-lg"></i>
+        <h3>Cancelar cambio programado</h3>
+        <div class="text-secondary mb-3">Estás por cancelar el siguiente cambio programado:</div>
+        <div class="bg-secondary-lt rounded-2 p-2 text-start mb-2" style="font-size:13px">
+          <div><span class="text-secondary">Componente:</span> <strong id="cc-component">—</strong></div>
+          <div><span class="text-secondary">País:</span> <span id="cc-country">—</span></div>
+        </div>
+        <div class="text-secondary" style="font-size:12px">Esta acción es irreversible. El cambio quedará en estado <strong>Cancelado</strong> y no se publicará.</div>
+      </div>
+      <div class="modal-footer">
+        <div class="w-100">
+          <div class="row">
+            <div class="col"><button type="button" class="btn w-100" data-bs-dismiss="modal">Volver</button></div>
+            <div class="col"><button type="button" class="btn btn-danger w-100" onclick="confirmCancel()"><i class="ti ti-ban"></i>Confirmar cancelación</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODAL: Nueva FAQ ==================== -->
+<div class="modal modal-blur fade" id="modal-faq" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-help-circle text-primary me-2"></i>Nueva pregunta frecuente</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Pregunta <span class="form-label-description text-danger">*</span></label>
+          <input class="form-control" placeholder="¿Cuál es la pregunta?">
+        </div>
+        <div>
+          <label class="form-label">Respuesta <span class="form-label-description text-danger">*</span></label>
+          <textarea class="form-control" placeholder="Escribí la respuesta..." rows="3"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="showToast('Pregunta agregada al final de la lista')"><i class="ti ti-plus"></i>Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODAL: Eliminar FAQ ==================== -->
+<div class="modal modal-blur fade" id="modal-delete-faq" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-status bg-danger"></div>
+      <div class="modal-body text-center py-4">
+        <i class="ti ti-alert-triangle icon mb-2 text-danger icon-lg"></i>
+        <h3>Eliminar pregunta</h3>
+        <div class="text-secondary mb-2">¿Estás seguro que querés eliminar la pregunta:</div>
+        <p id="delete-faq-question" class="bg-secondary-lt rounded-2 p-2 fw-bold" style="font-size:13px"></p>
+        <div class="text-secondary" style="font-size:12px">Esta acción no se puede deshacer.</div>
+      </div>
+      <div class="modal-footer">
+        <div class="w-100">
+          <div class="row">
+            <div class="col"><button type="button" class="btn w-100" data-bs-dismiss="modal">Cancelar</button></div>
+            <div class="col"><button type="button" class="btn btn-danger w-100" onclick="confirmDeleteFaq()"><i class="ti ti-trash"></i>Eliminar</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODAL: Confirmar guardado ==================== -->
+<div class="modal modal-blur fade" id="modal-confirm" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-shield-check text-primary me-2"></i>Confirmar cambios</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-secondary mb-3">Revisá el resumen antes de confirmar. Esta acción actualizará el contenido en producción.</p>
+        <div class="bg-secondary-lt rounded-2 p-3">
+          <div class="row g-2" style="font-size:13px">
+            <div class="col-5 text-secondary fw-medium">Sección</div><div class="col-7" id="conf-section">Home → Banners</div>
+            <div class="col-5 text-secondary fw-medium">Componente</div><div class="col-7" id="conf-component">—</div>
+            <div class="col-5 text-secondary fw-medium">País</div><div class="col-7" id="conf-country">🇦🇷 Argentina</div>
+            <div class="col-5 text-secondary fw-medium">Publicación</div><div class="col-7" id="conf-sched">—</div>
+          </div>
+        </div>
+        <div class="alert alert-warning mt-3 mb-0" role="alert">
+          <div class="d-flex"><div><i class="ti ti-alert-triangle alert-icon"></i></div><div id="conf-warning-text">Si elegiste <strong>Inmediato</strong>, los cambios se aplicarán al sitio en el próximo ciclo de actualización (puede tardar hasta 1 minuto).</div></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="confirmSave()"><i class="ti ti-check"></i>Confirmar y guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TOASTS ==================== -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container"></div>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+  /* ---------- NAV (sidebar CMS) ---------- */
+  const allSections = ['hero','mq-top','banners','mq-bottom','faqs','historial'];
+  const allNavIds   = ['nav-hero','nav-mq-top','nav-banners','nav-mq-bottom','nav-faqs','nav-historial'];
+
+  function showSection(name) {
+    allSections.forEach(s => {
+      const el = document.getElementById('section-' + s);
+      if (el) el.classList.remove('active');
+    });
+    allNavIds.forEach(n => {
+      const el = document.getElementById(n);
+      if (el) el.classList.remove('active', 'text-primary');
+    });
+    document.getElementById('nav-home-parent').classList.remove('text-primary');
+
+    const section = document.getElementById('section-' + name);
+    if (section) section.classList.add('active');
+    const navEl = document.getElementById('nav-' + name);
+    if (navEl) navEl.classList.add('active', 'text-primary');
+
+    // "Home" se resalta cuando la sección activa es una de sus 5 hijas; Historial
+    // se resalta a sí mismo (no cuelga de Home).
+    if (name === 'historial') {
+      // ya resaltado vía navEl arriba
+    } else {
+      document.getElementById('nav-home-parent').classList.add('text-primary');
+    }
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- COUNTRY TABS (visual — no hay contenido distinto por país en este prototipo) ---------- */
+  function selTab(e, el) {
+    e.preventDefault();
+    el.closest('.nav-tabs').querySelectorAll('.nav-link').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  /* ---------- HISTORIAL: FILTROS POR COMPONENTE Y PAÍS ---------- */
+  function filterHistorial() {
+    const comp = document.getElementById('historial-filter-componente').value;
+    const country = document.getElementById('historial-filter-pais').value;
+    const rows = document.querySelectorAll('#historial-tbody tr');
+    let visibleCount = 0;
+    rows.forEach(row => {
+      const matchesComp = !comp || row.dataset.component === comp;
+      const matchesCountry = !country || row.dataset.country === country;
+      const show = matchesComp && matchesCountry;
+      row.classList.toggle('d-none', !show);
+      if (show) visibleCount++;
+    });
+
+    const hasResults = visibleCount > 0;
+    document.getElementById('historial-empty').classList.toggle('d-none', hasResults);
+    document.getElementById('historial-table-wrap').classList.toggle('d-none', !hasResults);
+    document.getElementById('historial-footer').classList.toggle('d-none', !hasResults);
+    document.getElementById('historial-showing-count').textContent = visibleCount;
+  }
+
+  function resetHistorialFilters() {
+    document.getElementById('historial-filter-componente').value = '';
+    document.getElementById('historial-filter-pais').value = '';
+    filterHistorial();
+  }
+
+  /* ---------- CHAR COUNTER ---------- */
+  function cc(input, counterId) {
+    const max = parseInt(input.getAttribute('maxlength'));
+    if (!max) return;
+    const len = input.value.length;
+    const el = document.getElementById(counterId);
+    if (!el) return;
+    el.textContent = len + '/' + max;
+    el.classList.remove('text-warning', 'text-danger');
+    input.classList.remove('is-invalid');
+    if (len > max) {
+      el.classList.add('text-danger');
+      input.classList.add('is-invalid');
+    } else if (len >= max * 0.85) {
+      el.classList.add('text-warning');
+    }
+  }
+
+  /* Bloquea la escritura una vez alcanzado el máximo y fuerza el estado rojo
+     (input is-invalid + contador text-danger). Se usa solo en los campos que
+     demuestran este comportamiento (Slide 1 Vigencia y Marquesina Bottom Vigencia). */
+  function ccBlock(input, counterId, e) {
+    const max = parseInt(input.getAttribute('maxlength'));
+    if (!max || input.value.length < max) return;
+    if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      const el = document.getElementById(counterId);
+      if (el) {
+        el.textContent = max + '/' + max;
+        el.classList.remove('text-warning');
+        el.classList.add('text-danger');
+        input.classList.add('is-invalid');
+      }
+    }
+  }
+
+  // Init counters on load (para los valores precargados del prototipo)
+  setTimeout(() => {
+    document.querySelectorAll('input[maxlength]').forEach(inp => {
+      const oi = inp.getAttribute('oninput');
+      if (!oi) return;
+      const m = oi.match(/cc\(this,'([^']+)'\)/);
+      if (m) cc(inp, m[1]);
+    });
+  }, 80);
+
+  /* ---------- SCHEDULING (form-selectgroup nativo) ---------- */
+  function sched(prefix) {
+    const mode = document.querySelector('input[name="sched-' + prefix + '"]:checked').value;
+    const dtField = document.getElementById(prefix + '-dt');
+    if (dtField) dtField.style.display = (mode === 'prog') ? 'block' : 'none';
+  }
+
+  /* ---------- FILE UPLOAD SIM ---------- */
+  function simUpload(dropId, prevId, filename, dims, size) {
+    const drop = document.getElementById(dropId);
+    const prev = document.getElementById(prevId);
+    if (!drop || !prev) return;
+    drop.style.opacity = '0.5';
+    const textEl = drop.querySelector('div:nth-child(2)');
+    if (textEl) textEl.innerHTML = '<span class="text-secondary">Subiendo...</span>';
+    setTimeout(() => {
+      drop.style.display = 'none';
+      drop.style.opacity = '';
+      if (textEl) textEl.innerHTML = '<strong>Subir archivo</strong> o arrastrar aquí';
+      const captionEl = prev.querySelector('.img-preview-caption');
+      if (captionEl) captionEl.textContent = filename + ' · ' + (filename.endsWith('.png') ? 'PNG transparente' : 'JPG') + ' · ' + size + ' · ' + dims + ' px';
+      prev.classList.add('show');
+      showToast('Imagen subida: ' + filename);
+    }, 900);
+  }
+
+  function showDrop(dropId, prevId) {
+    const drop = document.getElementById(dropId);
+    const prev = document.getElementById(prevId);
+    if (prev) prev.classList.remove('show');
+    if (drop) drop.style.display = 'block';
+  }
+
+  /* ---------- MARQUESINA PREVIEW (CUSTOM) ---------- */
+  function updateMqPreview(inputId, spanId) {
+    const val = document.getElementById(inputId).value;
+    const span = document.getElementById(spanId);
+    if (span) {
+      const icon = '<i class="ti ti-plane-departure" style="font-size:11px;opacity:.8"></i>';
+      const sep = ' &nbsp;&nbsp;•&nbsp;&nbsp; ';
+      const item = icon + ' ' + val + sep;
+      span.innerHTML = item + item + item;
+    }
+  }
+
+  function updateMqBottomPreview() {
+    const v = document.getElementById('mb-v-input');
+    const p = document.getElementById('mb-p-input');
+    const d = document.getElementById('mb-d-input');
+    const pv = document.getElementById('mb-prev-v');
+    const pp = document.getElementById('mb-prev-p');
+    const pd = document.getElementById('mb-prev-d');
+    if (v && pv) pv.textContent = v.value;
+    if (p && pp) pp.textContent = 'Protegete vos también con ' + p.value;
+    if (d && pd) pd.textContent = d.value;
+  }
+
+  /* ---------- BANNER SLIDE PREVIEWS (CUSTOM) ---------- */
+  function updateS1Preview() {
+    const v  = document.getElementById('s1-vigencia');
+    const p  = document.getElementById('s1-promo');
+    const d  = document.getElementById('s1-disclaimer');
+    const c  = document.getElementById('s1-cta-texto');
+    const pv = document.getElementById('s1-prev-vigencia');
+    const pp = document.getElementById('s1-prev-promo');
+    const pd = document.getElementById('s1-prev-disclaimer');
+    const pc = document.getElementById('s1-prev-cta');
+    if (v && pv) pv.textContent = v.value || '—';
+    if (p && pp) pp.textContent = p.value;
+    if (d && pd) pd.textContent = d.value;
+    if (c && pc) pc.textContent = c.value;
+  }
+
+  function updateS2Preview() {
+    const l  = document.getElementById('s2-left');
+    const s  = document.getElementById('s2-sub');
+    const t  = document.getElementById('s2-title');
+    const dr = document.getElementById('s2-drop');
+    const c  = document.getElementById('s2-cta');
+    const pl = document.getElementById('s2-prev-left');
+    const ps = document.getElementById('s2-prev-sub');
+    const pt = document.getElementById('s2-prev-title');
+    const pd = document.getElementById('s2-prev-drop');
+    const pc = document.getElementById('s2-prev-cta');
+    if (l  && pl) pl.textContent = l.value;
+    if (s  && ps) ps.textContent = s.value;
+    if (t  && pt) pt.textContent = t.value;
+    if (dr && pd) pd.textContent = dr.value;
+    if (c  && pc) pc.textContent = c.value;
+  }
+
+  function updateS3Preview() {
+    const t  = document.getElementById('s3-title');
+    const i1 = document.getElementById('s3-item1');
+    const i2 = document.getElementById('s3-item2');
+    const c  = document.getElementById('s3-cta');
+    const pt  = document.getElementById('s3-prev-title');
+    const pi1 = document.getElementById('s3-prev-item1');
+    const pi2 = document.getElementById('s3-prev-item2');
+    const pc  = document.getElementById('s3-prev-cta');
+    if (t  && pt)  pt.textContent  = t.value;
+    if (i1 && pi1) pi1.textContent = i1.value;
+    if (i2 && pi2) pi2.textContent = i2.value;
+    if (c  && pc)  pc.textContent  = c.value;
+  }
+
+  /* ---------- TOAST (bootstrap.Toast nativo) ---------- */
+  function showToast(msg) {
+    const container = document.getElementById('toast-container');
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.setAttribute('role', 'alert');
+    el.innerHTML = `<div class="toast-header"><i class="ti ti-circle-check text-success me-2"></i><strong class="me-auto">Listo</strong></div><div class="toast-body">${msg}</div>`;
+    container.appendChild(el);
+    const toastInstance = new bootstrap.Toast(el, { delay: 3200 });
+    toastInstance.show();
+    el.addEventListener('hidden.bs.toast', () => el.remove());
+  }
+
+  /* ---------- MODALES (bootstrap.Modal nativo) ---------- */
+  function openModal(id)  { bootstrap.Modal.getOrCreateInstance(document.getElementById(id)).show(); }
+  function closeModal(id) { bootstrap.Modal.getOrCreateInstance(document.getElementById(id)).hide(); }
+
+  /* ---------- CANCELAR CAMBIO PROGRAMADO ---------- */
+  let _cancelRowId = null;
+
+  function openCancelConfirm(rowId, component, country) {
+    _cancelRowId = rowId;
+    document.getElementById('cc-component').textContent = component;
+    document.getElementById('cc-country').textContent   = country;
+    openModal('modal-cancelar-confirm');
+  }
+
+  function confirmCancel() {
+    if (!_cancelRowId) return;
+    const row = document.getElementById(_cancelRowId);
+    if (!row) return;
+
+    // 1. Actualizar badge de estado en la fila
+    row.querySelector('.status-cell').innerHTML =
+      '<span class="status status-red"><span class="status-dot"></span>Cancelado</span>';
+
+    // 2. Deshabilitar botón Cancelar de la fila
+    const cancelBtn = row.querySelector('.btn-cancelar');
+    if (cancelBtn) { cancelBtn.disabled = true; cancelBtn.onclick = null; }
+
+    // 3. Mostrar "Cancelado por" en el modal Ver correspondiente
+    const cancelInfoId = 'cancel-info-' + _cancelRowId.replace('row-', '');
+    const statusBarId  = 'status-bar-'  + _cancelRowId.replace('row-', '');
+    const cancelInfo = document.getElementById(cancelInfoId);
+    const statusBar  = document.getElementById(statusBarId);
+    if (cancelInfo) cancelInfo.classList.remove('d-none');
+    if (statusBar) {
+      statusBar.className = 'alert alert-danger rounded-0 m-0';
+      statusBar.innerHTML = '<div class="d-flex"><div><i class="ti ti-ban alert-icon"></i></div><div>Cambio <strong>Cancelado</strong> — la publicación programada fue dejada sin efecto.</div></div>';
+    }
+
+    closeModal('modal-cancelar-confirm');
+    _cancelRowId = null;
+    showToast('Cambio cancelado correctamente');
+  }
+
+  /* ---------- DELETE FAQ ---------- */
+  let _pendingDeleteFaqRow = null;
+
+  function openDeleteFaq(btn) {
+    const row = btn.closest('.faq-row');
+    const input = row.querySelector('input.form-control');
+    const question = input ? input.value : 'esta pregunta';
+    document.getElementById('delete-faq-question').textContent = question || 'esta pregunta';
+    _pendingDeleteFaqRow = row;
+    openModal('modal-delete-faq');
+  }
+  function confirmDeleteFaq() {
+    if (_pendingDeleteFaqRow) {
+      _pendingDeleteFaqRow.remove();
+      _pendingDeleteFaqRow = null;
+    }
+    closeModal('modal-delete-faq');
+    showToast('FAQ eliminada');
+  }
+
+  /* ---------- CONFIRM SAVE (todos los componentes) ---------- */
+  function openConfirm() {
+    let activeSection = 'banners';
+    allSections.forEach(s => {
+      const el = document.getElementById('section-' + s);
+      if (el && el.classList.contains('active')) activeSection = s;
+    });
+
+    const sectionCfg = {
+      'hero':       { label: 'Hero',              tabsId: 'tabs-hero',    schedPrefix: 'h'  },
+      'mq-top':     { label: 'Marquesina Top',    tabsId: 'tabs-mq-top',  schedPrefix: 'mt' },
+      'banners':    { label: 'Banners',           tabsId: 'tabs-banners', schedPrefix: 'b'  },
+      'mq-bottom':  { label: 'Marquesina Bottom', tabsId: 'tabs-mb',      schedPrefix: 'mb' },
+      'faqs':       { label: 'FAQs',              tabsId: 'tabs-faqs',    schedPrefix: null },
+    };
+
+    const cfg = sectionCfg[activeSection] || sectionCfg['banners'];
+    let component = cfg.label;
+
+    // Para Banners: detectar qué acordeones están abiertos
+    if (activeSection === 'banners') {
+      const acc1Open = document.getElementById('acc1-body').classList.contains('show');
+      const acc2Open = document.getElementById('acc2-body').classList.contains('show');
+      const acc3Open = document.getElementById('acc3-body').classList.contains('show');
+      if (acc1Open && acc2Open && acc3Open) component = 'Todos los banners (3 slides)';
+      else if (acc1Open && acc2Open)        component = 'Banner 1 + Banner 2';
+      else if (acc3Open && !acc1Open)       component = 'Banner 3: Adicionales';
+      else if (acc2Open && !acc1Open)       component = 'Banner 2: Plan multitrip';
+      else                                  component = 'Banner 1: Cuotas y promociones';
+    }
+
+    // País activo
+    const activeTab = cfg.tabsId ? document.querySelector('#' + cfg.tabsId + ' .nav-link.active') : null;
+    const country = activeTab ? activeTab.textContent.trim() : '—';
+
+    // Modo de publicación
+    let schedText = 'Inmediato';
+    if (cfg.schedPrefix) {
+      const checkedRadio = document.querySelector('input[name="sched-' + cfg.schedPrefix + '"]:checked');
+      const isImm = checkedRadio ? checkedRadio.value === 'imm' : true;
+      const dtInput = document.querySelector('#' + cfg.schedPrefix + '-dt input');
+      const dtVal = dtInput ? dtInput.value : '';
+      if (!isImm && dtVal) {
+        const d = new Date(dtVal);
+        schedText = 'Programado para ' + d.toLocaleDateString('es-AR') + ' ' + d.toLocaleTimeString('es-AR', {hour:'2-digit',minute:'2-digit'});
+      } else if (!isImm) {
+        schedText = 'Programado (fecha no seleccionada)';
+      }
+    }
+
+    document.getElementById('conf-section').textContent = 'Home → ' + component;
+    document.getElementById('conf-component').textContent = component;
+    document.getElementById('conf-country').textContent = country;
+    document.getElementById('conf-sched').textContent = schedText;
+
+    const warningEl = document.getElementById('conf-warning-text');
+    if (activeSection === 'faqs') {
+      warningEl.innerHTML = 'Los cambios en FAQs se aplican de forma <strong>inmediata</strong> al sitio (puede tardar hasta 1 minuto).';
+    } else {
+      warningEl.innerHTML = 'Si elegiste <strong>Inmediato</strong>, los cambios se aplicarán al sitio en el próximo ciclo de actualización (puede tardar hasta 1 minuto).';
+    }
+
+    openModal('modal-confirm');
+  }
+
+  function confirmSave() {
+    const country = document.getElementById('conf-country').textContent;
+    closeModal('modal-confirm');
+    showToast('Cambios guardados para ' + country + ' ✓');
+  }
+</script>
+</body>
+</html>

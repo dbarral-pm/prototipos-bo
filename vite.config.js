@@ -16,6 +16,7 @@ export default defineConfig(({ command }) => ({
         reintegrosFormularioWeb: resolve(root, 'bo_reintegros_formulario_web_prototipo_2.html'),
         reintegrosSolicitudes: resolve(root, 'bo_reintegros_solicitudes_prototipo_1.html'),
         reintegrosSolicitudDetalle: resolve(root, 'bo_reintegros_solicitud_detalle_prototipo_1.html'),
+        contenidoEcommerceHome: resolve(root, 'bo_contenido_ecommerce_home_prototipo_1.html'),
       },
     },
   },
