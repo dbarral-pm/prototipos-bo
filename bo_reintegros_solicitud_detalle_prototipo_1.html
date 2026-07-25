@@ -11,6 +11,19 @@
 <script type="module" src="/src/tabler.js"></script>
 <style>
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+  /* CUSTOM: mismo sidebar de módulo que "Formulario web de reintegros" y que el
+     módulo "Contenido Ecommerce" — ver ese archivo para el detalle de la justificación. */
+  .cms-sidebar { width: 240px; flex-shrink: 0; border-right: 1px solid #e6e8eb; min-height: calc(100vh - 56px); padding: .75rem 0; }
+  .cms-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; padding: .5rem 1rem .25rem; }
+  .cms-parent { display: flex; align-items: center; gap: .5rem; padding: .45rem .9rem; font-size: 13px; font-weight: 500; cursor: pointer; user-select: none; border-radius: 4px; margin: 0 .5rem; text-decoration: none; color: inherit; }
+  .cms-parent:hover, .cms-parent:focus { background: #f5f7fb; text-decoration: none !important; }
+  .cms-parent.active { color: #206bc4; }
+  .cms-content { flex: 1; min-width: 0; padding: 1.5rem; }
+  .cms-section { max-width: 960px; }
+
+  .cms-content .page-pretitle { margin-bottom: .5rem !important; }
+  .cms-content .page-header { margin-bottom: 1.75rem !important; }
 </style>
 </head>
 <body>
@@ -68,63 +81,78 @@
     </div>
   </header>
 
-  <!-- PAGE BODY -->
-  <div class="page-body">
-    <div class="container-xl">
+  <!-- ==================== LAYOUT: SIDEBAR + CONTENIDO ==================== -->
+  <div class="page-body" style="margin:0;padding:0">
+    <div class="d-flex align-items-start" style="min-height:calc(100vh - 56px)">
 
-      <div class="page-header d-print-none">
-        <div class="row align-items-center">
-          <div class="col">
-            <div class="page-pretitle mb-1">
+      <!-- -------- SIDEBAR DEL MÓDULO (CUSTOM) -------- -->
+      <aside class="cms-sidebar">
+        <div class="cms-section-label text-secondary">Reintegros</div>
+
+        <a href="bo_reintegros_formulario_web_prototipo_2.html" class="cms-parent">
+          <i class="ti ti-forms"></i>Formulario web de reintegros
+        </a>
+
+        <a href="bo_reintegros_solicitudes_prototipo_1.html" class="cms-parent active">
+          <i class="ti ti-list-check"></i>Solicitudes de reintegros
+        </a>
+      </aside>
+
+      <!-- -------- CONTENIDO -------- -->
+      <main class="cms-content">
+        <div class="cms-section">
+
+          <div class="page-header d-print-none">
+            <div class="page-pretitle">
               <a href="bo_reintegros_solicitudes_prototipo_1.html" class="text-secondary"><i class="ti ti-arrow-left me-1"></i>Reintegros / Solicitudes de reintegros</a>
             </div>
             <h2 class="page-title" id="page-title">Detalle de solicitud</h2>
           </div>
-        </div>
-      </div>
 
-      <div id="content-not-found" class="d-none">
-        <div class="empty">
-          <div class="empty-icon"><i class="ti ti-file-off" style="font-size:2.5rem"></i></div>
-          <p class="empty-title">No encontramos esa solicitud.</p>
-          <p class="empty-subtitle text-secondary">Puede que ya haya sido eliminada.</p>
-          <div class="empty-action"><a href="bo_reintegros_solicitudes_prototipo_1.html" class="btn btn-primary">Volver al listado</a></div>
-        </div>
-      </div>
-
-      <div id="content-detalle" class="d-none">
-
-        <div class="card mb-3">
-          <div class="card-header"><h3 class="card-title"><i class="ti ti-id-badge2 text-primary me-2"></i>Información general</h3></div>
-          <div class="card-body">
-            <div class="datagrid" id="datagrid-general"></div>
-          </div>
-        </div>
-
-        <div class="row row-cards mb-3">
-          <div class="col-12 col-md-6">
-            <div class="card h-100">
-              <div class="card-header"><h3 class="card-title"><i class="ti ti-users text-primary me-2"></i>Viajeros involucrados</h3></div>
-              <div class="list-group list-group-flush" id="list-viajeros"></div>
+          <div id="content-not-found" class="d-none">
+            <div class="empty">
+              <div class="empty-icon"><i class="ti ti-file-off" style="font-size:2.5rem"></i></div>
+              <p class="empty-title">No encontramos esa solicitud.</p>
+              <p class="empty-subtitle text-secondary">Puede que ya haya sido eliminada.</p>
+              <div class="empty-action"><a href="bo_reintegros_solicitudes_prototipo_1.html" class="btn btn-primary">Volver al listado</a></div>
             </div>
           </div>
-          <div class="col-12 col-md-6">
-            <div class="card h-100">
-              <div class="card-header"><h3 class="card-title"><i class="ti ti-credit-card text-primary me-2"></i>Datos de pago</h3></div>
+
+          <div id="content-detalle" class="d-none">
+
+            <div class="card mb-3">
+              <div class="card-header"><h3 class="card-title"><i class="ti ti-id-badge2 text-primary me-2"></i>Información general</h3></div>
               <div class="card-body">
-                <div class="datagrid" id="datagrid-pago"></div>
+                <div class="datagrid" id="datagrid-general"></div>
               </div>
             </div>
+
+            <div class="row row-cards mb-3">
+              <div class="col-12 col-md-6">
+                <div class="card h-100">
+                  <div class="card-header"><h3 class="card-title"><i class="ti ti-users text-primary me-2"></i>Viajeros involucrados</h3></div>
+                  <div class="list-group list-group-flush" id="list-viajeros"></div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="card h-100">
+                  <div class="card-header"><h3 class="card-title"><i class="ti ti-credit-card text-primary me-2"></i>Datos de pago</h3></div>
+                  <div class="card-body">
+                    <div class="datagrid" id="datagrid-pago"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3 class="card-title"><i class="ti ti-files text-primary me-2"></i>Documentación presentada</h3></div>
+              <div class="list-group list-group-flush" id="list-documentos"></div>
+            </div>
+
           </div>
+
         </div>
-
-        <div class="card">
-          <div class="card-header"><h3 class="card-title"><i class="ti ti-files text-primary me-2"></i>Documentación presentada</h3></div>
-          <div class="list-group list-group-flush" id="list-documentos"></div>
-        </div>
-
-      </div>
-
+      </main>
     </div>
   </div>
 </div>

@@ -12,6 +12,32 @@
 <style>
   /* CUSTOM: Tabler no define una fuente por defecto para <body> en el bundle base — se fija Inter acá, nada más. */
   body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+  /* CUSTOM: sidebar de módulo de dos niveles (secciones expandibles + subitems).
+     Tabler no tiene un patrón nativo para este árbol de navegación lateral de dos
+     niveles; se resuelve con estructura propia usando utilidades Tabler (text-primary,
+     badges, etc.) para color/tipografía. El expandir/colapsar en sí usa el componente
+     Collapse nativo de Bootstrap. Mismo patrón que el módulo "Contenido Ecommerce",
+     para mantener consistencia visual entre módulos del BO. */
+  .cms-sidebar { width: 240px; flex-shrink: 0; border-right: 1px solid #e6e8eb; min-height: calc(100vh - 56px); padding: .75rem 0; }
+  .cms-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; padding: .5rem 1rem .25rem; }
+  .cms-parent { display: flex; align-items: center; gap: .5rem; padding: .45rem .9rem; font-size: 13px; font-weight: 500; cursor: pointer; user-select: none; border-radius: 4px; margin: 0 .5rem; text-decoration: none; color: inherit; }
+  .cms-parent:hover, .cms-parent:focus { background: #f5f7fb; text-decoration: none !important; }
+  .cms-parent .chev { margin-left: auto; transition: transform .18s; }
+  .cms-parent[aria-expanded="true"] .chev { transform: rotate(90deg); }
+  .cms-parent-disabled { opacity: .55; cursor: not-allowed; pointer-events: none; }
+  .cms-child { display: flex; align-items: center; gap: .45rem; padding: .4rem .8rem .4rem 2rem; font-size: 13px; text-decoration: none; color: inherit; border-left: 2px solid transparent; border-radius: 0 4px 4px 0; margin-right: .5rem; }
+  .cms-child:hover, .cms-child:focus { background: #f5f7fb; text-decoration: none !important; }
+  .cms-child.active { border-left-color: currentColor; }
+  .cms-content { flex: 1; min-width: 0; padding: 1.5rem; }
+  .cms-section { display: none; max-width: 960px; }
+  .cms-section.active { display: block; }
+
+  /* CUSTOM: aire entre el breadcrumb, el título y el bloque de info de cada sección.
+     Con !important porque el CSS de Tabler se inyecta después (vía el módulo JS) y
+     pisa reglas de igual especificidad definidas antes en el documento. */
+  .cms-content .page-pretitle { margin-bottom: .5rem !important; }
+  .cms-content .page-header { margin-bottom: 1.75rem !important; }
 </style>
 </head>
 <body>
@@ -69,126 +95,121 @@
     </div>
   </header>
 
-  <!-- PAGE BODY -->
-  <div class="page-body">
-    <div class="container-xl">
+  <!-- ==================== LAYOUT: SIDEBAR + CONTENIDO ==================== -->
+  <div class="page-body" style="margin:0;padding:0">
+    <div class="d-flex align-items-start" style="min-height:calc(100vh - 56px)">
 
-      <div class="page-header d-print-none mb-3">
-        <div class="row align-items-center">
-          <div class="col">
-            <div class="page-pretitle mb-1">Reintegros</div>
-            <h2 class="page-title">Formulario web de reintegros</h2>
-          </div>
+      <!-- -------- SIDEBAR DEL MÓDULO (CUSTOM) -------- -->
+      <aside class="cms-sidebar">
+        <div class="cms-section-label text-secondary">Reintegros</div>
+
+        <a href="#" class="cms-parent text-primary" id="nav-formulario-parent" data-bs-toggle="collapse" data-bs-target="#ch-formulario" role="button" aria-expanded="true" aria-controls="ch-formulario">
+          <i class="ti ti-forms"></i>Formulario web de reintegros
+          <i class="ti ti-chevron-right chev"></i>
+        </a>
+        <div class="collapse show" id="ch-formulario">
+          <a href="#" class="cms-child active text-primary" id="nav-categorias" onclick="showSection('categorias');return false">
+            <i class="ti ti-category-2"></i>Categoría de asistencia
+          </a>
+          <a href="#" class="cms-child" id="nav-subcategorias" onclick="showSection('subcategorias');return false">
+            <i class="ti ti-list-details"></i>Subcategoría de asistencia
+          </a>
+          <a href="#" class="cms-child" id="nav-documentos" onclick="showSection('documentos');return false">
+            <i class="ti ti-files"></i>Documentos requeridos
+          </a>
         </div>
-      </div>
 
-      <div class="alert alert-info" role="alert">
-        <div class="d-flex">
-          <div><i class="ti ti-bulb alert-icon"></i></div>
-          <div>
-            <strong>Objetivo del módulo:</strong> permitir que el equipo de Operaciones cree, edite y elimine las categorías de asistencia, subcategorías y documentos requeridos que alimentan la página de solicitud de reintegros, <strong>sin depender de Ingeniería de Producto</strong>. Cualquier cambio guardado acá impacta de forma directa en el formulario que ve el viajero.
-          </div>
-        </div>
-      </div>
+        <a href="bo_reintegros_solicitudes_prototipo_1.html" class="cms-parent" id="nav-solicitudes">
+          <i class="ti ti-list-check"></i>Solicitudes de reintegros
+        </a>
+      </aside>
 
-      <div class="card">
-        <div class="row g-0">
-          <!-- SUB-NAVEGACIÓN DEL MÓDULO (patrón real de settings.html) -->
-          <div class="col-12 col-md-3 border-end">
-            <div class="card-body">
-              <h4 class="subheader">Reintegros</h4>
-              <div class="list-group list-group-transparent">
-                <a href="bo_reintegros_formulario_web_prototipo_2.html" class="list-group-item list-group-item-action d-flex align-items-center active">
-                  <i class="ti ti-forms me-2"></i>Formulario web de reintegros
-                </a>
-                <div class="ps-3" id="module-nav">
-                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center active" data-section="categorias" onclick="showSection('categorias');return false">
-                    <i class="ti ti-category-2 me-2"></i>Categoría de asistencia
-                  </a>
-                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center" data-section="subcategorias" onclick="showSection('subcategorias');return false">
-                    <i class="ti ti-list-details me-2"></i>Subcategoría de asistencia
-                  </a>
-                  <a href="#" class="list-group-item list-group-item-action d-flex align-items-center" data-section="documentos" onclick="showSection('documentos');return false">
-                    <i class="ti ti-files me-2"></i>Documentos requeridos
-                  </a>
-                </div>
-                <a href="bo_reintegros_solicitudes_prototipo_1.html" class="list-group-item list-group-item-action d-flex align-items-center">
-                  <i class="ti ti-list-check me-2"></i>Solicitudes de reintegros
-                </a>
-              </div>
-            </div>
-          </div>
+      <!-- -------- CONTENIDO -------- -->
+      <main class="cms-content">
 
-          <!-- CONTENIDO -->
-          <div class="col-12 col-md-9 d-flex flex-column">
-            <div class="card-body">
-
-              <!-- ===================== SECCIÓN: CATEGORÍAS ===================== -->
-              <div class="module-section" data-section="categorias">
-                <div class="alert alert-secondary" role="alert">
-                  <div class="d-flex">
-                    <div><i class="ti ti-info-circle alert-icon"></i></div>
-                    <div>Las categorías son el primer grupo que el viajero elige al iniciar una solicitud de reintegro (ej: Salud, Vuelo, Equipaje). Cada categoría agrupa una o varias subcategorías de asistencia más específicas.</div>
-                  </div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                  <div class="input-icon me-2" style="width:280px">
-                    <input type="text" class="form-control" id="search-categorias" placeholder="Buscar categoría..." oninput="renderCategorias()">
-                    <span class="input-icon-addon"><i class="ti ti-search"></i></span>
-                  </div>
-                  <span class="text-secondary" id="count-categorias"></span>
-                  <button class="btn btn-primary ms-auto" onclick="openCategoriaModal()"><i class="ti ti-plus"></i>Nueva categoría</button>
-                </div>
-                <div class="row row-cards" id="grid-categorias"></div>
-              </div>
-
-              <!-- ===================== SECCIÓN: SUBCATEGORÍAS ===================== -->
-              <div class="module-section d-none" data-section="subcategorias">
-                <div class="alert alert-secondary" role="alert">
-                  <div class="d-flex">
-                    <div><i class="ti ti-info-circle alert-icon"></i></div>
-                    <div>Las subcategorías son el evento específico que el viajero selecciona (ej: Medicamentos, Demora de equipaje). Toda subcategoría pertenece a <strong>una y solo una</strong> categoría.</div>
-                  </div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                  <div class="input-icon me-2" style="width:280px">
-                    <input type="text" class="form-control" id="search-subcategorias" placeholder="Buscar subcategoría..." oninput="renderSubcategorias()">
-                    <span class="input-icon-addon"><i class="ti ti-search"></i></span>
-                  </div>
-                  <span class="text-secondary" id="count-subcategorias"></span>
-                  <button class="btn btn-primary ms-auto" onclick="openSubcategoriaModal()"><i class="ti ti-plus"></i>Nueva subcategoría</button>
-                </div>
-                <div class="card">
-                  <div class="list-group list-group-flush" id="list-subcategorias"></div>
-                </div>
-              </div>
-
-              <!-- ===================== SECCIÓN: DOCUMENTOS ===================== -->
-              <div class="module-section d-none" data-section="documentos">
-                <div class="alert alert-secondary" role="alert">
-                  <div class="d-flex">
-                    <div><i class="ti ti-info-circle alert-icon"></i></div>
-                    <div>Los documentos requeridos se anticipan al viajero antes de iniciar la carga y se validan al subir cada archivo. Un documento no puede existir sin estar vinculado al menos a una subcategoría, y puede repetirse en varias.</div>
-                  </div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                  <div class="input-icon me-2" style="width:280px">
-                    <input type="text" class="form-control" id="search-documentos" placeholder="Buscar documento..." oninput="renderDocumentos()">
-                    <span class="input-icon-addon"><i class="ti ti-search"></i></span>
-                  </div>
-                  <span class="text-secondary" id="count-documentos"></span>
-                  <button class="btn btn-primary ms-auto" onclick="openDocumentoModal()"><i class="ti ti-plus"></i>Nuevo documento</button>
-                </div>
-                <div class="card">
-                  <div class="list-group list-group-flush" id="list-documentos"></div>
-                </div>
-              </div>
-
+        <div class="alert alert-info" role="alert">
+          <div class="d-flex">
+            <div><i class="ti ti-bulb alert-icon"></i></div>
+            <div>
+              <strong>Objetivo del módulo:</strong> permitir que el equipo de Operaciones cree, edite y elimine las categorías de asistencia, subcategorías y documentos requeridos que alimentan la página de solicitud de reintegros, <strong>sin depender de Ingeniería de Producto</strong>. Cualquier cambio guardado acá impacta de forma directa en el formulario que ve el viajero.
             </div>
           </div>
         </div>
-      </div>
 
+        <!-- ===================== SECCIÓN: CATEGORÍAS ===================== -->
+        <div class="cms-section active" id="section-categorias">
+          <div class="page-header d-print-none">
+            <div class="page-pretitle">Formulario web de reintegros <i class="ti ti-chevron-right" style="font-size:10px"></i> Categoría de asistencia</div>
+            <h2 class="page-title">Categoría de asistencia</h2>
+          </div>
+          <div class="alert alert-secondary" role="alert">
+            <div class="d-flex">
+              <div><i class="ti ti-info-circle alert-icon"></i></div>
+              <div>Las categorías son el primer grupo que el viajero elige al iniciar una solicitud de reintegro (ej: Salud, Vuelo, Equipaje). Cada categoría agrupa una o varias subcategorías de asistencia más específicas.</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <div class="input-icon me-2" style="width:280px">
+              <input type="text" class="form-control" id="search-categorias" placeholder="Buscar categoría..." oninput="renderCategorias()">
+              <span class="input-icon-addon"><i class="ti ti-search"></i></span>
+            </div>
+            <span class="text-secondary" id="count-categorias"></span>
+            <button class="btn btn-primary ms-auto" onclick="openCategoriaModal()"><i class="ti ti-plus"></i>Nueva categoría</button>
+          </div>
+          <div class="row row-cards" id="grid-categorias"></div>
+        </div>
+
+        <!-- ===================== SECCIÓN: SUBCATEGORÍAS ===================== -->
+        <div class="cms-section" id="section-subcategorias">
+          <div class="page-header d-print-none">
+            <div class="page-pretitle">Formulario web de reintegros <i class="ti ti-chevron-right" style="font-size:10px"></i> Subcategoría de asistencia</div>
+            <h2 class="page-title">Subcategoría de asistencia</h2>
+          </div>
+          <div class="alert alert-secondary" role="alert">
+            <div class="d-flex">
+              <div><i class="ti ti-info-circle alert-icon"></i></div>
+              <div>Las subcategorías son el evento específico que el viajero selecciona (ej: Medicamentos, Demora de equipaje). Toda subcategoría pertenece a <strong>una y solo una</strong> categoría.</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <div class="input-icon me-2" style="width:280px">
+              <input type="text" class="form-control" id="search-subcategorias" placeholder="Buscar subcategoría..." oninput="renderSubcategorias()">
+              <span class="input-icon-addon"><i class="ti ti-search"></i></span>
+            </div>
+            <span class="text-secondary" id="count-subcategorias"></span>
+            <button class="btn btn-primary ms-auto" onclick="openSubcategoriaModal()"><i class="ti ti-plus"></i>Nueva subcategoría</button>
+          </div>
+          <div class="card">
+            <div class="list-group list-group-flush" id="list-subcategorias"></div>
+          </div>
+        </div>
+
+        <!-- ===================== SECCIÓN: DOCUMENTOS ===================== -->
+        <div class="cms-section" id="section-documentos">
+          <div class="page-header d-print-none">
+            <div class="page-pretitle">Formulario web de reintegros <i class="ti ti-chevron-right" style="font-size:10px"></i> Documentos requeridos</div>
+            <h2 class="page-title">Documentos requeridos</h2>
+          </div>
+          <div class="alert alert-secondary" role="alert">
+            <div class="d-flex">
+              <div><i class="ti ti-info-circle alert-icon"></i></div>
+              <div>Los documentos requeridos se anticipan al viajero antes de iniciar la carga y se validan al subir cada archivo. Un documento no puede existir sin estar vinculado al menos a una subcategoría, y puede repetirse en varias.</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <div class="input-icon me-2" style="width:280px">
+              <input type="text" class="form-control" id="search-documentos" placeholder="Buscar documento..." oninput="renderDocumentos()">
+              <span class="input-icon-addon"><i class="ti ti-search"></i></span>
+            </div>
+            <span class="text-secondary" id="count-documentos"></span>
+            <button class="btn btn-primary ms-auto" onclick="openDocumentoModal()"><i class="ti ti-plus"></i>Nuevo documento</button>
+          </div>
+          <div class="card">
+            <div class="list-group list-group-flush" id="list-documentos"></div>
+          </div>
+        </div>
+
+      </main>
     </div>
   </div>
 </div>
@@ -353,9 +374,21 @@
 /* =========================================================
    NAVEGACIÓN DEL MÓDULO
    ========================================================= */
+const allSections = ['categorias', 'subcategorias', 'documentos'];
+const allNavIds   = ['nav-categorias', 'nav-subcategorias', 'nav-documentos'];
+
 function showSection(name) {
-  document.querySelectorAll('.module-section').forEach(el => el.classList.toggle('d-none', el.dataset.section !== name));
-  document.querySelectorAll('#module-nav .list-group-item').forEach(el => el.classList.toggle('active', el.dataset.section === name));
+  allSections.forEach(s => {
+    const el = document.getElementById('section-' + s);
+    if (el) el.classList.toggle('active', s === name);
+  });
+  allNavIds.forEach(n => {
+    const el = document.getElementById(n);
+    if (el) el.classList.remove('active', 'text-primary');
+  });
+  const navEl = document.getElementById('nav-' + name);
+  if (navEl) navEl.classList.add('active', 'text-primary');
+  window.scrollTo(0, 0);
 }
 
 /* =========================================================

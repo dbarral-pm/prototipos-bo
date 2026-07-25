@@ -27,7 +27,6 @@ El BO real usa **Tabler UI**, un admin template construido sobre Bootstrap 5 (MI
 | Menú de acciones por fila (editar/eliminar) | `.dropdown` + `.dropdown-menu` + `.dropdown-item` |
 | Banner informativo o de advertencia | `.alert.alert-info` / `.alert.alert-warning` con `.alert-icon` |
 | Estado vacío de una lista/tabla | `.empty` + `.empty-img` + `.empty-title` + `.empty-subtitle` + `.empty-action` |
-| Sub-navegación dentro de un módulo (varias secciones) | patrón de `settings.html`: `.card` > `.row.g-0` > `.col-md-3.border-end` con `.list-group.list-group-transparent` + `.col-md-9` de contenido |
 | Subida de un archivo simple | `<input type="file" class="form-control">` (validaciones de negocio van en JS propio, eso es lógica de producto, no UI) |
 | Avatar / ícono circular | `.avatar`, `.avatar-sm`, `.avatar-xl`, etc. |
 | Badge de estado | `.badge`, `.bg-{color}-lt` (variante suave) |
@@ -37,6 +36,7 @@ El BO real usa **Tabler UI**, un admin template construido sobre Bootstrap 5 (MI
 Ejemplos ya identificados en features anteriores — quedan permitidos porque Tabler no tiene un componente de fondo para esto, pero SIEMPRE marcados con el comentario `<!-- CUSTOM: ... -->`:
 - Validación específica de negocio (tamaño/formato/dimensiones de un ícono .svg) — es lógica, no componente, así que ni siquiera cuenta como "custom UI", pero el feedback visual de error debe usar `.is-invalid` / `.invalid-feedback` nativos de Tabler, no clases propias.
 - Un layout de tarjetas con contador de vínculos (ej: "esta categoría incluye 5 subcategorías") — Tabler tiene `.card` y `.chip`/`.badge`, pero la combinación específica de card + chips vinculados es nuestra.
+- **El sidebar de navegación de un módulo** (ver sección dedicada más abajo) — Tabler no tiene un patrón nativo de árbol de dos niveles con secciones expandibles y items "próximamente" deshabilitados. Este es un caso especial: dejó de ser una decisión libre por prototipo y pasó a ser **un patrón único y obligatorio para todo el BO** (ver más abajo) — así se garantiza consistencia visual entre módulos distintos (ej: Reintegros y Contenido Ecommerce comparten el mismo sidebar).
 
 ---
 
@@ -221,40 +221,107 @@ Correr `npm run dev` y verificar en el navegador que carga bien, que los modales
 
 ## Patrones de componentes frecuentes (markup real, verificado contra preview.tabler.io)
 
-### Sub-navegación dentro de un módulo (varias secciones)
+### Sidebar de módulo (patrón único y obligatorio — CUSTOM, ver justificación arriba)
 
-> Usar cuando la feature tiene múltiples sub-secciones navegables (ej: módulo Reintegros con Categoría / Subcategoría / Documentos requeridos). Patrón real tomado de `settings.html` de Tabler — no un sidebar custom.
+> **Usar SIEMPRE que un módulo tenga más de una pantalla/sub-sección** (ej: Reintegros con "Formulario web de reintegros" + "Solicitudes de reintegros"; Contenido Ecommerce con "Home" y sus componentes). Este es EL sidebar del BO — no inventar una variante nueva por módulo, ni volver al patrón viejo de `list-group` dentro de una `card` (deprecado: rompía la consistencia visual entre módulos). Nació en el módulo "Contenido Ecommerce" y se adoptó también en "Reintegros" para unificar.
 
+**Regla de estructura:** cada módulo tiene UN sidebar con dos niveles posibles:
+- **Ítems padre** (`.cms-parent`): un destino de primer nivel. Puede ser expandible (tiene hijos) o una acción directa (sin hijos, ej. "Historial de cambios", "Solicitudes de reintegros").
+- **Ítems hijo** (`.cms-child`): sub-secciones de un padre expandible, siempre anidadas dentro de un `.collapse` justo debajo de su padre.
+- **Ítems deshabilitados** (`.cms-parent-disabled` + `<span class="badge bg-secondary-lt ms-auto">Pronto</span>`): secciones futuras, no clickeables.
+
+**Si el módulo vive en varias páginas HTML distintas** (no todo cabe como secciones de una sola página): cada página es un destino de primer nivel del sidebar. En la página donde estás parado, ese ítem se muestra expandido con sus hijos reales (si los tiene) funcionando con `showSection()` dentro de esa misma página. En las demás páginas del módulo, ese mismo ítem se muestra como un link directo sin chevron ni `data-bs-toggle="collapse"` (no tiene sentido mostrar la promesa de expandir algo que no existe en el DOM de esa página) — ver los 3 archivos de Reintegros como referencia real de esto.
+
+**CSS (agregar tal cual, sin modificar valores):**
+```css
+.cms-sidebar { width: 240px; flex-shrink: 0; border-right: 1px solid #e6e8eb; min-height: calc(100vh - 56px); padding: .75rem 0; }
+.cms-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; padding: .5rem 1rem .25rem; }
+.cms-parent { display: flex; align-items: center; gap: .5rem; padding: .45rem .9rem; font-size: 13px; font-weight: 500; cursor: pointer; user-select: none; border-radius: 4px; margin: 0 .5rem; text-decoration: none; color: inherit; }
+.cms-parent:hover, .cms-parent:focus { background: #f5f7fb; text-decoration: none !important; }
+.cms-parent.active { color: #206bc4; }
+.cms-parent .chev { margin-left: auto; transition: transform .18s; }
+.cms-parent[aria-expanded="true"] .chev { transform: rotate(90deg); }
+.cms-parent-disabled { opacity: .55; cursor: not-allowed; pointer-events: none; }
+.cms-child { display: flex; align-items: center; gap: .45rem; padding: .4rem .8rem .4rem 2rem; font-size: 13px; text-decoration: none; color: inherit; border-left: 2px solid transparent; border-radius: 0 4px 4px 0; margin-right: .5rem; }
+.cms-child:hover, .cms-child:focus { background: #f5f7fb; text-decoration: none !important; }
+.cms-child.active { border-left-color: currentColor; }
+.cms-content { flex: 1; min-width: 0; padding: 1.5rem; }
+.cms-section { display: none; max-width: 960px; }
+.cms-section.active { display: block; }
+
+/* Aire entre breadcrumb/título y el resto — el CSS de Tabler se inyecta después
+   (vía el módulo JS) y pisa reglas de igual especificidad definidas antes en el documento. */
+.cms-content .page-pretitle { margin-bottom: .5rem !important; }
+.cms-content .page-header { margin-bottom: 1.75rem !important; }
+```
+
+**Layout exterior** (reemplaza el `page-body > container-xl` tradicional — el sidebar y el contenido ocupan todo el ancho del viewport, sin `container-xl` ni `card` envolvente):
 ```html
-<div class="card">
-  <div class="row g-0">
-    <div class="col-12 col-md-3 border-end">
-      <div class="card-body">
-        <h4 class="subheader">[Nombre del módulo]</h4>
-        <div class="list-group list-group-transparent" id="module-nav">
-          <a href="#" class="list-group-item list-group-item-action d-flex align-items-center active" data-section="seccion1" onclick="showSection('seccion1');return false">
-            <i class="ti ti-category-2 me-2"></i>[Sub-sección 1]
-          </a>
-          <a href="#" class="list-group-item list-group-item-action d-flex align-items-center" data-section="seccion2" onclick="showSection('seccion2');return false">
-            <i class="ti ti-list-details me-2"></i>[Sub-sección 2]
-          </a>
+<div class="page-body" style="margin:0;padding:0">
+  <div class="d-flex align-items-start" style="min-height:calc(100vh - 56px)">
+
+    <aside class="cms-sidebar">
+      <div class="cms-section-label text-secondary">[Nombre del módulo]</div>
+
+      <!-- Padre expandible con hijos (usar en la página donde estos hijos existen) -->
+      <a href="#" class="cms-parent text-primary" id="nav-[padre]-parent" data-bs-toggle="collapse" data-bs-target="#ch-[padre]" role="button" aria-expanded="true" aria-controls="ch-[padre]">
+        <i class="ti ti-[icono]"></i>[Nombre de la sub-sección padre]
+        <i class="ti ti-chevron-right chev"></i>
+      </a>
+      <div class="collapse show" id="ch-[padre]">
+        <a href="#" class="cms-child active text-primary" id="nav-[hijo1]" onclick="showSection('[hijo1]');return false">
+          <i class="ti ti-[icono]"></i>[Hijo 1]
+        </a>
+        <a href="#" class="cms-child" id="nav-[hijo2]" onclick="showSection('[hijo2]');return false">
+          <i class="ti ti-[icono]"></i>[Hijo 2]
+        </a>
+      </div>
+
+      <!-- Padre plano, sin hijos: acción directa o link a otra página del módulo -->
+      <a href="[url-u-onclick]" class="cms-parent" id="nav-[otro-destino]">
+        <i class="ti ti-[icono]"></i>[Otro destino del módulo]
+      </a>
+
+      <!-- Ítem deshabilitado ("próximamente") -->
+      <div class="cms-parent cms-parent-disabled">
+        <i class="ti ti-[icono]"></i>[Sección futura]
+        <span class="badge bg-secondary-lt ms-auto">Pronto</span>
+      </div>
+    </aside>
+
+    <main class="cms-content">
+      <!-- Si el módulo tiene un mensaje de "Objetivo del módulo", va acá afuera de las
+           .cms-section para que se vea sin importar cuál sub-sección esté activa -->
+      <div class="cms-section active" id="section-[hijo1]">
+        <div class="page-header d-print-none">
+          <div class="page-pretitle">[Padre] <i class="ti ti-chevron-right" style="font-size:10px"></i> [Hijo 1]</div>
+          <h2 class="page-title">[Hijo 1]</h2>
         </div>
+        <!-- contenido de la sub-sección -->
       </div>
-    </div>
-    <div class="col-12 col-md-9 d-flex flex-column">
-      <div class="card-body">
-        <div class="module-section" data-section="seccion1"><!-- contenido sección 1 --></div>
-        <div class="module-section d-none" data-section="seccion2"><!-- contenido sección 2 --></div>
-      </div>
-    </div>
+      <div class="cms-section" id="section-[hijo2]"><!-- contenido --></div>
+    </main>
   </div>
 </div>
 ```
-JS mínimo para alternar (la única parte "custom", porque es lógica de interacción, no un componente visual):
+
+**JS de navegación** (única parte verdaderamente "lógica de interacción" — el expandir/colapsar en sí ya lo maneja el Collapse nativo de Bootstrap vía `data-bs-toggle="collapse"`, esto solo swappea qué `.cms-section` se ve y qué `.cms-child` queda resaltado):
 ```javascript
+const allSections = ['hijo1', 'hijo2'];
+const allNavIds   = ['nav-hijo1', 'nav-hijo2'];
+
 function showSection(name) {
-  document.querySelectorAll('.module-section').forEach(el => el.classList.toggle('d-none', el.dataset.section !== name));
-  document.querySelectorAll('#module-nav .list-group-item').forEach(el => el.classList.toggle('active', el.dataset.section === name));
+  allSections.forEach(s => {
+    const el = document.getElementById('section-' + s);
+    if (el) el.classList.toggle('active', s === name);
+  });
+  allNavIds.forEach(n => {
+    const el = document.getElementById(n);
+    if (el) el.classList.remove('active', 'text-primary');
+  });
+  const navEl = document.getElementById('nav-' + name);
+  if (navEl) navEl.classList.add('active', 'text-primary');
+  window.scrollTo(0, 0);
 }
 ```
 
@@ -533,6 +600,7 @@ En los prototipos, renderizar siempre la vista del **rol con más permisos** (Ma
 - [ ] El HTML carga `<script type="module" src="/src/tabler.js"></script>` — no CSS custom que reimplemente a Tabler
 - [ ] Cada componente usado (modal, dropdown, toast, form-selectgroup, empty state, alert, etc.) usa las clases y el JS reales de Tabler/Bootstrap, no una reimplementación
 - [ ] Todo bloque genuinamente custom está marcado con `<!-- CUSTOM: [motivo] -->` y tiene la misma atención a la UX que el resto
+- [ ] Si el módulo tiene más de una pantalla, usa EL sidebar único (`.cms-sidebar`/`.cms-parent`/`.cms-child`) — no un `list-group` dentro de una card ni una variante propia
 - [ ] El navbar muestra el logo de ASSIST 365 (URL oficial)
 - [ ] Se usa Inter como fuente y Tabler Icons para todos los iconos (vía CDN)
 - [ ] El estado vacío de cada lista/tabla está implementado con `.empty`
