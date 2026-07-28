@@ -900,7 +900,7 @@
           <div class="alert alert-info" role="alert">
             <div class="d-flex">
               <div><i class="ti ti-info-circle alert-icon"></i></div>
-              <div>Registro de todos los cambios publicados en los componentes del home. Los cambios con estado <strong>Pendiente</strong> aún no se aplicaron al sitio (publicación programada).</div>
+              <div>Registro de todos los cambios publicados en los componentes del home. Los cambios con estado <strong>Programado</strong> aún no se aplicaron al sitio (publicación programada).</div>
             </div>
           </div>
 
@@ -951,26 +951,26 @@
                   </tr>
                 </thead>
                 <tbody id="historial-tbody">
-                  <!-- 1. Hero AR — Pendiente -->
+                  <!-- 1. Hero AR — Programado -->
                   <tr id="row-hero-ar" data-ver-modal="modal-ver-hero-ar" data-component="Hero" data-country="Argentina">
                     <td class="text-secondary text-nowrap">24/07/2026 10:20</td>
                     <td>Hero</td>
                     <td>🇦🇷 Argentina</td>
-                    <td><span class="badge bg-blue-lt">Programado 29/07 09:00</span></td>
-                    <td class="status-cell"><span class="status status-yellow"><span class="status-dot"></span>Pendiente</span></td>
+                    <td><span class="badge bg-blue-lt">29/07 09:00</span></td>
+                    <td class="status-cell"><span class="status status-yellow"><span class="status-dot"></span>Programado</span></td>
                     <td>Denu Barral</td>
                     <td class="text-nowrap">
                       <button class="btn btn-sm btn-ghost-secondary" data-bs-toggle="modal" data-bs-target="#modal-ver-hero-ar"><i class="ti ti-eye"></i>Ver</button>
                       <button class="btn btn-sm btn-ghost-danger btn-cancelar" onclick="openCancelConfirm('row-hero-ar','Hero','🇦🇷 Argentina')"><i class="ti ti-ban"></i>Cancelar</button>
                     </td>
                   </tr>
-                  <!-- 2. Banner 3 CL — Pendiente -->
+                  <!-- 2. Banner 3 CL — Programado -->
                   <tr id="row-banner3-cl" data-ver-modal="modal-ver-banner3-cl" data-component="Banners" data-country="Chile">
                     <td class="text-secondary text-nowrap">22/07/2026 09:05</td>
                     <td>Banner 3: Seguro de equipaje</td>
                     <td>🇨🇱 Chile</td>
-                    <td><span class="badge bg-blue-lt">Programado 27/07 00:00</span></td>
-                    <td class="status-cell"><span class="status status-yellow"><span class="status-dot"></span>Pendiente</span></td>
+                    <td><span class="badge bg-blue-lt">27/07 00:00</span></td>
+                    <td class="status-cell"><span class="status status-yellow"><span class="status-dot"></span>Programado</span></td>
                     <td>Florencia Duarte</td>
                     <td class="text-nowrap">
                       <button class="btn btn-sm btn-ghost-secondary" data-bs-toggle="modal" data-bs-target="#modal-ver-banner3-cl"><i class="ti ti-eye"></i>Ver</button>
@@ -1008,7 +1008,7 @@
                     <td class="text-secondary text-nowrap">25/06/2026 09:15</td>
                     <td>Banner 2: Plan multitrip</td>
                     <td>🇧🇷 Brasil</td>
-                    <td><span class="badge bg-blue-lt">Programado 01/07 00:00</span></td>
+                    <td><span class="badge bg-blue-lt">01/07 00:00</span></td>
                     <td class="status-cell"><span class="status status-red"><span class="status-dot"></span>Cancelado</span></td>
                     <td>Florencia Duarte</td>
                     <td class="text-nowrap">
@@ -1021,7 +1021,7 @@
                     <td class="text-secondary text-nowrap">20/06/2026 11:00</td>
                     <td>Marquesina Top</td>
                     <td>🇨🇱 Chile</td>
-                    <td><span class="badge bg-blue-lt">Programado 30/06 00:01</span></td>
+                    <td><span class="badge bg-blue-lt">30/06 00:01</span></td>
                     <td class="status-cell"><span class="status status-red"><span class="status-dot"></span>Cancelado</span></td>
                     <td>Denu Barral</td>
                     <td class="text-nowrap">
@@ -1081,7 +1081,7 @@
 
 <!-- ==================== MODALES: Ver cambio del Historial ==================== -->
 
-<!-- 1. VER: Hero AR — Pendiente -->
+<!-- 1. VER: Hero AR — Programado -->
 <div class="modal modal-blur fade" id="modal-ver-hero-ar" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
@@ -1091,7 +1091,7 @@
       </div>
       <div class="modal-body p-0">
         <div class="alert alert-warning rounded-0 m-0" id="status-bar-hero-ar" role="alert">
-          <div class="d-flex"><div><i class="ti ti-clock alert-icon"></i></div><div>Cambio <strong>Pendiente</strong> — se publicará el <strong>29/07/2026 a las 09:00 hs.</strong></div></div>
+          <div class="d-flex"><div><i class="ti ti-clock alert-icon"></i></div><div>Cambio <strong>Programado</strong> — se publicará el <strong>29/07/2026 a las 09:00 hs.</strong></div></div>
         </div>
         <div class="alert alert-danger rounded-0 m-0 d-none" id="cancel-info-hero-ar" role="alert">
           <div class="d-flex"><div><i class="ti ti-user-x alert-icon"></i></div><div>Cancelado por <strong>Denu Barral</strong> el 24/07/2026.</div></div>
@@ -1121,7 +1121,7 @@
   </div>
 </div>
 
-<!-- 2. VER: Banner 3 CL — Pendiente -->
+<!-- 2. VER: Banner 3 CL — Programado -->
 <div class="modal modal-blur fade" id="modal-ver-banner3-cl" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
@@ -1131,7 +1131,7 @@
       </div>
       <div class="modal-body p-0">
         <div class="alert alert-warning rounded-0 m-0" id="status-bar-banner3-cl" role="alert">
-          <div class="d-flex"><div><i class="ti ti-clock alert-icon"></i></div><div>Cambio <strong>Pendiente</strong> — se publicará el <strong>27/07/2026 a las 00:00 hs.</strong></div></div>
+          <div class="d-flex"><div><i class="ti ti-clock alert-icon"></i></div><div>Cambio <strong>Programado</strong> — se publicará el <strong>27/07/2026 a las 00:00 hs.</strong></div></div>
         </div>
         <div class="alert alert-danger rounded-0 m-0 d-none" id="cancel-info-banner3-cl" role="alert">
           <div class="d-flex"><div><i class="ti ti-user-x alert-icon"></i></div><div>Cancelado por <strong>Florencia Duarte</strong> el 22/07/2026.</div></div>
@@ -1851,9 +1851,9 @@
       const dtVal = dtInput ? dtInput.value : '';
       if (!isImm && dtVal) {
         const d = new Date(dtVal);
-        schedText = 'Programado para ' + d.toLocaleDateString('es-AR') + ' ' + d.toLocaleTimeString('es-AR', {hour:'2-digit',minute:'2-digit'});
+        schedText = d.toLocaleDateString('es-AR') + ' ' + d.toLocaleTimeString('es-AR', {hour:'2-digit',minute:'2-digit'});
       } else if (!isImm) {
-        schedText = 'Programado (fecha no seleccionada)';
+        schedText = '(fecha no seleccionada)';
       }
     }
 

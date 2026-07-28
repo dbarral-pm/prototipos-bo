@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Figma__get_screenshot",
+      "Bash(curl -L -o \"C:\\\\Users\\\\denis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-denis-Desktop-Claude-product-manager-bo-prototipos-bo\\\\6894b5c6-515c-40cd-982b-1b30883e35f9\\\\scratchpad\\\\paso1_categoria.png\" \"https://www.figma.com/api/mcp/asset/d7d2fc46-05de-4315-8dcf-1b6291849132\")",
+      "Bash(curl -L -o \"C:\\\\Users\\\\denis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-denis-Desktop-Claude-product-manager-bo-prototipos-bo\\\\6894b5c6-515c-40cd-982b-1b30883e35f9\\\\scratchpad\\\\paso2_salud.png\" \"https://www.figma.com/api/mcp/asset/903a7f6f-57cc-4df7-a14e-dd133866893c\")"
+    ]
+  }
+}
