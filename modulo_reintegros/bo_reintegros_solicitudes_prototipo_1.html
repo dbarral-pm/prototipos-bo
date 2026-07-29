@@ -164,6 +164,7 @@
                   <tr>
                     <th>ID</th>
                     <th>Fecha y hora</th>
+                    <th>Estado</th>
                     <th>Cliente</th>
                     <th>Categoría / Subcategoría</th>
                     <th>Reserva</th>
@@ -341,7 +342,7 @@ function renderSolicitudes() {
 
   const tbody = document.getElementById('tbody-solicitudes');
   if (!pageItems.length) {
-    tbody.innerHTML = `<tr><td colspan="8"><div class="empty">
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty">
       <div class="empty-icon"><i class="ti ti-file-off" style="font-size:2.5rem"></i></div>
       <p class="empty-title">No encontramos solicitudes para estos filtros.</p>
     </div></td></tr>`;
@@ -352,6 +353,7 @@ function renderSolicitudes() {
       <tr>
         <td><span class="text-secondary">${s.id}</span></td>
         <td>${s.fechaHora}</td>
+        <td><span class="badge bg-azure-lt">Iniciado</span></td>
         <td>
           <div>${s.nombre}</div>
           <div class="text-secondary" style="font-size:12px">${s.mail}</div>

@@ -233,6 +233,7 @@ function render() {
   document.getElementById('datagrid-general').innerHTML = [
     datagridItem('ID de solicitud', s.id),
     datagridItem('Fecha y hora recibida', s.fechaHora),
+    datagridItem('Estado', '<span class="badge bg-azure-lt">Iniciado</span>'),
     datagridItem('Fecha del evento', s.fechaEvento),
     datagridItem('Cliente', s.nombre + '<br><span class="text-secondary" style="font-size:12px">' + s.mail + '</span>'),
     datagridItem('Categoría de asistencia', '<span class="badge bg-blue-lt">' + s.categoria + '</span>'),
