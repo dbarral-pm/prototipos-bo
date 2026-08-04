@@ -390,7 +390,7 @@ let categorias = [
   { id:'salud', icon:'ti-first-aid-kit', title:'Salud', desc:'Atención médica o dental', subcats:['asist-medica','medicamentos','odontologia','embarazo','cob-deportiva'] },
   { id:'vuelo', icon:'ti-plane', title:'Vuelo', desc:'Problemas con tu vuelo', subcats:['demora-vuelo','cancel-vuelo'] },
   { id:'equipaje', icon:'ti-briefcase', title:'Equipaje', desc:'Problemas con tu equipaje', subcats:['demora-equipaje','extravio-equipaje','rotura-equipaje'] },
-  { id:'otros', icon:'ti-dots-circle-horizontal', title:'Otros', desc:'Reintegro por otros motivos', subcats:['traslado-sanitario','repat-sanitaria','repat-funeraria','mascotas'] },
+  { id:'otros', icon:'ti-dots-circle-horizontal', title:'Otros', desc:'Reintegro por otros motivos', subcats:['traslado-sanitario','repat-sanitaria','repat-funeraria','mascotas','tec-protegida'] },
 ];
 
 let subcategorias = [
@@ -403,11 +403,12 @@ let subcategorias = [
   { id:'cancel-vuelo', icon:'ti-plane-off', title:'Cancelación de vuelo', categoryId:'vuelo', visiblePublico:true },
   { id:'demora-equipaje', icon:'ti-luggage', title:'Demora de equipaje', categoryId:'equipaje', visiblePublico:true },
   { id:'extravio-equipaje', icon:'ti-briefcase-off', title:'Extravío de equipaje', categoryId:'equipaje', visiblePublico:true },
-  { id:'rotura-equipaje', icon:'ti-alert-octagon', title:'Rotura de equipaje (Upgrade)', categoryId:'equipaje', visiblePublico:false },
+  { id:'rotura-equipaje', icon:'ti-alert-octagon', title:'Rotura de equipaje', categoryId:'equipaje', visiblePublico:false },
   { id:'traslado-sanitario', icon:'ti-ambulance', title:'Traslado sanitario', categoryId:'otros', visiblePublico:true },
   { id:'repat-sanitaria', icon:'ti-heartbeat', title:'Repatriación sanitaria', categoryId:'otros', visiblePublico:true },
   { id:'repat-funeraria', icon:'ti-flower', title:'Repatriación funeraria', categoryId:'otros', visiblePublico:true },
-  { id:'mascotas', icon:'ti-paw', title:'Asist. médica mascotas (Upgrade)', categoryId:'otros', visiblePublico:false },
+  { id:'mascotas', icon:'ti-paw', title:'Asistencia a mascotas', categoryId:'otros', visiblePublico:false },
+  { id:'tec-protegida', icon:'ti-device-mobile', title:'Tecnología protegida', categoryId:'otros', visiblePublico:false },
 ];
 
 let documentos = [
@@ -416,9 +417,13 @@ let documentos = [
   { id:'doc-pasaporte', icon:'ti-id', name:'Pasaporte o DNI', desc:'Foto de pasaporte o documento de identidad', subcats:['asist-medica','medicamentos','odontologia','demora-vuelo','cancel-vuelo','demora-equipaje','extravio-equipaje','repat-sanitaria','repat-funeraria'] },
   { id:'doc-itinerario', icon:'ti-ticket', name:'Itinerario de viaje', desc:'Itinerario completo de viaje (ticket aéreo con fecha de salida, regreso y llegada a destino)', subcats:['asist-medica','medicamentos','odontologia','demora-vuelo','cancel-vuelo','demora-equipaje','extravio-equipaje','repat-sanitaria'] },
   { id:'doc-receta', icon:'ti-prescription', name:'Receta médica', desc:'Prescripción y receta de los medicamentos', subcats:['medicamentos'] },
-  { id:'doc-pir', icon:'ti-file-alert', name:'PIR de la aerolínea', desc:'PIR (Property Irregularity Report) emitido por la aerolínea', subcats:['demora-equipaje','extravio-equipaje','rotura-equipaje'] },
+  { id:'doc-pir', icon:'ti-file-alert', name:'PIR de la aerolínea', desc:'PIR (Property Irregularity Report) emitido por la aerolínea', subcats:['demora-equipaje','extravio-equipaje','rotura-equipaje','tec-protegida'] },
   { id:'doc-foto-dano', icon:'ti-camera', name:'Foto del daño', desc:'Evidencia fotográfica clara del daño sufrido por el equipaje', subcats:['rotura-equipaje'] },
   { id:'doc-cartilla-vacunacion', icon:'ti-vaccine', name:'Cartilla de vacunación', desc:'Cartilla de vacunación completa de la mascota', subcats:['mascotas'] },
+  { id:'doc-denuncia-policial', icon:'ti-badge', name:'Denuncia policial', desc:'Denuncia policial radicada dentro de las 24 horas de ocurrido el hecho, que acredite el robo, extravío o hurto de los objetos personales', subcats:['tec-protegida'] },
+  { id:'doc-denuncia-hotel', icon:'ti-building', name:'Denuncia en hotel', desc:'Si el hecho ocurrió en un hotel, denuncia radicada ante la administración del mismo', subcats:['tec-protegida'] },
+  { id:'doc-factura-compra', icon:'ti-receipt-2', name:'Factura de compra', desc:'Factura de compra o declaración en aduana del objeto perdido, robado o hurtado, con fecha anterior al hecho', subcats:['tec-protegida'] },
+  { id:'doc-factura-reposicion', icon:'ti-receipt-2', name:'Factura de reposición', desc:'Factura por reposición del objeto robado, perdido o hurtado, con fecha posterior a la radicación de la denuncia policial', subcats:['tec-protegida'] },
 ];
 
 let uploadedIcons = { cat: null, sub: null, doc: null }; // dataURL temporal por modal

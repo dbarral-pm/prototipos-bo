@@ -30,6 +30,45 @@ El BO real usa **Tabler UI**, un admin template construido sobre Bootstrap 5 (MI
 | Subida de un archivo simple | `<input type="file" class="form-control">` (validaciones de negocio van en JS propio, eso es lógica de producto, no UI) |
 | Avatar / ícono circular | `.avatar`, `.avatar-sm`, `.avatar-xl`, etc. |
 | Badge de estado | `.badge`, `.bg-{color}-lt` (variante suave) |
+| Selector de fecha / rango de fechas / fecha+hora | **Litepicker** (ver sección dedicada más abajo) — viene empaquetado dentro de `@tabler/core/dist/libs/litepicker/`, NUNCA el input nativo del navegador |
+
+### Fechas y horas: SIEMPRE Litepicker, NUNCA el input nativo del navegador
+
+> ⚠️ **Regla obligatoria, sin excepción.** `<input type="date">`, `type="datetime-local">` o `type="time">` quedan **prohibidos** en cualquier prototipo del BO. Ese widget lo dibuja el sistema operativo/navegador (no Tabler, no HTML/CSS nuestro), no es estilable, y se ve distinto en cada navegador/OS — rompe la fidelidad visual con el BO real y no es "custom hecho con cuidado", es simplemente no usar componente.
+>
+> Tabler ya trae la solución empaquetada: **Litepicker** (`@tabler/core/dist/libs/litepicker/`), importado una sola vez en `src/tabler.js` junto con `bootstrap` y `fslightbox`. Es tan "Tabler real" como el modal o el toast — se usa siempre que la pantalla necesite elegir una fecha, un rango de fechas, o fecha+hora.
+
+**Input de texto que dispara el picker** (no un `<input type="date">`, un `text` normal que Litepicker controla):
+```html
+<div class="mb-3">
+  <label class="form-label">[Label del campo]</label>
+  <input type="text" class="form-control" id="[id-del-campo]" placeholder="DD/MM/YYYY" autocomplete="off">
+</div>
+```
+
+**Instancia de Litepicker (fecha única):**
+```javascript
+new Litepicker({
+  element: document.getElementById('[id-del-campo]'),
+  format: 'DD/MM/YYYY',
+  lang: 'es-ES',
+});
+```
+
+**Rango de fechas** (ver `bo_reintegros_solicitudes_prototipo_1.html` como referencia real ya implementada):
+```javascript
+const picker = new Litepicker({
+  element: document.getElementById('[id-del-campo]'),
+  singleMode: false,
+  format: 'DD/MM/YYYY',
+  lang: 'es-ES',
+  setup: (picker) => {
+    picker.on('selected', () => { /* re-render / filtrar con el rango elegido */ });
+  },
+});
+```
+
+**Fecha + hora:** Litepicker no tiene un modo "datetime" nativo con selector de hora incluido — para este caso sí aplica la válvula de escape de "custom como último recurso" (punto 2 del principio rector): agregar un `<select>` o dos `<input type="text">` con clase `form-control` para la hora al lado del campo de fecha controlado por Litepicker, marcado con `<!-- CUSTOM: Litepicker no incluye selector de hora nativo -->`. Lo que NUNCA se hace es reemplazar todo el conjunto por un único `<input type="datetime-local">`.
 
 ### Qué probablemente SÍ requiera algo custom (y está bien que lo sea)
 
@@ -50,6 +89,10 @@ vite.config.js                  → un entry en rollupOptions.input por cada HTM
 src/tabler.js                   → único entrypoint que importa Tabler (compartido por todos los módulos):
                                      import '@tabler/core/dist/css/tabler.min.css'
                                      import '@tabler/core/dist/js/tabler.esm.min.js'
+                                     import '@tabler/core/dist/libs/litepicker/dist/css/litepicker.css'
+                                     import '@tabler/core/dist/libs/litepicker/dist/litepicker.js'
+                                   Litepicker viene EMPAQUETADO dentro de @tabler/core — es el selector
+                                   de fecha/hora oficial de Tabler, no una librería externa aparte.
 index.html                       → índice del sitio, agrupado por módulo (un <h2 class="group"> por módulo)
 modulo_[nombre]/                 → una carpeta por módulo del BO
   bo_[feature]_prototipo_[N].html
@@ -617,5 +660,6 @@ En los prototipos, renderizar siempre la vista del **rol con más permisos** (Ma
 - [ ] Los modales usan `bootstrap.Modal` (no clases `.open` custom)
 - [ ] Los formularios validan con `.is-invalid` / `.invalid-feedback` nativos
 - [ ] Las acciones destructivas pasan por modal de confirmación (`modal-status bg-danger`)
+- [ ] Ningún campo de fecha/hora usa `<input type="date">` / `type="datetime-local">` / `type="time">` nativo — todos usan Litepicker
 - [ ] El archivo se guarda dentro de `modulo_[nombre]/` con el naming convention `bo_[feature]_prototipo_[N].html`, se agrega a `rollupOptions.input` en `vite.config.js` y se linkea desde `index.html`
 - [ ] Se corrió `npm run dev` y se verificó en el navegador que todo funciona sin errores de consola
