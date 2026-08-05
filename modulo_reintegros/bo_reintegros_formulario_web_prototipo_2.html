@@ -287,6 +287,13 @@
           <small class="form-hint">Una subcategoría debe tener al menos un documento requerido vinculado. Podés agregar o quitar documentos existentes.</small>
           <div class="invalid-feedback" id="sub-docs-error">Seleccioná al menos un documento.</div>
         </div>
+        <div class="mb-3">
+          <label class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="sub-es-upgrade">
+            <span class="form-check-label">Es una cobertura adicional (Upgrade)</span>
+          </label>
+          <small class="form-hint">Marcá esta opción si la subcategoría corresponde a un upgrade (ej. Embarazo). Su visibilidad en el formulario de reintegros dependerá de si la reserva elegida por el usuario tiene ese upgrade contratado.</small>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -397,18 +404,18 @@ let subcategorias = [
   { id:'asist-medica', icon:'ti-stethoscope', title:'Asistencia médica', categoryId:'salud', visiblePublico:true },
   { id:'medicamentos', icon:'ti-pill', title:'Medicamentos', categoryId:'salud', visiblePublico:true },
   { id:'odontologia', icon:'ti-mood-smile', title:'Urgencia odontológica', categoryId:'salud', visiblePublico:true },
-  { id:'embarazo', icon:'ti-heart', title:'Embarazo', categoryId:'salud', visiblePublico:false },
-  { id:'cob-deportiva', icon:'ti-ball-football', title:'Cobertura deportiva', categoryId:'salud', visiblePublico:false },
+  { id:'embarazo', icon:'ti-heart', title:'Embarazo', categoryId:'salud', visiblePublico:false, esUpgrade:true },
+  { id:'cob-deportiva', icon:'ti-ball-football', title:'Cobertura deportiva', categoryId:'salud', visiblePublico:false, esUpgrade:true },
   { id:'demora-vuelo', icon:'ti-clock-pause', title:'Demora de vuelo', categoryId:'vuelo', visiblePublico:true },
   { id:'cancel-vuelo', icon:'ti-plane-off', title:'Cancelación de vuelo', categoryId:'vuelo', visiblePublico:true },
   { id:'demora-equipaje', icon:'ti-luggage', title:'Demora de equipaje', categoryId:'equipaje', visiblePublico:true },
   { id:'extravio-equipaje', icon:'ti-briefcase-off', title:'Extravío de equipaje', categoryId:'equipaje', visiblePublico:true },
-  { id:'rotura-equipaje', icon:'ti-alert-octagon', title:'Rotura de equipaje', categoryId:'equipaje', visiblePublico:false },
+  { id:'rotura-equipaje', icon:'ti-alert-octagon', title:'Rotura de equipaje', categoryId:'equipaje', visiblePublico:false, esUpgrade:true },
   { id:'traslado-sanitario', icon:'ti-ambulance', title:'Traslado sanitario', categoryId:'otros', visiblePublico:true },
   { id:'repat-sanitaria', icon:'ti-heartbeat', title:'Repatriación sanitaria', categoryId:'otros', visiblePublico:true },
   { id:'repat-funeraria', icon:'ti-flower', title:'Repatriación funeraria', categoryId:'otros', visiblePublico:true },
-  { id:'mascotas', icon:'ti-paw', title:'Asistencia a mascotas', categoryId:'otros', visiblePublico:false },
-  { id:'tec-protegida', icon:'ti-device-mobile', title:'Tecnología protegida', categoryId:'otros', visiblePublico:false },
+  { id:'mascotas', icon:'ti-paw', title:'Asistencia a mascotas', categoryId:'otros', visiblePublico:false, esUpgrade:true },
+  { id:'tec-protegida', icon:'ti-device-mobile', title:'Tecnología protegida', categoryId:'otros', visiblePublico:false, esUpgrade:true },
 ];
 
 let documentos = [
@@ -649,16 +656,16 @@ function renderSubcategorias() {
   list.innerHTML = filtered.map(s => {
     const cat = catById(s.categoryId);
     const linkedDocs = docsLinkedTo(s.id);
-    const docChips = linkedDocs.map(d => `<span class="badge bg-yellow-lt text-warning">${d.name}</span>`).join(' ');
+    const docsText = linkedDocs.map(d => d.name).join(', ');
     const visible = s.visiblePublico !== false;
     return `
       <div class="list-group-item">
         <div class="row align-items-center">
           <div class="col-auto"><span class="avatar avatar-sm bg-blue-lt text-primary"><i class="ti ${s.icon}"></i></span></div>
           <div class="col text-truncate">
-            <div class="text-body">${s.title}</div>
+            <div class="text-body">${s.title}${s.esUpgrade ? ' <span class="badge bg-purple-lt" title="Cobertura adicional: su visibilidad en Mi Voucher depende de si la reserva tiene este upgrade contratado">Upgrade</span>' : ''}</div>
             <div class="text-secondary text-truncate mt-1" style="font-size:12.5px">Pertenece a <span class="badge bg-blue-lt ms-1">${cat ? cat.title : '—'}</span></div>
-            <div class="mt-2 d-flex flex-wrap gap-1">${docChips}</div>
+            <div class="text-secondary text-truncate mt-1" style="font-size:12.5px">Documentos: ${docsText || '—'}</div>
           </div>
           <div class="col-auto text-center" style="width:190px">
             <label class="form-check form-switch mb-0 d-inline-flex align-items-center" title="Controla si esta subcategoría aparece en el bloque '¿Qué documentación necesito?' del sitio público (assist-365.com/reintegros)">
@@ -678,8 +685,11 @@ function renderSubcategorias() {
 }
 
 /* Visibilidad en el sitio público (assist-365.com/reintegros, bloque "¿Qué documentación necesito?"):
-   controla si esta subcategoría aparece como chip ahí. No afecta el formulario dentro de Mi Voucher,
-   donde las subcategorías siempre están disponibles todas. */
+   controla si esta subcategoría aparece como chip ahí. Es independiente del flag esUpgrade (ver modal
+   de alta/edición): ese otro flag gobierna la visibilidad dentro del formulario real de Mi Voucher,
+   según si la reserva del viajero tiene o no contratado ese upgrade — no se resuelve en este prototipo
+   de BO (que no tiene noción de "reserva de un viajero"), pero queda documentado como el dato que el
+   BO debe exponer para que Mi Voucher (FEAT-2663) haga ese filtro. */
 function requestToggleVisibilidadPublica(id) {
   const sub = subcatById(id);
   const willBeVisible = !(sub.visiblePublico !== false);
@@ -714,6 +724,7 @@ function openSubcategoriaModal(id) {
   select.innerHTML = '<option value="">Seleccioná una categoría</option>' + categorias.map(c => `<option value="${c.id}" ${sub && sub.categoryId === c.id ? 'selected' : ''}>${c.title}</option>`).join('');
 
   renderDocsSelector('sub-docs-selector', sub ? docsLinkedTo(sub.id).map(d => d.id) : []);
+  document.getElementById('sub-es-upgrade').checked = sub ? !!sub.esUpgrade : false;
 
   openModal('modal-subcategoria');
 }
@@ -722,6 +733,7 @@ function requestSaveSubcategoria() {
   const title = document.getElementById('sub-title').value.trim();
   const categoryId = document.getElementById('sub-category').value;
   const selectedDocs = Array.from(document.querySelectorAll('#sub-docs-selector input:checked')).map(el => el.value);
+  const esUpgrade = document.getElementById('sub-es-upgrade').checked;
 
   let valid = true;
   document.getElementById('sub-title').classList.toggle('is-invalid', !title);
@@ -740,14 +752,14 @@ function requestSaveSubcategoria() {
     if (editingId) {
       const sub = subcatById(editingId);
       const oldCat = catById(sub.categoryId);
-      sub.title = title; sub.categoryId = categoryId;
+      sub.title = title; sub.categoryId = categoryId; sub.esUpgrade = esUpgrade;
       if (oldCat && oldCat.id !== categoryId) oldCat.subcats = oldCat.subcats.filter(x => x !== editingId);
       const newCat = catById(categoryId);
       if (newCat && !newCat.subcats.includes(editingId)) newCat.subcats.push(editingId);
       subId = editingId;
     } else {
       subId = 'sub-' + Date.now();
-      subcategorias.push({ id: subId, icon: 'ti-file-description', title, categoryId, visiblePublico: true });
+      subcategorias.push({ id: subId, icon: 'ti-file-description', title, categoryId, visiblePublico: true, esUpgrade });
       const newCat = catById(categoryId);
       if (newCat) newCat.subcats.push(subId);
     }
