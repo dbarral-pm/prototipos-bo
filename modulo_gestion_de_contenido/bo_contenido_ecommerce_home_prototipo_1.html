@@ -200,7 +200,7 @@
           <div class="alert alert-info" role="alert">
             <div class="d-flex">
               <div><i class="ti ti-info-circle alert-icon"></i></div>
-              <div>La imagen del hero aparece como fondo detrás del cotizador. Podés subir imágenes distintas para cada mercado. <strong>El sistema renombra automáticamente el archivo al guardarlo</strong> — no hace falta que el nombre del archivo sea exacto. Sí es importante respetar el formato JPG y las dimensiones indicadas.</div>
+              <div>La imagen del hero aparece como fondo detrás del cotizador. Podés subir imágenes distintas para cada mercado. <strong>El sistema renombra automáticamente el archivo al guardarlo</strong> — no hace falta que el nombre del archivo sea exacto. Sí es importante respetar las dimensiones y el peso máximo indicados.</div>
             </div>
           </div>
 
@@ -224,7 +224,7 @@
                   <div class="img-preview-card show" id="prev-hero-d">
                     <div class="img-preview-thumb">
                       <img src="assets-contenido-ecommerce/BgCotizadorDesktop.jpg">
-                      <div class="img-preview-caption">hero_desktop.jpg &nbsp;·&nbsp; JPG · 38 KB · 1600×347 px</div>
+                      <div class="img-preview-caption">hero_desktop.jpg &nbsp;·&nbsp; 38 KB · 1600×347 px</div>
                     </div>
                     <div class="card-footer d-flex align-items-center gap-2 py-2">
                       <i class="ti ti-circle-check text-success"></i>
@@ -235,11 +235,11 @@
                   <div class="file-drop" id="drop-hero-d" style="display:none" onclick="simUpload('drop-hero-d','prev-hero-d','hero_desktop.jpg','1600×347','38 KB')">
                     <i class="ti ti-photo-up fs-1 text-secondary d-block mb-1"></i>
                     <div><strong>Subir archivo</strong> o arrastrar aquí</div>
-                    <div class="text-secondary" style="font-size:11px">JPG · 1600 × 347 px · Máx. 40 KB</div>
+                    <div class="text-secondary" style="font-size:11px">1600 × 347 px · Máx. 40 KB</div>
                   </div>
-                  <p class="form-hint">Formato obligatorio: <strong>JPG</strong> · Dimensiones: <strong>1600 × 347 px</strong> · Máx. 40 KB</p>
+                  <p class="form-hint">Dimensiones: <strong>1600 × 347 px</strong> · Máx. 40 KB</p>
                   <div class="mt-2">
-                    <label class="form-label" style="font-size:12px">Texto alternativo (alt) <code class="text-secondary">hero_desktop_alt</code></label>
+                    <label class="form-label" style="font-size:12px">Texto alternativo (alt)</label>
                     <input class="form-control form-control-sm" type="text" id="alt-hero-d" maxlength="125" oninput="cc(this,'cc-alt-hero-d')" value="Fondo del cotizador — pareja de viajeros con valijas en el aeropuerto">
                     <div class="form-hint char-counter" id="cc-alt-hero-d">0/125</div>
                     <p class="form-hint mb-0"><i class="ti ti-info-circle"></i> Describí la imagen para SEO y accesibilidad.</p>
@@ -252,7 +252,7 @@
                   <div class="img-preview-card show" id="prev-hero-m">
                     <div class="img-preview-thumb">
                       <img src="assets-contenido-ecommerce/BgCotizadorMobile.jpg">
-                      <div class="img-preview-caption">hero_mobile.jpg &nbsp;·&nbsp; JPG · 17 KB · 834×252 px</div>
+                      <div class="img-preview-caption">hero_mobile.jpg &nbsp;·&nbsp; 17 KB · 834×252 px</div>
                     </div>
                     <div class="card-footer d-flex align-items-center gap-2 py-2">
                       <i class="ti ti-circle-check text-success"></i>
@@ -263,11 +263,11 @@
                   <div class="file-drop" id="drop-hero-m" style="display:none" onclick="simUpload('drop-hero-m','prev-hero-m','hero_mobile.jpg','834×252','17 KB')">
                     <i class="ti ti-device-mobile fs-1 text-secondary d-block mb-1"></i>
                     <div><strong>Subir archivo</strong> o arrastrar aquí</div>
-                    <div class="text-secondary" style="font-size:11px">JPG · 834 × 252 px · Máx. 20 KB</div>
+                    <div class="text-secondary" style="font-size:11px">834 × 252 px · Máx. 20 KB</div>
                   </div>
-                  <p class="form-hint">Formato obligatorio: <strong>JPG</strong> · Dimensiones: <strong>834 × 252 px</strong> · Máx. 20 KB</p>
+                  <p class="form-hint">Dimensiones: <strong>834 × 252 px</strong> · Máx. 20 KB</p>
                   <div class="mt-2">
-                    <label class="form-label" style="font-size:12px">Texto alternativo (alt) <code class="text-secondary">hero_mobile_alt</code></label>
+                    <label class="form-label" style="font-size:12px">Texto alternativo (alt)</label>
                     <input class="form-control form-control-sm" type="text" id="alt-hero-m" maxlength="125" oninput="cc(this,'cc-alt-hero-m')" value="Fondo del cotizador mobile — pareja de viajeros con valijas">
                     <div class="form-hint char-counter" id="cc-alt-hero-m">0/125</div>
                     <p class="form-hint mb-0"><i class="ti ti-info-circle"></i> Describí la imagen para SEO y accesibilidad.</p>
@@ -325,7 +325,7 @@
             </ul>
             <div class="card-body">
               <div class="mb-3">
-                <label class="form-label">Texto del banner <code class="text-secondary">Marquesina_top</code></label>
+                <label class="form-label">Texto del banner</label>
                 <input class="form-control" type="text" id="mq-top-input" value="Acumulá 15% OFF con código AHORA15" oninput="updateMqPreview('mq-top-input','mq-top-prev')">
                 <p class="form-hint">Texto corrido con scroll infinito. El sistema lo repite automáticamente. Sin límite de caracteres.</p>
               </div>
@@ -411,17 +411,17 @@
                       <div class="mb-2"><span class="text-secondary" style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">Texto izquierdo</span></div>
                       <div class="row">
                         <div class="col-md-4 mb-3">
-                          <label class="form-label">Vigencia <code class="text-secondary">Slide_1_left_vigencia</code></label>
+                          <label class="form-label">Vigencia</label>
                           <input class="form-control" id="s1-vigencia" type="text" maxlength="34" oninput="cc(this,'cc1v');updateS1Preview()" onkeydown="ccBlock(this,'cc1v',event)" value="">
                           <div class="form-hint char-counter" id="cc1v">0/34</div>
                         </div>
                         <div class="col-md-4 mb-3">
-                          <label class="form-label">Promo <code class="text-secondary">Slide_1_left_promo</code></label>
+                          <label class="form-label">Promo</label>
                           <input class="form-control" id="s1-promo" type="text" maxlength="40" oninput="cc(this,'cc1p');updateS1Preview()" value="Hasta 60% OFF y 12 cuotas sin interés">
                           <div class="form-hint char-counter" id="cc1p">38/40</div>
                         </div>
                         <div class="col-md-4 mb-3">
-                          <label class="form-label">Disclaimer <code class="text-secondary">Slide_1_left_disclaimer</code></label>
+                          <label class="form-label">Disclaimer</label>
                           <input class="form-control" id="s1-disclaimer" type="text" maxlength="40" oninput="cc(this,'cc1d');updateS1Preview()" value="Con tarjetas de todos los bancos">
                           <div class="form-hint char-counter" id="cc1d">32/40</div>
                         </div>
@@ -430,11 +430,11 @@
                       <div class="mb-2 mt-2"><span class="text-secondary" style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">Imagen de fondo derecha</span></div>
                       <div class="row">
                         <div class="col-md-6 mb-3">
-                          <label class="form-label">Desktop <code class="text-secondary">Slide_1_right_background</code></label>
+                          <label class="form-label">Desktop</label>
                           <div class="img-preview-card show" id="prev-s1d">
                             <div class="img-preview-thumb" style="height:80px">
                               <img src="assets-contenido-ecommerce/Slide1Desktop.jpg">
-                              <div class="img-preview-caption">slide_1_right_background_desktop.jpg · JPG · 36 KB · 486×280 px</div>
+                              <div class="img-preview-caption">slide_1_right_background_desktop.jpg · 36 KB · 486×280 px</div>
                             </div>
                             <div class="card-footer d-flex align-items-center gap-2 py-2">
                               <i class="ti ti-circle-check text-success"></i>
@@ -445,21 +445,21 @@
                           <div class="file-drop" id="drop-s1d" style="display:none" onclick="simUpload('drop-s1d','prev-s1d','slide_1_right_background_desktop.jpg','486×280','36 KB')">
                             <i class="ti ti-photo-up fs-2 text-secondary d-block mb-1"></i>
                             <div><strong>Subir archivo</strong> o arrastrar aquí</div>
-                            <div class="text-secondary" style="font-size:11px">JPG · 486 × 280 px · Máx. 40 KB</div>
+                            <div class="text-secondary" style="font-size:11px">486 × 280 px · Máx. 40 KB</div>
                           </div>
-                          <p class="form-hint">486 × 280 px · Máx. 40 KB · JPG</p>
+                          <p class="form-hint">486 × 280 px · Máx. 40 KB</p>
                           <div class="mt-2">
-                            <label class="form-label" style="font-size:12px">Texto alternativo (alt) <code class="text-secondary">Slide_1_right_background_desktop_alt</code></label>
+                            <label class="form-label" style="font-size:12px">Texto alternativo (alt)</label>
                             <input class="form-control form-control-sm" type="text" id="alt-s1d" maxlength="125" oninput="cc(this,'cc-alt-s1d')" value="Promoción de cuotas sin interés en medios de pago">
                             <div class="form-hint char-counter" id="cc-alt-s1d">0/125</div>
                           </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                          <label class="form-label">Mobile <code class="text-secondary">Slide_1_right_background</code></label>
+                          <label class="form-label">Mobile</label>
                           <div class="img-preview-card show" id="prev-s1m">
                             <div class="img-preview-thumb" style="height:80px">
                               <img src="assets-contenido-ecommerce/Slide1Mobile.jpg">
-                              <div class="img-preview-caption">slide_1_right_background_mobile.jpg · JPG · 22 KB · 548×140 px</div>
+                              <div class="img-preview-caption">slide_1_right_background_mobile.jpg · 22 KB · 548×140 px</div>
                             </div>
                             <div class="card-footer d-flex align-items-center gap-2 py-2">
                               <i class="ti ti-circle-check text-success"></i>
@@ -470,11 +470,11 @@
                           <div class="file-drop" id="drop-s1m" style="display:none" onclick="simUpload('drop-s1m','prev-s1m','slide_1_right_background_mobile.jpg','548×140','22 KB')">
                             <i class="ti ti-photo-up fs-2 text-secondary d-block mb-1"></i>
                             <div><strong>Subir archivo</strong></div>
-                            <div class="text-secondary" style="font-size:11px">JPG · 548 × 140 px · Máx. 40 KB</div>
+                            <div class="text-secondary" style="font-size:11px">548 × 140 px · Máx. 40 KB</div>
                           </div>
-                          <p class="form-hint">548 × 140 px · Máx. 40 KB · JPG</p>
+                          <p class="form-hint">548 × 140 px · Máx. 40 KB</p>
                           <div class="mt-2">
-                            <label class="form-label" style="font-size:12px">Texto alternativo (alt) <code class="text-secondary">Slide_1_right_background_mobile_alt</code></label>
+                            <label class="form-label" style="font-size:12px">Texto alternativo (alt)</label>
                             <input class="form-control form-control-sm" type="text" id="alt-s1m" maxlength="125" oninput="cc(this,'cc-alt-s1m')" value="Promoción de cuotas sin interés en medios de pago">
                             <div class="form-hint char-counter" id="cc-alt-s1m">0/125</div>
                           </div>
@@ -484,12 +484,12 @@
                       <div class="mb-2 mt-2"><span class="text-secondary" style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">CTA de la imagen</span></div>
                       <div class="row">
                         <div class="col-md-6 mb-3">
-                          <label class="form-label">Texto del CTA <code class="text-secondary">Slide_1_right_cta</code></label>
+                          <label class="form-label">Texto del CTA</label>
                           <input class="form-control" id="s1-cta-texto" type="text" maxlength="54" oninput="cc(this,'cc1c');updateS1Preview()" value="Conocé nuestros medios de pago">
                           <div class="form-hint char-counter" id="cc1c">30/54</div>
                         </div>
                         <div class="col-md-6 mb-3">
-                          <label class="form-label">URL de destino <code class="text-secondary">Slide_1_cta_url</code></label>
+                          <label class="form-label">URL de destino</label>
                           <input class="form-control" type="url" value="https://assist-365.com/#medios-de-pago" placeholder="https://assist-365.com/pagina">
                           <p class="form-hint">Puede ser una URL completa o un anchor interno (ej: <code>#medios-de-pago</code>).</p>
                         </div>
@@ -529,43 +529,40 @@
                     <div class="accordion-body">
                       <div class="row">
                         <div class="col-md-6 mb-3">
-                          <label class="form-label">Texto izquierdo <code class="text-secondary">Slide_2_left_text</code></label>
+                          <label class="form-label">Texto izquierdo</label>
                           <input class="form-control" id="s2-left" type="text" maxlength="58" oninput="cc(this,'cc2t');updateS2Preview()" value="10% OFF pagando con transferencia">
                           <div class="form-hint char-counter" id="cc2t">34/58</div>
                         </div>
                         <div class="col-md-6 mb-3">
-                          <label class="form-label">Subtítulo tarjeta <code class="text-secondary">Slide_2_right_subtext</code></label>
+                          <label class="form-label">Subtítulo tarjeta</label>
                           <input class="form-control" id="s2-sub" type="text" maxlength="46" oninput="cc(this,'cc2s');updateS2Preview()" value="Plan anual multitrip">
                           <div class="form-hint char-counter" id="cc2s">20/46</div>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-6 mb-3">
-                          <label class="form-label">Título tarjeta <code class="text-secondary">Slide_2_right_title</code></label>
+                          <label class="form-label">Título tarjeta</label>
                           <input class="form-control" id="s2-title" type="text" maxlength="30" oninput="cc(this,'cc2ti');updateS2Preview()" value="¿Viajás seguido? Vamos con vos">
                           <div class="form-hint char-counter text-warning" id="cc2ti">30/30</div>
                         </div>
                         <div class="col-md-6 mb-3">
-                          <label class="form-label">Dropline <code class="text-secondary">Slide_2_right_dropline</code></label>
+                          <label class="form-label">Dropline</label>
                           <input class="form-control" id="s2-drop" type="text" maxlength="76" oninput="cc(this,'cc2d');updateS2Preview()" value="Viajes ilimitados durante todo un año, hasta 30 o 60 días por viaje.">
                           <div class="form-hint char-counter" id="cc2d">69/76</div>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-6 mb-3">
-                          <label class="form-label">CTA <code class="text-secondary">Slide_2_right_cta</code></label>
+                          <label class="form-label">CTA</label>
                           <input class="form-control" id="s2-cta" type="text" maxlength="40" oninput="cc(this,'cc2c');updateS2Preview()" value="Cotizá tu viaje ahora">
                           <div class="form-hint char-counter" id="cc2c">21/40</div>
-                          <label class="form-label mt-2">URL del CTA <code class="text-secondary">Slide_2_cta_url</code></label>
-                          <input class="form-control" type="url" value="https://assist-365.com/multitrip" placeholder="https://assist-365.com/...">
-                          <p class="form-hint">URL de destino. Puede ser una URL completa o un anchor interno (ej: <code>#multitrip</code>).</p>
                         </div>
                         <div class="col-md-6 mb-3">
-                          <label class="form-label">Imagen central PNG <code class="text-secondary">Slide_2_middle_background</code></label>
+                          <label class="form-label">Imagen circular izquierda</label>
                           <div class="img-preview-card show" id="prev-s2mid">
                             <div class="img-preview-thumb" style="height:80px">
                               <img src="assets-contenido-ecommerce/Slide2Desktop.png">
-                              <div class="img-preview-caption">slide_2_middle_background.png · PNG transparente · 22 KB · 280×280 px</div>
+                              <div class="img-preview-caption">slide_2_middle_background.png · 22 KB · 280×280 px</div>
                             </div>
                             <div class="card-footer d-flex align-items-center gap-2 py-2">
                               <i class="ti ti-circle-check text-success"></i>
@@ -576,13 +573,20 @@
                           <div class="file-drop" id="drop-s2mid" style="display:none" onclick="simUpload('drop-s2mid','prev-s2mid','slide_2_middle_background.png','280×280','22 KB')">
                             <i class="ti ti-photo-up fs-2 text-secondary d-block mb-1"></i>
                             <div><strong>Subir archivo</strong> o arrastrar aquí</div>
-                            <div class="text-secondary" style="font-size:11px">PNG transparente · 280 × 280 px · Máx. 40 KB</div>
+                            <div class="text-secondary" style="font-size:11px">280 × 280 px · Máx. 40 KB</div>
                           </div>
-                          <div class="mt-2">
-                            <label class="form-label" style="font-size:12px">Texto alternativo (alt) <code class="text-secondary">Slide_2_middle_background_alt</code></label>
-                            <input class="form-control form-control-sm" type="text" id="alt-s2mid" maxlength="125" oninput="cc(this,'cc-alt-s2mid')" value="Ilustración plan multitrip — mapa con destinos de viaje">
-                            <div class="form-hint char-counter" id="cc-alt-s2mid">0/125</div>
-                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">URL del CTA</label>
+                          <input class="form-control" type="url" value="https://assist-365.com/multitrip" placeholder="https://assist-365.com/...">
+                          <p class="form-hint">URL de destino. Puede ser una URL completa o un anchor interno (ej: <code>#multitrip</code>).</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Texto alternativo (alt)</label>
+                          <input class="form-control" type="text" id="alt-s2mid" maxlength="125" oninput="cc(this,'cc-alt-s2mid')" value="Ilustración plan multitrip — mapa con destinos de viaje">
+                          <div class="form-hint char-counter" id="cc-alt-s2mid">0/125</div>
                         </div>
                       </div>
 
@@ -619,15 +623,15 @@
                     <div class="accordion-body">
                       <div class="row">
                         <div class="col-md-6 mb-3">
-                          <label class="form-label">Título <code class="text-secondary">Slide_3_left_title</code></label>
+                          <label class="form-label">Título</label>
                           <input class="form-control" id="s3-title" type="text" maxlength="54" oninput="cc(this,'cc3t');updateS3Preview()" value="Sumá coberturas adicionales y viajá más tranquilo">
                           <div class="form-hint char-counter" id="cc3t">50/54</div>
                         </div>
                         <div class="col-md-6 mb-3">
-                          <label class="form-label">CTA <code class="text-secondary">Slide_3_left_cta</code></label>
+                          <label class="form-label">CTA</label>
                           <input class="form-control" id="s3-cta" type="text" maxlength="24" oninput="cc(this,'cc3cta');updateS3Preview()" value="Conocé más">
                           <div class="form-hint char-counter" id="cc3cta">10/24</div>
-                          <label class="form-label mt-2">URL del CTA <code class="text-secondary">Slide_3_cta_url</code></label>
+                          <label class="form-label mt-2">URL del CTA</label>
                           <input class="form-control" type="url" value="https://assist-365.com/adicionales" placeholder="https://assist-365.com/...">
                           <p class="form-hint">URL de destino. Puede ser una URL completa o un anchor interno (ej: <code>#adicionales</code>).</p>
                         </div>
@@ -639,7 +643,7 @@
                           <div class="card card-sm">
                             <div class="card-body">
                               <div class="text-secondary mb-2" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Ítem 1</div>
-                              <label class="form-label" style="font-size:12px">Texto <code class="text-secondary">Slide_3_left_item_1_text</code></label>
+                              <label class="form-label" style="font-size:12px">Texto</label>
                               <input class="form-control form-control-sm" id="s3-item1" maxlength="120" oninput="cc(this,'cc3i1');updateS3Preview()" value="Tus objetos, protegidos: agregá cobertura para tus dispositivos electrónicos o por rotura de equipaje">
                               <div class="form-hint char-counter" id="cc3i1">101/120</div>
                             </div>
@@ -649,7 +653,7 @@
                           <div class="card card-sm">
                             <div class="card-body">
                               <div class="text-secondary mb-2" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Ítem 2</div>
-                              <label class="form-label" style="font-size:12px">Texto <code class="text-secondary">Slide_3_left_item_2_text</code></label>
+                              <label class="form-label" style="font-size:12px">Texto</label>
                               <input class="form-control form-control-sm" id="s3-item2" maxlength="100" oninput="cc(this,'cc3i2');updateS3Preview()" value="Cobertura a tu medida: sumá asistencia médica por embarazo, deportes o mascotas">
                               <div class="form-hint char-counter" id="cc3i2">79/100</div>
                             </div>
@@ -674,16 +678,16 @@
                       </div>
                       <p class="form-hint text-end mt-n2 mb-3">Vista previa del componente</p>
 
-                      <label class="form-label">Imagen de fondo derecha <code class="text-secondary">Slide_3_right_background</code></label>
+                      <label class="form-label">Imagen de fondo derecha</label>
                       <div class="file-drop" id="drop-s3bg" style="display:none" onclick="simUpload('drop-s3bg','prev-s3bg','slide_3_right_background.jpg','486×280','34 KB')">
                         <i class="ti ti-photo-up fs-2 text-secondary d-block mb-1"></i>
                         <div><strong>Subir archivo</strong> o arrastrar aquí</div>
-                        <div class="text-secondary" style="font-size:11px">JPG · 486 × 280 px · Máx. 40 KB</div>
+                        <div class="text-secondary" style="font-size:11px">486 × 280 px · Máx. 40 KB</div>
                       </div>
                       <div class="img-preview-card show" id="prev-s3bg">
                         <div class="img-preview-thumb" style="height:80px">
                           <img src="assets-contenido-ecommerce/Slide3Desktop.png">
-                          <div class="img-preview-caption">slide_3_right_background.jpg · JPG · 34 KB · 486×280 px</div>
+                          <div class="img-preview-caption">slide_3_right_background.jpg · 34 KB · 486×280 px</div>
                         </div>
                         <div class="card-footer d-flex align-items-center gap-2 py-2">
                           <i class="ti ti-circle-check text-success"></i>
@@ -692,7 +696,7 @@
                         </div>
                       </div>
                       <div class="mt-2">
-                        <label class="form-label" style="font-size:12px">Texto alternativo (alt) <code class="text-secondary">Slide_3_right_background_alt</code></label>
+                        <label class="form-label" style="font-size:12px">Texto alternativo (alt)</label>
                         <input class="form-control form-control-sm" type="text" id="alt-s3bg" maxlength="125" oninput="cc(this,'cc-alt-s3bg')" value="Viajero con mochila y coberturas adicionales">
                         <div class="form-hint char-counter" id="cc-alt-s3bg">0/125</div>
                       </div>
@@ -753,18 +757,18 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label class="form-label">Vigencia <code class="text-secondary">Marquesina_bottom_vigencia</code></label>
+                  <label class="form-label">Vigencia</label>
                   <input class="form-control" type="text" id="mb-v-input" maxlength="30" oninput="cc(this,'cc-mb-v');updateMqBottomPreview()" onkeydown="ccBlock(this,'cc-mb-v',event)" value="">
                   <div class="form-hint char-counter" id="cc-mb-v">0/30</div>
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label class="form-label">Promo <code class="text-secondary">Marquesina_bottom_promo</code></label>
+                  <label class="form-label">Promo</label>
                   <input class="form-control" type="text" id="mb-p-input" maxlength="42" oninput="cc(this,'cc-mb-p');updateMqBottomPreview()" value="Hasta 60% OFF y 12 cuotas sin interés">
                   <div class="form-hint char-counter" id="cc-mb-p">38/42</div>
                 </div>
               </div>
               <div class="mb-3 col-md-6">
-                <label class="form-label">Disclaimer <code class="text-secondary">Marquesina_bottom_disclaimer</code></label>
+                <label class="form-label">Disclaimer</label>
                 <input class="form-control" type="text" id="mb-d-input" maxlength="42" oninput="cc(this,'cc-mb-d');updateMqBottomPreview()" value="Con tarjetas de todos los bancos">
                 <div class="form-hint char-counter" id="cc-mb-d">32/42</div>
               </div>
@@ -1677,7 +1681,7 @@
       drop.style.opacity = '';
       if (textEl) textEl.innerHTML = '<strong>Subir archivo</strong> o arrastrar aquí';
       const captionEl = prev.querySelector('.img-preview-caption');
-      if (captionEl) captionEl.textContent = filename + ' · ' + (filename.endsWith('.png') ? 'PNG transparente' : 'JPG') + ' · ' + size + ' · ' + dims + ' px';
+      if (captionEl) captionEl.textContent = filename + ' · ' + size + ' · ' + dims + ' px';
       prev.classList.add('show');
       showToast('Imagen subida: ' + filename);
     }, 900);
